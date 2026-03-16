@@ -141,12 +141,12 @@
             background: #fff;
             border: 2px solid #0f172a;
             box-shadow: 6px 6px 0 rgba(15,23,42,0.7);
-            min-height: 600px;
+            min-height: 800px;
+            height: auto;
             flex-shrink: 0;
             position: relative;
-            transition: width 0.3s ease;
+            transition: width 0.3s ease, min-height 0.3s ease;
             display: flex; flex-direction: column;
-            /* zoom property for scaling — doesn't affect layout calculations */
         }
         #canvas::before {
             content: attr(data-label);
@@ -157,7 +157,7 @@
 
         /* ===================== DROP ZONE ===================== */
         #drop-zone {
-            flex: 1; padding: 0; min-height: 300px; position: relative;
+            flex: 1; padding: 0; min-height: 600px; position: relative;
         }
         /* Drop line indicator */
         .drop-line {
@@ -328,6 +328,12 @@
             <button class="tb-btn device-btn" data-w="768" data-label="Tablet — 768px">📟 Tablet</button>
             <button class="tb-btn device-btn active" data-w="1440" data-label="Desktop — 1440px">🖥️ Desktop</button>
             <button class="tb-btn device-btn" data-w="1920" data-label="Wide — 1920px">🖥️ Wide</button>
+            <div class="tb-sep"></div>
+            <span class="tb-label">H:</span>
+            <button class="tb-btn height-btn" data-h="800">Short</button>
+            <button class="tb-btn height-btn active" data-h="1600">Medium</button>
+            <button class="tb-btn height-btn" data-h="3000">Long</button>
+            <button class="tb-btn height-btn" data-h="0">Auto</button>
             <div class="tb-sep"></div>
             <button class="tb-btn" id="btn-zout" title="Zoom Out">−</button>
             <span id="zoom-val">100%</span>

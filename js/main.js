@@ -390,6 +390,27 @@ document.querySelectorAll('.device-btn').forEach(btn => {
 });
 
 // ============================================================
+// CANVAS HEIGHT PRESETS
+// ============================================================
+document.querySelectorAll('.height-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.height-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const h = parseInt(btn.dataset.h);
+        if (h === 0) {
+            // Auto: min-height only, grows with content
+            canvas.style.minHeight = '800px';
+            canvas.style.height = 'auto';
+            notify('Height: Auto');
+        } else {
+            canvas.style.minHeight = h + 'px';
+            canvas.style.height = 'auto';
+            notify('Height: ' + h + 'px');
+        }
+    });
+});
+
+// ============================================================
 // ZOOM (CSS zoom property — layout-safe, screenshot-safe)
 // ============================================================
 function setZoom(z) {
