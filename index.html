@@ -156,6 +156,33 @@
         #drop-zone {
             min-height: 600px; position: relative; padding: 0;
         }
+        /* ===================== CANVAS RESIZER ===================== */
+        #canvas-resizer {
+            height: 12px;
+            background: #f1f5f9;
+            border-top: 1px solid #e2e8f0;
+            cursor: ns-resize;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+            position: relative;
+            z-index: 5;
+        }
+        #canvas-resizer:hover {
+            background: #e2e8f0;
+        }
+        #canvas-resizer::after {
+            content: '';
+            width: 30px;
+            height: 4px;
+            border-top: 1px solid #94a3b8;
+            border-bottom: 1px solid #94a3b8;
+        }
+        .screenshot-mode #canvas-resizer {
+            display: none !important;
+        }
+
         /* Drop line indicator */
         .drop-line {
             height: 3px; background: #3b82f6;
@@ -354,6 +381,7 @@
                     <small>Hover to see controls · Drag bar to reorder · Drop into content to nest</small>
                 </div>
             </div>
+            <div id="canvas-resizer" title="Drag to resize height"></div>
         </div>
     </div>
 </div>

@@ -411,6 +411,34 @@ document.querySelectorAll('.height-btn').forEach(btn => {
 });
 
 // ============================================================
+// MANUAL CANVAS RESIZE (Drag height)
+// ============================================================
+const resizer = document.getElementById('canvas-resizer');
+resizer.addEventListener('mousedown', (e) => {
+    e.preventDefault();
+    const startY = e.clientY;
+    const startH = canvas.offsetHeight;
+    
+    // Deactivate height buttons
+    document.querySelectorAll('.height-btn').forEach(b => b.classList.remove('active'));
+
+    const onMouseMove = (ev) => {
+        const delta = (ev.clientY - startY) / currentZoom;
+        const newH = Math.max(400, startH + delta);
+        canvas.style.minHeight = newH + 'px';
+    };
+
+    const onMouseUp = () => {
+        document.removeEventListener('mousemove', onMouseMove);
+        document.removeEventListener('mouseup', onMouseUp);
+        notify('Custom height set');
+    };
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+});
+
+// ============================================================
 // ZOOM (CSS zoom property — layout-safe, screenshot-safe)
 // ============================================================
 function setZoom(z) {
