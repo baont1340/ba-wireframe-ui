@@ -447,42 +447,73 @@ document.getElementById('btn-clear').addEventListener('click', () => {
 });
 
 // ============================================================
-// SCREENSHOT — dom-to-image-more (inline computed styles automatically)
+// SCREENSHOT — clone + inline all computed styles + html2canvas
 // ============================================================
 document.getElementById('btn-screenshot').addEventListener('click', async () => {
-    // Save zoom & apply screenshot mode
-    const savedZoom = canvas.style.zoom;
-    canvas.style.zoom = '1';
+    notify('Preparing screenshot...');
+
+    // Add screenshot mode to hide controls
     canvas.classList.add('screenshot-mode');
+    const savedZoom = canvas.style.zoom || '1';
+    canvas.style.zoom = '1';
 
     // Wait for repaint
     await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
 
-    try {
-        const dataUrl = await domtoimage.toPng(canvas, {
-            quality: 1,
-            bgcolor: '#ffffff',
-            style: {
-                // Override any leftover styles
-                'box-shadow': 'none',
-                'border': 'none',
-            },
-            filter: (node) => {
-                // Filter out the ::before pseudo-element label (can't directly, but filter drop indicators)
-                if (node.classList && node.classList.contains('drop-line')) return false;
-                return true;
-            }
-        });
+    // Clone the canvas element
+    const clone = canvas.cloneNode(true);
+    clone.style.position = 'absolute';
+    clone.style.left = '-99999px';
+    clone.style.top = '0';
+    clone.style.zIndex = '-1';
+    clone.style.zoom = '1';
+    clone.style.boxShadow = 'none';
+    clone.style.border = 'none';
+    document.body.appendChild(clone);
 
+    // Inline all computed styles from original into clone
+    function inlineStyles(src, dest) {
+        const srcStyle = window.getComputedStyle(src);
+        let cssText = '';
+        for (let i = 0; i < srcStyle.length; i++) {
+            const prop = srcStyle[i];
+            cssText += `${prop}:${srcStyle.getPropertyValue(prop)};`;
+        }
+        dest.style.cssText = cssText;
+        // Recurse children
+        const srcChildren = src.children;
+        const destChildren = dest.children;
+        for (let i = 0; i < srcChildren.length && i < destChildren.length; i++) {
+            inlineStyles(srcChildren[i], destChildren[i]);
+        }
+    }
+    inlineStyles(canvas, clone);
+
+    // Ensure clone has clean screenshot appearance
+    clone.style.position = 'absolute';
+    clone.style.left = '-99999px';
+    clone.style.boxShadow = 'none';
+    clone.style.border = 'none';
+    clone.style.overflow = 'visible';
+
+    try {
+        const cvs = await html2canvas(clone, {
+            useCORS: true,
+            scale: 2,
+            backgroundColor: '#ffffff',
+            logging: false,
+            windowWidth: parseInt(canvas.style.width) || 1440,
+        });
         const link = document.createElement('a');
         link.download = `wireframe-${Date.now()}.png`;
-        link.href = dataUrl;
+        link.href = cvs.toDataURL('image/png');
         link.click();
         notify('Screenshot saved!');
     } catch (err) {
         console.error('Screenshot failed:', err);
-        notify('Screenshot failed — try a smaller canvas');
+        notify('Screenshot failed');
     } finally {
+        clone.remove();
         canvas.classList.remove('screenshot-mode');
         canvas.style.zoom = savedZoom;
     }
