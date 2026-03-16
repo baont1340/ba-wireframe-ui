@@ -78,4 +78,26 @@
     .control-btn {
         @apply w-8 h-8 rounded-full border-2 border-slate-900 bg-white flex items-center justify-center hover:bg-slate-100;
     }
+
+    /* Custom Scrollbar Utility */
+    .scrollbar-custom::-webkit-scrollbar {
+        @apply w-2 h-2;
+    }
+    .scrollbar-custom::-webkit-scrollbar-track {
+        @apply bg-slate-100;
+    }
+    .scrollbar-custom::-webkit-scrollbar-thumb {
+        @apply bg-slate-300 border-2 border-slate-900;
+    }
+    .scrollbar-custom::-webkit-scrollbar-thumb:hover {
+        @apply bg-slate-900;
+    }
+}
+
+@layer utilities {
+    .no-print {
+        @media print {
+            display: none !important;
+        }
+    }
 }
