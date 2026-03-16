@@ -74,22 +74,17 @@ const COMPONENTS = [
     { cat:'Advanced', id:'file-upload', name:'File Upload', file:'components/file-upload.html', icon:'M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6' },
 ];
 
-// SVG placeholder for image areas
-const IMG_PLACEHOLDER_SVG = `<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect x="4" y="8" width="40" height="32" rx="2" stroke="#94a3b8" stroke-width="2" stroke-dasharray="4 3"/>
-  <circle cx="16" cy="20" r="4" stroke="#94a3b8" stroke-width="2"/>
-  <path d="M4 34 L16 24 L24 30 L32 22 L44 32" stroke="#94a3b8" stroke-width="2" fill="none" stroke-linejoin="round"/>
-</svg>`;
-
 // ============================================================
 // STATE
 // ============================================================
-let canvasZoom = 1;
+let currentZoom = 1;
 let itemUID = 0;
-let dragSrcEl = null; // The .ci being dragged
+let dragSrcEl = null;
+let selectedEl = null;
+let dropIndicator = null;
 
 // ============================================================
-// DOM
+// DOM REFS
 // ============================================================
 const dropZone    = document.getElementById('drop-zone');
 const canvas      = document.getElementById('canvas');
@@ -102,13 +97,12 @@ const toastEl     = document.getElementById('toast');
 const emptyState  = document.getElementById('empty-state');
 
 // ============================================================
-// SIDEBAR — Render component list
+// SIDEBAR
 // ============================================================
 function renderSidebar(filter = '') {
     compList.innerHTML = '';
     const terms = filter.toLowerCase().trim().split(/\s+/).filter(Boolean);
     const cats = [...new Set(COMPONENTS.map(c => c.cat))];
-
     cats.forEach(cat => {
         const items = COMPONENTS.filter(c => {
             if (c.cat !== cat) return false;
@@ -116,12 +110,10 @@ function renderSidebar(filter = '') {
             return terms.every(t => c.name.toLowerCase().includes(t) || cat.toLowerCase().includes(t));
         });
         if (!items.length) return;
-
         const h = document.createElement('div');
         h.className = 'cat-header';
         h.textContent = cat;
         compList.appendChild(h);
-
         items.forEach(comp => {
             const el = document.createElement('div');
             el.className = 'comp-item';
@@ -135,7 +127,6 @@ function renderSidebar(filter = '') {
             compList.appendChild(el);
         });
     });
-
     if (!compList.children.length) {
         compList.innerHTML = '<div style="padding:20px;text-align:center;font-size:11px;color:#94a3b8;">No results</div>';
     }
@@ -144,7 +135,7 @@ searchInput.addEventListener('input', e => renderSidebar(e.target.value));
 renderSidebar();
 
 // ============================================================
-// ADD COMPONENT — Creates a .ci element inside a target container
+// ADD COMPONENT
 // ============================================================
 async function addComponent(comp, targetContainer, beforeEl = null) {
     let html = '';
@@ -153,19 +144,8 @@ async function addComponent(comp, targetContainer, beforeEl = null) {
         if (!res.ok) throw new Error('not found');
         html = await res.text();
     } catch {
-        html = `<div style="padding:16px;border:2px dashed #94a3b8;color:#94a3b8;font-size:11px;font-weight:600;">[${comp.name} — not found]</div>`;
+        html = `<div style="padding:16px;border:2px dashed #94a3b8;color:#94a3b8;font-size:11px;font-weight:600;">[${comp.name} — file not found]</div>`;
     }
-
-    // Replace plain text IMAGE placeholders with proper SVG placeholders
-    html = html.replace(
-        /(<div[^>]*class="[^"]*wf-placeholder[^"]*"[^>]*>)\s*(IMAGE[^<]*)\s*(<\/div>)/gi,
-        `$1<div class="wf-img">${IMG_PLACEHOLDER_SVG}<span>Image</span></div>$3`
-    );
-    // Also handle standalone text IMAGE placeholders
-    html = html.replace(
-        />(\s*IMAGE\s*(?:\/\s*ILLUSTRATION)?\s*PLACEHOLDER\s*)</gi,
-        `><div class="wf-img">${IMG_PLACEHOLDER_SVG}<span>Image / Illustration</span></div><`
-    );
 
     // Hide empty state
     if (emptyState) emptyState.style.display = 'none';
@@ -195,78 +175,108 @@ async function addComponent(comp, targetContainer, beforeEl = null) {
         targetContainer.appendChild(ci);
     }
 
-    // ---- Delete ----
+    // ---- SELECT on click ----
+    ci.addEventListener('mousedown', (e) => {
+        if (e.target.closest('.ci-btns')) return;
+        selectItem(ci);
+    });
+
+    // ---- DELETE ----
     ci.querySelector('.del').addEventListener('click', (e) => {
         e.stopPropagation();
         ci.remove();
+        if (selectedEl === ci) selectedEl = null;
         updateStatus();
         showEmptyIfNeeded();
     });
 
-    // ---- Duplicate ----
+    // ---- DUPLICATE ----
     ci.querySelector('.dup').addEventListener('click', (e) => {
         e.stopPropagation();
         addComponent(comp, ci.parentElement, ci.nextElementSibling);
     });
 
-    // ---- DRAG START (from bar handle) ----
+    // ---- DRAG (from bar) ----
     const bar = ci.querySelector('.ci-bar');
     bar.addEventListener('dragstart', (e) => {
+        if (e.target.closest('.ci-btns')) { e.preventDefault(); return; }
         dragSrcEl = ci;
         ci.classList.add('dragging');
         e.dataTransfer.effectAllowed = 'move';
         e.dataTransfer.setData('text/plain', ci.dataset.uid);
+        // Delay so browser captures the element first
+        requestAnimationFrame(() => ci.classList.add('dragging'));
     });
     bar.addEventListener('dragend', () => {
         ci.classList.remove('dragging');
         dragSrcEl = null;
+        removeDropIndicator();
         clearAllHighlights();
     });
 
-    // ---- DROP TARGET: the content area allows nesting ----
+    // ---- NEST TARGET: content area accepts drops ----
     const content = ci.querySelector('.ci-content');
+
     content.addEventListener('dragover', (e) => {
         if (!dragSrcEl || dragSrcEl === ci) return;
-        // Don't allow nesting into own children
-        if (dragSrcEl.contains(ci)) return;
+        if (dragSrcEl.contains(ci)) return; // no nesting into own children
         e.preventDefault();
         e.stopPropagation();
         e.dataTransfer.dropEffect = 'move';
+        removeDropIndicator();
         clearAllHighlights();
         content.classList.add('nest-target');
     });
+
     content.addEventListener('dragleave', (e) => {
         if (e.relatedTarget && content.contains(e.relatedTarget)) return;
         content.classList.remove('nest-target');
     });
+
     content.addEventListener('drop', (e) => {
         e.preventDefault();
         e.stopPropagation();
         content.classList.remove('nest-target');
         if (!dragSrcEl || dragSrcEl === ci || dragSrcEl.contains(ci)) return;
-        // Nest: move the dragged element inside this content
         content.appendChild(dragSrcEl);
         dragSrcEl.classList.remove('dragging');
         dragSrcEl = null;
         updateStatus();
+        notify('Component nested!');
     });
 
-    // ---- DROP TARGET: the whole .ci for reordering (above/below) ----
+    // ---- REORDER TARGET: the whole .ci shows drop indicator ----
     ci.addEventListener('dragover', (e) => {
         if (!dragSrcEl || dragSrcEl === ci) return;
         if (dragSrcEl.contains(ci)) return;
         e.preventDefault();
         e.dataTransfer.dropEffect = 'move';
+
+        // Show line indicator above or below
+        const rect = ci.getBoundingClientRect();
+        const midY = rect.top + rect.height / 2;
+        const parent = ci.parentElement;
+        removeDropIndicator();
+        clearAllHighlights();
+
+        dropIndicator = document.createElement('div');
+        dropIndicator.className = 'drop-line';
+
+        if (e.clientY < midY) {
+            parent.insertBefore(dropIndicator, ci);
+        } else {
+            parent.insertBefore(dropIndicator, ci.nextElementSibling);
+        }
     });
 
-    // ---- DOUBLE CLICK to edit text ----
+    // ---- DOUBLE-CLICK to edit text ----
     content.addEventListener('dblclick', (e) => {
         const el = e.target;
-        const editable = ['P','SPAN','H1','H2','H3','H4','H5','H6','A','BUTTON','LI','TD','TH','LABEL'];
-        if (editable.includes(el.tagName) && !el.querySelector('svg')) {
+        const tags = ['P','SPAN','H1','H2','H3','H4','H5','H6','A','BUTTON','LI','TD','TH','LABEL'];
+        if (tags.includes(el.tagName) && !el.querySelector('svg')) {
             e.stopPropagation();
             el.contentEditable = 'true';
-            el.style.outline = '1px dashed #64748b';
+            el.style.outline = '1px dashed #3b82f6';
             el.style.outlineOffset = '1px';
             el.focus();
             el.addEventListener('blur', () => {
@@ -278,32 +288,40 @@ async function addComponent(comp, targetContainer, beforeEl = null) {
     });
 
     updateStatus();
+    selectItem(ci);
     return ci;
 }
 
 // ============================================================
-// DROP-ZONE — accept reorder drops & sidebar drops
+// SELECTION
+// ============================================================
+function selectItem(el) {
+    if (selectedEl) selectedEl.classList.remove('selected');
+    selectedEl = el;
+    if (el) el.classList.add('selected');
+}
+// Deselect on click on empty canvas area
+dropZone.addEventListener('mousedown', (e) => {
+    if (e.target === dropZone || e.target === emptyState) selectItem(null);
+});
+
+// ============================================================
+// DROP ZONE — accept reorder drops
 // ============================================================
 dropZone.addEventListener('dragover', (e) => {
     e.preventDefault();
     e.dataTransfer.dropEffect = 'move';
-
     if (!dragSrcEl) return;
 
-    // Find the closest .ci under cursor for insertion position (only direct children)
+    // If not over any .ci, show indicator at end
     const children = [...dropZone.querySelectorAll(':scope > .ci')];
-    clearAllHighlights();
-
-    let insertBefore = null;
-    for (const child of children) {
-        const rect = child.getBoundingClientRect();
-        const midY = rect.top + rect.height / 2;
-        if (e.clientY < midY) {
-            insertBefore = child;
-            break;
-        }
+    if (!e.target.closest('.ci')) {
+        removeDropIndicator();
+        clearAllHighlights();
+        dropIndicator = document.createElement('div');
+        dropIndicator.className = 'drop-line';
+        dropZone.appendChild(dropIndicator);
     }
-    // Visual indicator could be added here if needed
 });
 
 dropZone.addEventListener('drop', (e) => {
@@ -312,25 +330,14 @@ dropZone.addEventListener('drop', (e) => {
 
     if (!dragSrcEl) return;
 
-    // Find insertion position among direct children
-    const children = [...dropZone.querySelectorAll(':scope > .ci')];
-    let insertBefore = null;
-    for (const child of children) {
-        if (child === dragSrcEl) continue;
-        const rect = child.getBoundingClientRect();
-        const midY = rect.top + rect.height / 2;
-        if (e.clientY < midY) {
-            insertBefore = child;
-            break;
-        }
-    }
-
-    if (insertBefore) {
-        dropZone.insertBefore(dragSrcEl, insertBefore);
+    // Insert at drop indicator position, or at end
+    if (dropIndicator && dropIndicator.parentElement) {
+        dropIndicator.parentElement.insertBefore(dragSrcEl, dropIndicator);
     } else {
         dropZone.appendChild(dragSrcEl);
     }
 
+    removeDropIndicator();
     dragSrcEl.classList.remove('dragging');
     dragSrcEl = null;
     updateStatus();
@@ -339,9 +346,15 @@ dropZone.addEventListener('drop', (e) => {
 // ============================================================
 // HELPERS
 // ============================================================
+function removeDropIndicator() {
+    if (dropIndicator && dropIndicator.parentElement) {
+        dropIndicator.remove();
+    }
+    dropIndicator = null;
+}
+
 function clearAllHighlights() {
     document.querySelectorAll('.nest-target').forEach(el => el.classList.remove('nest-target'));
-    document.querySelectorAll('.drag-over-self').forEach(el => el.classList.remove('drag-over-self'));
 }
 
 function showEmptyIfNeeded() {
@@ -356,43 +369,48 @@ function updateStatus() {
 }
 
 // ============================================================
-// DEVICE PRESETS
+// DEVICE SIZE PRESETS
 // ============================================================
 document.querySelectorAll('.device-btn').forEach(btn => {
     btn.addEventListener('click', () => {
         document.querySelectorAll('.device-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         const w = parseInt(btn.dataset.w);
-        const label = btn.dataset.label;
         canvas.style.width = w + 'px';
-        canvas.dataset.label = label;
+        canvas.dataset.label = btn.dataset.label;
+        // Auto-fit if canvas wider than viewport
+        const vpW = viewport.clientWidth - 60;
+        if (w > vpW) {
+            setZoom(Math.min(1, vpW / w));
+        } else {
+            setZoom(1);
+        }
+        notify(btn.dataset.label);
     });
 });
 
 // ============================================================
-// ZOOM (CSS transform on #canvas — no layout break)
+// ZOOM (CSS zoom property — layout-safe, screenshot-safe)
 // ============================================================
 function setZoom(z) {
-    canvasZoom = Math.max(0.25, Math.min(2, z));
-    canvas.style.transform = `scale(${canvasZoom})`;
-    canvas.style.transformOrigin = 'top center';
-    zoomValEl.textContent = Math.round(canvasZoom * 100) + '%';
+    currentZoom = Math.max(0.25, Math.min(2, Math.round(z * 100) / 100));
+    canvas.style.zoom = currentZoom;
+    zoomValEl.textContent = Math.round(currentZoom * 100) + '%';
 }
 
-document.getElementById('btn-zin').addEventListener('click', () => setZoom(canvasZoom + 0.1));
-document.getElementById('btn-zout').addEventListener('click', () => setZoom(canvasZoom - 0.1));
+document.getElementById('btn-zin').addEventListener('click', () => setZoom(currentZoom + 0.1));
+document.getElementById('btn-zout').addEventListener('click', () => setZoom(currentZoom - 0.1));
 document.getElementById('btn-zfit').addEventListener('click', () => {
     const vpW = viewport.clientWidth - 60;
     const cW = parseInt(canvas.style.width) || 1440;
     setZoom(Math.min(1, vpW / cW));
 });
 
-// Ctrl + Scroll to zoom canvas (prevent browser zoom)
+// Ctrl+Scroll zoom
 document.addEventListener('wheel', (e) => {
     if (!e.ctrlKey && !e.metaKey) return;
     e.preventDefault();
-    const delta = e.deltaY > 0 ? -0.1 : 0.1;
-    setZoom(canvasZoom + delta);
+    setZoom(currentZoom + (e.deltaY > 0 ? -0.1 : 0.1));
 }, { passive: false });
 
 // ============================================================
@@ -402,43 +420,50 @@ document.getElementById('btn-clear').addEventListener('click', () => {
     if (!confirm('Clear all components?')) return;
     dropZone.querySelectorAll('.ci').forEach(el => el.remove());
     itemUID = 0;
+    selectedEl = null;
     updateStatus();
     showEmptyIfNeeded();
 });
 
 // ============================================================
-// SCREENSHOT — temporarily reset zoom, hide controls, capture
+// SCREENSHOT — dom-to-image-more (inline computed styles automatically)
 // ============================================================
 document.getElementById('btn-screenshot').addEventListener('click', async () => {
-    // Save current zoom
-    const savedZoom = canvasZoom;
-    // Reset zoom to 1:1 for accurate capture
-    canvas.style.transform = 'scale(1)';
-    // Add screenshot mode class to hide bars
+    // Save zoom & apply screenshot mode
+    const savedZoom = canvas.style.zoom;
+    canvas.style.zoom = '1';
     canvas.classList.add('screenshot-mode');
 
-    // Wait a frame for reflow
+    // Wait for repaint
     await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
 
     try {
-        const cvs = await html2canvas(canvas, {
-            useCORS: true,
-            scale: 2,
-            backgroundColor: '#ffffff',
-            logging: false,
+        const dataUrl = await domtoimage.toPng(canvas, {
+            quality: 1,
+            bgcolor: '#ffffff',
+            style: {
+                // Override any leftover styles
+                'box-shadow': 'none',
+                'border': 'none',
+            },
+            filter: (node) => {
+                // Filter out the ::before pseudo-element label (can't directly, but filter drop indicators)
+                if (node.classList && node.classList.contains('drop-line')) return false;
+                return true;
+            }
         });
+
         const link = document.createElement('a');
         link.download = `wireframe-${Date.now()}.png`;
-        link.href = cvs.toDataURL('image/png');
+        link.href = dataUrl;
         link.click();
         notify('Screenshot saved!');
     } catch (err) {
-        notify('Screenshot failed');
-        console.error(err);
+        console.error('Screenshot failed:', err);
+        notify('Screenshot failed — try a smaller canvas');
     } finally {
-        // Restore
         canvas.classList.remove('screenshot-mode');
-        canvas.style.transform = `scale(${savedZoom})`;
+        canvas.style.zoom = savedZoom;
     }
 });
 

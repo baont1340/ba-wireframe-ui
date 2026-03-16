@@ -1,98 +1,55 @@
 # BA Wireframe Builder
 
-Công cụ lắp ghép wireframe trực quan cho Business Analyst. Kéo thả, lồng ghép, chỉnh sửa nội dung — rồi chụp ảnh trình bày ngay.
+Công cụ lắp ghép wireframe trực quan cho Business Analyst — kéo thả, lồng ghép, chỉnh sửa nội dung, chuyển đổi kích thước thiết bị, rồi chụp ảnh PNG đưa vào tài liệu.
 
 ## 🚀 Tính năng
 
-### 📐 Layout theo dòng (Flow-based)
-- Các component xếp chồng tự nhiên theo chiều dọc — giống HTML thật.
-- Kéo thanh đen (drag handle) để **sắp xếp lại thứ tự**.
-- Kéo component **thả VÀO bên trong** component khác để **lồng ghép** (nesting). Ví dụ: kéo Input vào Form, kéo Title vào Card.
+### 📐 Flow-based Layout
+- Component xếp theo chiều dọc tự nhiên (như HTML thật)
+- Kéo thanh điều khiển (ẩn mặc định, hiện khi hover) để sắp xếp lại thứ tự
+- Kéo component thả VÀO component khác để lồng ghép (nesting)
 
 ### 📱 Chuyển đổi kích thước thiết bị
-| Thiết bị | Kích thước |
-|---|---|
-| 📱 Mobile | 375px |
-| 📟 Tablet | 768px |
-| 🖥️ Desktop | 1440px |
-| 🖥️ Widescreen | 1920px |
-
-Canvas tự động thay đổi chiều rộng — các component responsive theo Tailwind CSS sẽ hiển thị đúng trên từng kích thước.
+| Nút | Kích thước | Auto-fit |
+|---|---|---|
+| 📱 Mobile | 375px | Tự zoom nếu vượt viewport |
+| 📟 Tablet | 768px | ✓ |
+| 🖥️ Desktop | 1440px | ✓ |
+| 🖥️ Wide | 1920px | ✓ |
 
 ### 🔍 Zoom
-- `Ctrl + Scroll chuột`: Phóng to / thu nhỏ canvas.
-- Nút `+` / `−` / `FIT` trên toolbar.
+- `Ctrl + Scroll`: Zoom canvas
+- Nút `+` / `−` / `FIT` trên toolbar
+- CSS `zoom` (không dùng `transform: scale`) → screenshot luôn đúng
 
-### ✏️ Chỉnh sửa nội dung
-- **Double-click** vào text bất kỳ (tiêu đề, nhãn nút, nội dung bảng...) để thay đổi trực tiếp trên canvas.
+### ✏️ Chỉnh sửa
+- **Double-click** vào text để chỉnh sửa trực tiếp
 
-### 📸 Screenshot
-- Nhấn `📷 Screenshot` để tải ảnh PNG chất lượng cao.
-- Hệ thống tự ẩn drag handle và nút điều khiển, reset zoom về 1:1 trước khi chụp → ảnh sạch, đúng tỷ lệ.
+### 📸 Screenshot PNG
+- Dùng `dom-to-image-more` — inline computed styles tự động
+- Tự ẩn thanh điều khiển, reset zoom trước khi chụp
+- Kết quả: ảnh PNG sạch, đúng CSS, sẵn sàng đưa vào tài liệu
 
-### 🖼️ Image Placeholder
-- Các vùng ảnh hiển thị bằng SVG wireframe icon (landscape + sun) thay vì text thuần — dễ nhận biết hơn khi trình bày.
+### 🧩 60+ Components
+General · Navigation · Forms · Overlays · Data · Sections · Advanced
 
----
-
-## 📂 Cấu trúc thư mục
-
+## 📂 Cấu trúc
 ```
-ba-wireframe-ui/
-├── index.html              # Giao diện chính
-├── js/main.js              # Logic kéo thả, zoom, screenshot
-├── css/main.css             # Design system wireframe
-├── components/              # 60+ component HTML riêng lẻ
-│   ├── accordion.html
-│   ├── alert.html
-│   ├── card.html
-│   ├── hero.html
-│   ├── navbar.html
-│   ├── ...
-│   └── file-upload.html
+├── index.html          # UI + styles
+├── js/main.js          # Logic kéo thả, zoom, screenshot
+├── css/main.css        # Design tokens (wf-border, wf-button...)
+├── components/         # 60+ component HTML files
 └── README.md
 ```
 
+## 📖 Cách dùng
+1. Mở `index.html` qua **Live Server**
+2. Click component từ sidebar → tự động thêm vào canvas
+3. **Hover** component → thanh điều khiển hiện ra (kéo / xóa / duplicate)
+4. **Kéo thả bar** để sắp xếp hoặc lồng ghép vào component khác
+5. Chọn kích thước thiết bị: Mobile / Tablet / Desktop / Wide
+6. **Double-click** text để chỉnh sửa
+7. Nhấn **📷 Screenshot** → tải PNG
+
 ## 🛠️ Công nghệ
-- **HTML5 + Vanilla JavaScript** — không framework, chạy trực tiếp.
-- **Tailwind CSS (CDN)** — responsive utility classes.
-- **html2canvas** — chụp ảnh canvas.
-- **HTML5 Drag and Drop API** — kéo thả native, ổn định.
-
-## 📖 Hướng dẫn sử dụng
-
-1. Mở `index.html` qua **Live Server** (VS Code) hoặc bất kỳ web server nào.
-2. **Chọn kích thước**: Click `📱 Mobile`, `📟 Tablet`, hoặc `🖥️ Desktop` trên toolbar.
-3. **Thêm component**: Click tên component ở sidebar trái.
-4. **Sắp xếp lại**: Kéo thanh đen ở đầu mỗi component.
-5. **Lồng ghép**: Kéo component thả vào vùng nội dung của component khác.
-6. **Sửa text**: Double-click vào text để chỉnh sửa.
-7. **Chụp ảnh**: Nhấn `📷 Screenshot` để tải PNG.
-
----
-
-## 🧩 Danh sách Component
-
-### General (28)
-Accordion, Alert, Avatar Group, Badge, Blockquote, Button Group, Card, Carousel, Chat Bubbles, Collapse, Datepicker, Devices, Divider, File Progress, KBD, Legend, Link, List Group, Progress, Ratings, Skeleton, Spinner, Static Icons, Stepper, Timeline, Toasts, Tree View, Typography.
-
-### Navigation (7)
-Breadcrumb, Mega Menu, Navbar, Tabs/Navs, Pagination, Scrollspy, Sidebar.
-
-### Forms (15)
-Checkbox/Radio, Color Picker, ComboBox, File Input, Input, PIN Input, Range Slider, SearchBox, Select, Strong Password, Switch, Textarea, Toggle Count, Toggle Password, Complete Form.
-
-### Overlays (6)
-Context Menu, Dropdown, Modal, Offcanvas, Popover, Tooltip.
-
-### Data (6)
-Charts, Table, Confetti, Maps, Clipboard, Datamaps.
-
-### Sections (4)
-Hero Section, Features Grid, Pricing Plans, Footer.
-
-### Advanced (4)
-WYSIWYG Editor, Layout Splitter, Copy Markup, File Upload.
-
----
-*Designed for BA teams who value simplicity and speed.*
+- HTML5 + Vanilla JS · Tailwind CSS (CDN) · dom-to-image-more · HTML5 Drag API
