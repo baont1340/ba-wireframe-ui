@@ -1,3 +1,6 @@
+// ============================================================
+// COMPONENT DATA
+// ============================================================
 const componentData = [
     // Application UI / General
     { category: 'General', id: 'accordion', name: 'Accordion', file: 'components/accordion.html', icon: 'M19 9l-7 7-7-7' },
@@ -35,15 +38,15 @@ const componentData = [
     { category: 'Navigation', id: 'navbar', name: 'Navbar', file: 'components/navbar.html', icon: 'M4 6h16M4 12h16M4 18h16' },
     { category: 'Navigation', id: 'tabs', name: 'Tabs / Navs', file: 'components/tabs.html', icon: 'M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2' },
     { category: 'Navigation', id: 'pagination', name: 'Pagination', file: 'components/pagination.html', icon: 'M7 16l-4-4m0 0l4-4m-4 4h18' },
-    { category: 'Navigation', id: 'scrollspy', name: 'Scrollspy', file: 'components/scrollspy.html', icon: 'M15 12a3 3 0 11-6 0 3 3 0 016 0z M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z' },
+    { category: 'Navigation', id: 'scrollspy', name: 'Scrollspy', file: 'components/scrollspy.html', icon: 'M15 12a3 3 0 11-6 0 3 3 0 016 0z' },
     { category: 'Navigation', id: 'sidebar', name: 'Sidebar', file: 'components/sidebar.html', icon: 'M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7' },
 
     // Forms
     { category: 'Forms', id: 'checkbox', name: 'Checkbox / Radio', file: 'components/checkbox.html', icon: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z' },
-    { category: 'Forms', id: 'color-picker', name: 'Color Picker', file: 'components/color-picker.html', icon: 'M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01' },
+    { category: 'Forms', id: 'color-picker', name: 'Color Picker', file: 'components/color-picker.html', icon: 'M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343' },
     { category: 'Forms', id: 'combobox', name: 'ComboBox', file: 'components/combobox.html', icon: 'M8 9l4-4 4 4m0 6l-4 4-4-4' },
     { category: 'Forms', id: 'file-input', name: 'File Input', file: 'components/file-input.html', icon: 'M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12' },
-    { category: 'Forms', id: 'input', name: 'Input Support', file: 'components/input.html', icon: 'M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z' },
+    { category: 'Forms', id: 'input', name: 'Input', file: 'components/input.html', icon: 'M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z' },
     { category: 'Forms', id: 'pin-input', name: 'PIN Input', file: 'components/pin-input.html', icon: 'M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z' },
     { category: 'Forms', id: 'range', name: 'Range Slider', file: 'components/range.html', icon: 'M3 10h18M7 15h1m4 0h1m4 0h1' },
     { category: 'Forms', id: 'searchbox', name: 'SearchBox', file: 'components/searchbox.html', icon: 'M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z' },
@@ -53,6 +56,7 @@ const componentData = [
     { category: 'Forms', id: 'textarea', name: 'Textarea', file: 'components/textarea.html', icon: 'M4 6h16M4 12h16M4 18h7' },
     { category: 'Forms', id: 'toggle-count', name: 'Toggle Count', file: 'components/toggle-count.html', icon: 'M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z' },
     { category: 'Forms', id: 'toggle-password', name: 'Toggle Password', file: 'components/toggle-password.html', icon: 'M15 12a3 3 0 11-6 0 3 3 0 016 0z' },
+    { category: 'Forms', id: 'form-full', name: 'Complete Form', file: 'components/form.html', icon: 'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z' },
 
     // Overlays
     { category: 'Overlays', id: 'context-menu', name: 'Context Menu', file: 'components/context-menu.html', icon: 'M4 6h16M4 12h16M4 18h16' },
@@ -65,205 +69,468 @@ const componentData = [
     // Data Display
     { category: 'Data', id: 'charts', name: 'Charts', file: 'components/charts.html', icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z' },
     { category: 'Data', id: 'table', name: 'Table', file: 'components/table.html', icon: 'M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z' },
+    { category: 'Data', id: 'timeline', name: 'Timeline', file: 'components/timeline.html', icon: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z' },
     { category: 'Data', id: 'confetti', name: 'Confetti', file: 'components/confetti.html', icon: 'M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2 2m-2 2l2-2m2 15l2 2m-2 2l2-2' },
-    { category: 'Data', id: 'map', name: 'Leaflet (Maps)', file: 'components/map.html', icon: 'M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z M15 11a3 3 0 11-6 0 3 3 0 016 0z' },
-    { category: 'Data', id: 'clipboard', name: 'Clipboard', file: 'components/clipboard.html', icon: 'M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3' },
-    { category: 'Data', id: 'datamaps', name: 'Datamaps', file: 'components/datamaps.html', icon: 'M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z' },
+    { category: 'Data', id: 'map', name: 'Leaflet (Maps)', file: 'components/map.html', icon: 'M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z' },
+    { category: 'Data', id: 'clipboard', name: 'Clipboard', file: 'components/clipboard.html', icon: 'M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2' },
+    { category: 'Data', id: 'datamaps', name: 'Datamaps', file: 'components/datamaps.html', icon: 'M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064' },
 
     // Sections
     { category: 'Sections', id: 'hero', name: 'Hero Section', file: 'components/hero.html', icon: 'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z' },
     { category: 'Sections', id: 'features', name: 'Features Grid', file: 'components/features.html', icon: 'M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6z' },
-    { category: 'Sections', id: 'pricing', name: 'Pricing Plans', file: 'components/pricing.html', icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z' },
+    { category: 'Sections', id: 'pricing', name: 'Pricing Plans', file: 'components/pricing.html', icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1' },
     { category: 'Sections', id: 'footer', name: 'Footer', file: 'components/footer.html', icon: 'M3 12l2-2m0 0l7-7 7 7' },
 
     // Advanced
-    { category: 'Advanced', id: 'copy-markup', name: 'Copy Markup', file: 'components/copy-markup.html', icon: 'M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3' },
+    { category: 'Advanced', id: 'copy-markup', name: 'Copy Markup', file: 'components/copy-markup.html', icon: 'M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2' },
     { category: 'Advanced', id: 'splitter', name: 'Layout Splitter', file: 'components/splitter.html', icon: 'M8 7v10m8-10v10M5 5h14a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2z' },
     { category: 'Advanced', id: 'editor', name: 'WYSIWYG Editor', file: 'components/editor.html', icon: 'M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z' },
     { category: 'Advanced', id: 'file-upload', name: 'File Upload', file: 'components/file-upload.html', icon: 'M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12' },
 ];
 
+// ============================================================
+// STATE
+// ============================================================
+let scale = 1;
+let panX = 0;
+let panY = 0;
+const ZOOM_MIN = 0.1;
+const ZOOM_MAX = 3;
+const ZOOM_STEP = 0.1;
+const SNAP_SIZE = 8;
+let snapEnabled = true;
+let componentCounter = 0;
+
+// ============================================================
+// MAIN
+// ============================================================
 document.addEventListener('DOMContentLoaded', () => {
     const componentList = document.getElementById('component-list');
     const searchInput = document.getElementById('component-search');
     const dropZone = document.getElementById('drop-zone');
-    const emptyState = document.getElementById('canvas-empty-state');
-    const clearBtn = document.getElementById('clear-canvas');
-    const downloadBtn = document.getElementById('download-screenshot');
+    const canvasWorld = document.getElementById('canvas-world');
+    const viewport = document.getElementById('canvas-viewport');
     const canvasStatus = document.getElementById('canvas-status');
     const toast = document.getElementById('toast');
+    const snapIndicator = document.getElementById('snap-indicator');
+    const zoomLevelDisplay = document.getElementById('zoom-level-display');
+    const zoomLevel = document.getElementById('zoom-level');
 
-    // Categorization Logic
+    // ---- Zoom helpers --------------------------------
+    function setZoom(newScale, originX, originY) {
+        const prevScale = scale;
+        scale = Math.max(ZOOM_MIN, Math.min(ZOOM_MAX, newScale));
+
+        if (originX !== undefined && originY !== undefined) {
+            // Zoom toward cursor
+            panX = originX - (originX - panX) * (scale / prevScale);
+            panY = originY - (originY - panY) * (scale / prevScale);
+        }
+
+        applyTransform();
+        const pct = Math.round(scale * 100) + '%';
+        zoomLevelDisplay.textContent = pct;
+        zoomLevel.textContent = pct;
+    }
+
+    function applyTransform() {
+        canvasWorld.style.transform = `translate(${panX}px, ${panY}px) scale(${scale})`;
+    }
+
+    // Zoom buttons
+    document.getElementById('zoom-in-btn').addEventListener('click', () => setZoom(scale + ZOOM_STEP));
+    document.getElementById('zoom-out-btn').addEventListener('click', () => setZoom(scale - ZOOM_STEP));
+    document.getElementById('zoom-in-corner').addEventListener('click', () => setZoom(scale + ZOOM_STEP));
+    document.getElementById('zoom-out-corner').addEventListener('click', () => setZoom(scale - ZOOM_STEP));
+    document.getElementById('zoom-reset-btn').addEventListener('click', () => {
+        scale = 0.7; panX = 40; panY = 40; applyTransform();
+        const pct = Math.round(scale * 100) + '%';
+        zoomLevelDisplay.textContent = pct;
+        zoomLevel.textContent = pct;
+    });
+
+    // Ctrl+Scroll to zoom
+    viewport.addEventListener('wheel', (e) => {
+        if (e.ctrlKey || e.metaKey) {
+            e.preventDefault();
+            const rect = viewport.getBoundingClientRect();
+            const mouseX = e.clientX - rect.left;
+            const mouseY = e.clientY - rect.top;
+            const delta = e.deltaY > 0 ? -ZOOM_STEP : ZOOM_STEP;
+            setZoom(scale + delta, mouseX, mouseY);
+        }
+    }, { passive: false });
+
+    // Normal scroll to zoom (no ctrl required, like Figma)
+    viewport.addEventListener('wheel', (e) => {
+        if (e.ctrlKey || e.metaKey) return; // handled above
+        if (!e.shiftKey) {
+            // Vertical pan
+            panY -= e.deltaY;
+        } else {
+            // Horizontal pan with shift
+            panX -= e.deltaX || e.deltaY;
+        }
+        applyTransform();
+    });
+
+    // ---- Pan (middle mouse / space+drag) -----------------
+    let isPanning = false;
+    let panStartX = 0, panStartY = 0;
+
+    viewport.addEventListener('mousedown', (e) => {
+        // Middle mouse or space is held
+        if (e.button === 1 || e.button === 2 || spaceDown) {
+            e.preventDefault();
+            isPanning = true;
+            panStartX = e.clientX - panX;
+            panStartY = e.clientY - panY;
+            viewport.classList.add('panning');
+        }
+    });
+
+    document.addEventListener('mousemove', (e) => {
+        if (!isPanning) return;
+        panX = e.clientX - panStartX;
+        panY = e.clientY - panStartY;
+        applyTransform();
+    });
+
+    document.addEventListener('mouseup', () => {
+        if (isPanning) {
+            isPanning = false;
+            viewport.classList.remove('panning');
+        }
+    });
+
+    // Space key for panning
+    let spaceDown = false;
+    document.addEventListener('keydown', (e) => {
+        if (e.code === 'Space' && !e.target.isContentEditable) {
+            e.preventDefault();
+            spaceDown = true;
+            viewport.style.cursor = 'grab';
+        }
+        // Keyboard zoom
+        if (e.ctrlKey && e.key === '=') { e.preventDefault(); setZoom(scale + ZOOM_STEP); }
+        if (e.ctrlKey && e.key === '-') { e.preventDefault(); setZoom(scale - ZOOM_STEP); }
+        if (e.ctrlKey && e.key === '0') { e.preventDefault(); scale = 1; panX = 100; panY = 100; applyTransform(); }
+    });
+    document.addEventListener('keyup', (e) => {
+        if (e.code === 'Space') { spaceDown = false; viewport.style.cursor = ''; }
+    });
+
+    // ---- Snap ----------------------------------------
+    snapIndicator.addEventListener('click', () => {
+        snapEnabled = !snapEnabled;
+        snapIndicator.classList.toggle('active', snapEnabled);
+        showNotification(snapEnabled ? 'Snap ON' : 'Snap OFF');
+    });
+
+    function snap(v) {
+        return snapEnabled ? Math.round(v / SNAP_SIZE) * SNAP_SIZE : v;
+    }
+
+    // ---- Component Sidebar ---------------------------
     function renderComponents(filter = '') {
         componentList.innerHTML = '';
-        const searchTerms = filter.toLowerCase().split(' ').filter(t => t);
-        
+        const terms = filter.toLowerCase().split(' ').filter(t => t);
         const categories = [...new Set(componentData.map(c => c.category))];
-        
+
         categories.forEach(cat => {
             const catComps = componentData.filter(c => {
-                const matchesSearch = searchTerms.every(term => 
-                    c.name.toLowerCase().includes(term) || 
-                    c.category.toLowerCase().includes(term)
+                const match = terms.every(t =>
+                    c.name.toLowerCase().includes(t) || c.category.toLowerCase().includes(t)
                 );
-                return c.category === cat && matchesSearch;
+                return c.category === cat && match;
             });
 
-            if (catComps.length > 0) {
-                // Category Header
-                const header = document.createElement('div');
-                header.className = 'bg-slate-50 px-6 py-2 text-[10px] font-bold text-slate-400 uppercase border-y border-slate-100';
-                header.textContent = cat;
-                componentList.appendChild(header);
+            if (catComps.length === 0) return;
 
-                catComps.forEach(comp => {
-                    const item = document.createElement('div');
-                    item.className = 'component-item group';
-                    item.innerHTML = `
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 wf-border flex items-center justify-center bg-white group-hover:bg-slate-900 group-hover:text-white transition-colors">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${comp.icon}"></path></svg>
-                            </div>
-                            <div>
-                                <p class="font-bold text-sm">${comp.name}</p>
-                            </div>
-                        </div>
-                    `;
-                    item.addEventListener('click', () => addComponentToCanvas(comp));
-                    componentList.appendChild(item);
+            const header = document.createElement('div');
+            header.style.cssText = 'background:#f8fafc; padding:6px 16px; font-size:9px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#94a3b8; border-bottom:1px solid #f1f5f9; border-top:1px solid #f1f5f9;';
+            header.textContent = cat;
+            componentList.appendChild(header);
+
+            catComps.forEach(comp => {
+                const item = document.createElement('div');
+                item.className = 'component-item';
+                item.innerHTML = `
+                    <div style="width:28px;height:28px;border:2px solid #0f172a;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:white;">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${comp.icon}"></path></svg>
+                    </div>
+                    <span style="font-size:12px;font-weight:600;line-height:1.2;">${comp.name}</span>
+                `;
+
+                // Click to add at center of visible area
+                item.addEventListener('click', () => {
+                    const rect = viewport.getBoundingClientRect();
+                    const centerX = (rect.width / 2 - panX) / scale - 100;
+                    const centerY = (rect.height / 2 - panY) / scale - 50;
+                    addComponentToCanvas(comp, snap(Math.max(20, centerX)), snap(Math.max(20, centerY)));
                 });
-            }
+
+                // Drag-from-sidebar to canvas
+                item.addEventListener('mousedown', (e) => {
+                    if (e.button !== 0) return;
+                    e.preventDefault();
+
+                    const onMouseMove = (e2) => {};
+                    const onMouseUp = async (e2) => {
+                        document.removeEventListener('mousemove', onMouseMove);
+                        document.removeEventListener('mouseup', onMouseUp);
+
+                        const rect = viewport.getBoundingClientRect();
+                        // Check if dropped over viewport
+                        if (e2.clientX >= rect.left && e2.clientX <= rect.right &&
+                            e2.clientY >= rect.top  && e2.clientY <= rect.bottom) {
+                            const x = (e2.clientX - rect.left - panX) / scale;
+                            const y = (e2.clientY - rect.top  - panY) / scale;
+                            addComponentToCanvas(comp, snap(Math.max(20, x - 150)), snap(Math.max(20, y - 40)));
+                        }
+                    };
+                    document.addEventListener('mousemove', onMouseMove);
+                    document.addEventListener('mouseup', onMouseUp);
+                });
+
+                componentList.appendChild(item);
+            });
         });
 
         if (componentList.innerHTML === '') {
-            componentList.innerHTML = '<div class="p-8 text-center text-slate-400 text-sm">No components found</div>';
+            componentList.innerHTML = '<div style="padding:24px;text-align:center;color:#94a3b8;font-size:12px;">No components found</div>';
         }
     }
 
-    // Search input event
-    searchInput.addEventListener('input', (e) => renderComponents(e.target.value));
-
-    // Initial render
+    searchInput.addEventListener('input', e => renderComponents(e.target.value));
     renderComponents();
 
-    async function addComponentToCanvas(comp) {
+    // ---- Add component to freeform canvas ------------
+    async function addComponentToCanvas(comp, x = 80, y = 80) {
         try {
             const response = await fetch(comp.file);
-            if (!response.ok) throw new Error('File not found');
-            let html = await response.text();
-            
-            // Remove empty state if present
-            const currentEmptyState = document.getElementById('canvas-empty-state');
-            if (currentEmptyState) currentEmptyState.remove();
+            if (!response.ok) throw new Error('Not found');
+            const html = await response.text();
 
+            // Remove empty state
+            const empty = document.getElementById('canvas-empty-state');
+            if (empty) empty.remove();
+
+            const id = `comp-${++componentCounter}`;
             const wrapper = document.createElement('div');
             wrapper.className = 'canvas-item';
+            wrapper.id = id;
+            wrapper.style.left = x + 'px';
+            wrapper.style.top = y + 'px';
+            wrapper.style.minWidth = '320px';
+            wrapper.style.zIndex = componentCounter;
+
             wrapper.innerHTML = `
-                ${html}
                 <div class="canvas-item-controls no-print">
-                    <button class="control-btn move-up" title="Move Up">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
-                    </button>
-                    <button class="control-btn move-down" title="Move Down">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                    </button>
-                    <button class="control-btn delete text-red-500" title="Remove">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-.867 12.142A2 2 0 0117.138 21H6.862a2 2 0 01-1.995-1.858L4 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                    </button>
+                    <button class="control-btn duplicate" title="Duplicate">⎘</button>
+                    <button class="control-btn delete" title="Remove">✕</button>
                 </div>
+                <div class="comp-content">${html}</div>
+                <div class="resize-handle"></div>
             `;
 
-            // Control events
-            wrapper.querySelector('.move-up').addEventListener('click', () => {
-                const prev = wrapper.previousElementSibling;
-                if (prev) dropZone.insertBefore(wrapper, prev);
+            // Select on click
+            wrapper.addEventListener('mousedown', (e) => {
+                if (e.target.closest('.canvas-item-controls') || e.target.closest('.resize-handle')) return;
+                selectItem(wrapper);
             });
 
-            wrapper.querySelector('.move-down').addEventListener('click', () => {
-                const next = wrapper.nextElementSibling;
-                if (next) dropZone.insertBefore(next, wrapper);
-            });
-
-            wrapper.querySelector('.delete').addEventListener('click', () => {
+            // Control buttons
+            wrapper.querySelector('.delete').addEventListener('click', (e) => {
+                e.stopPropagation();
                 wrapper.remove();
                 updateCanvasState();
             });
 
-            dropZone.appendChild(wrapper);
-            updateCanvasState();
-            
-            // Text Editing
-            wrapper.querySelectorAll('h1, h2, h3, h4, h5, h6, p, a, label, span, button, li, th, td').forEach(el => {
-                if (el.children.length === 0 || (el.children.length > 0 && el.innerText.trim() !== '')) {
+            wrapper.querySelector('.duplicate').addEventListener('click', async (e) => {
+                e.stopPropagation();
+                const nx = parseInt(wrapper.style.left) + 24;
+                const ny = parseInt(wrapper.style.top) + 24;
+                addComponentToCanvas(comp, snap(nx), snap(ny));
+            });
+
+            // ---- Drag to reposition ------------------
+            makeDraggable(wrapper);
+
+            // ---- Resize handle -----------------------
+            makeResizable(wrapper);
+
+            // ---- Text editing -----------------------
+            wrapper.querySelectorAll('h1,h2,h3,h4,h5,h6,p,a,label,span,button,li,th,td').forEach(el => {
+                if (!el.querySelector('svg') && el.childElementCount === 0) {
                     el.setAttribute('contenteditable', 'true');
-                    el.classList.add('hover:bg-slate-50', 'outline-none', 'focus:ring-2', 'focus:ring-slate-300', 'rounded', 'px-1');
+                    el.style.outline = 'none';
+                    el.style.cursor = 'text';
                 }
             });
 
-        } catch (error) {
-            console.error('Failed to load component:', error);
-            showNotification(`Missing: ${comp.name}`);
+            dropZone.appendChild(wrapper);
+            selectItem(wrapper);
+            updateCanvasState();
+
+        } catch (err) {
+            showNotification(`⚠ Missing: ${comp.name}`);
+            console.error(err);
         }
     }
 
+    // ---- Selection -----------------------------------
+    let selectedItem = null;
+    function selectItem(el) {
+        if (selectedItem) selectedItem.classList.remove('selected');
+        selectedItem = el;
+        if (el) {
+            el.classList.add('selected');
+            el.style.zIndex = ++componentCounter;
+        }
+    }
+    document.addEventListener('mousedown', (e) => {
+        if (!e.target.closest('.canvas-item')) selectItem(null);
+    });
+
+    // ---- Drag to reposition (free drag) --------------
+    function makeDraggable(el) {
+        const contentArea = el.querySelector('.comp-content');
+        contentArea.addEventListener('mousedown', (e) => {
+            if (e.button !== 0) return;
+            if (spaceDown) return; // space = pan viewport
+            if (e.target.isContentEditable) return; // text edit mode
+            if (e.target.closest('.resize-handle') || e.target.closest('.canvas-item-controls')) return;
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            selectItem(el);
+
+            const startX = e.clientX;
+            const startY = e.clientY;
+            const origLeft = parseInt(el.style.left) || 0;
+            const origTop  = parseInt(el.style.top)  || 0;
+
+            const onMove = (ev) => {
+                const dx = (ev.clientX - startX) / scale;
+                const dy = (ev.clientY - startY) / scale;
+                el.style.left = snap(origLeft + dx) + 'px';
+                el.style.top  = snap(origTop  + dy) + 'px';
+            };
+            const onUp = () => {
+                document.removeEventListener('mousemove', onMove);
+                document.removeEventListener('mouseup', onUp);
+            };
+            document.addEventListener('mousemove', onMove);
+            document.addEventListener('mouseup', onUp);
+        });
+    }
+
+    // ---- Resize handle -------------------------------
+    function makeResizable(el) {
+        const handle = el.querySelector('.resize-handle');
+        handle.addEventListener('mousedown', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const startX = e.clientX;
+            const startW = el.offsetWidth;
+            const startH = el.offsetHeight;
+
+            const onMove = (ev) => {
+                const dw = (ev.clientX - startX) / scale;
+                el.style.width = snap(Math.max(200, startW + dw)) + 'px';
+            };
+            const onUp = () => {
+                document.removeEventListener('mousemove', onMove);
+                document.removeEventListener('mouseup', onUp);
+            };
+
+            document.addEventListener('mousemove', onMove);
+            document.addEventListener('mouseup', onUp);
+        });
+    }
+
+    // ---- Canvas State --------------------------------
     function updateCanvasState() {
         const items = dropZone.querySelectorAll('.canvas-item');
-        canvasStatus.textContent = items.length === 0 ? 'Empty Canvas' : `${items.length} Component${items.length > 1 ? 's' : ''}`;
-        
+        canvasStatus.textContent = items.length === 0
+            ? 'Empty Canvas'
+            : `${items.length} Component${items.length > 1 ? 's' : ''}`;
+
         if (items.length === 0 && !document.getElementById('canvas-empty-state')) {
-            dropZone.innerHTML = `
-                <div id="canvas-empty-state" class="flex-1 flex flex-col items-center justify-center p-20 text-center space-y-4">
-                    <div class="w-24 h-24 wf-placeholder border-4 border-slate-200">
-                        <svg class="w-12 h-12 text-slate-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                    </div>
-                    <div>
-                        <h3 class="text-2xl text-slate-300">Start building your UI</h3>
-                        <p class="text-slate-300">Click components on the left to add them here</p>
-                    </div>
+            const empty = document.createElement('div');
+            empty.id = 'canvas-empty-state';
+            empty.innerHTML = `
+                <div style="width:80px;height:80px;border:3px dashed #cbd5e1;display:flex;align-items:center;justify-content:center;">
+                    <svg width="32" height="32" style="color:#cbd5e1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                </div>
+                <div style="text-align:center">
+                    <p style="font-size:18px;font-weight:700;color:#cbd5e1">Drag components here</p>
+                    <p style="font-size:12px;color:#cbd5e1;margin-top:4px">Or click in the sidebar to add · Ctrl+Scroll to zoom · Middle-click to pan</p>
                 </div>
             `;
+            dropZone.appendChild(empty);
         }
     }
 
-    clearBtn.addEventListener('click', () => {
+    // ---- Clear canvas --------------------------------
+    document.getElementById('clear-canvas').addEventListener('click', () => {
         if (confirm('Clear entire canvas?')) {
             dropZone.innerHTML = '';
+            componentCounter = 0;
             updateCanvasState();
         }
     });
 
-    downloadBtn.addEventListener('click', async () => {
-        const controls = document.querySelectorAll('.no-print');
-        controls.forEach(c => c.style.opacity = '0');
-        
-        const active = document.activeElement;
-        if (active) active.blur();
+    // ---- Screenshot ----------------------------------
+    document.getElementById('download-screenshot').addEventListener('click', async () => {
+        const noprints = document.querySelectorAll('.no-print');
+        noprints.forEach(el => el.style.opacity = '0');
+
+        if (document.activeElement) document.activeElement.blur();
 
         try {
             const canvas = await html2canvas(dropZone, {
                 useCORS: true,
                 scale: 2,
-                backgroundColor: '#ffffff'
+                backgroundColor: '#ffffff',
+                // Capture the dropzone at its natural size ignoring canvas transform
+                windowWidth: dropZone.scrollWidth,
+                windowHeight: dropZone.scrollHeight,
             });
-            
             const link = document.createElement('a');
             link.download = `wireframe-${Date.now()}.png`;
             link.href = canvas.toDataURL('image/png');
             link.click();
             showNotification('Screenshot downloaded!');
         } catch (err) {
-            console.error('Screenshot failed:', err);
             showNotification('Screenshot failed.');
+            console.error(err);
         } finally {
-            controls.forEach(c => c.style.opacity = '1');
+            noprints.forEach(el => el.style.opacity = '1');
         }
     });
 
+    // ---- Toast notification --------------------------
     function showNotification(msg) {
         toast.textContent = msg;
         toast.style.opacity = '1';
-        setTimeout(() => {
+        clearTimeout(showNotification._t);
+        showNotification._t = setTimeout(() => {
             toast.style.opacity = '0';
-        }, 3000);
+        }, 2500);
     }
+
+    // ---- Initial setup --------------------------------
+    // Start with a comfortable zoom & offset
+    scale = 0.7;
+    panX = 40;
+    panY = 40;
+    applyTransform();
+    zoomLevelDisplay.textContent = '70%';
+    zoomLevel.textContent = '70%';
+
+    updateCanvasState();
 });

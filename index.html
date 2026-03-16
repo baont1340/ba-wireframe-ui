@@ -5,73 +5,314 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>BA Wireframe Builder</title>
+    <meta name="description" content="Wireframe Builder for Business Analysts. Drag and drop components to assemble UI mockups.">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/main.css">
-    <!-- html2canvas for screenshots -->
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <style>
+        /* =====================================================
+           FREEFORM CANVAS SYSTEM
+        ====================================================== */
+        #canvas-viewport {
+            flex: 1;
+            overflow: hidden;
+            background-color: #e2e8f0;
+            background-image:
+                radial-gradient(circle, #94a3b8 1px, transparent 1px);
+            background-size: 24px 24px;
+            cursor: grab;
+            position: relative;
+        }
+        #canvas-viewport.panning { cursor: grabbing; }
+
+        /* The infinite canvas world that gets transformed */
+        #canvas-world {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%;
+            height: 100%;
+            /* transform applied via JS: translate + scale */
+            transform-origin: 0 0;
+        }
+
+        /* The actual "page" surface on the canvas */
+        #drop-zone {
+            position: absolute;
+            top: 200px;
+            left: 200px;
+            width: 1400px;
+            min-height: 900px;
+            background: #ffffff;
+            border: 2px solid #0f172a;
+            box-shadow: 8px 8px 0px 0px rgba(15,23,42,0.8);
+        }
+
+        /* Drop-zone ruler/label */
+        #drop-zone::before {
+            content: 'CANVAS — 1400px';
+            position: absolute;
+            top: -28px;
+            left: 0;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #94a3b8;
+        }
+
+        /* =====================================================
+           FREE-DRAG COMPONENT ITEMS
+        ====================================================== */
+        .canvas-item {
+            position: absolute;
+            cursor: move;
+            box-sizing: border-box;
+        }
+        .canvas-item.selected {
+            outline: 2px solid #0f172a;
+            outline-offset: 2px;
+        }
+
+        /* Resize handle */
+        .canvas-item .resize-handle {
+            position: absolute;
+            bottom: 0; right: 0;
+            width: 16px; height: 16px;
+            cursor: se-resize;
+            background: #0f172a;
+            clip-path: polygon(100% 0, 100% 100%, 0 100%);
+            opacity: 0;
+            transition: opacity 0.15s;
+            z-index: 10;
+        }
+        .canvas-item:hover .resize-handle,
+        .canvas-item.selected .resize-handle {
+            opacity: 1;
+        }
+
+        /* Floating controls */
+        .canvas-item-controls {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            display: flex;
+            gap: 4px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.15s;
+            z-index: 20;
+        }
+        .canvas-item:hover .canvas-item-controls,
+        .canvas-item.selected .canvas-item-controls {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .control-btn {
+            width: 28px; height: 28px;
+            border: 2px solid #0f172a;
+            background: white;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 700;
+        }
+        .control-btn:hover { background: #0f172a; color: white; }
+        .control-btn.delete:hover { background: #dc2626; border-color: #dc2626; }
+
+        /* =====================================================
+           ZOOM CONTROLS
+        ====================================================== */
+        #zoom-controls {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            align-items: center;
+        }
+        .zoom-btn {
+            width: 36px; height: 36px;
+            border: 2px solid #0f172a;
+            background: white;
+            font-size: 16px;
+            font-weight: 900;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: background 0.1s;
+            box-shadow: 2px 2px 0 #0f172a;
+        }
+        .zoom-btn:hover { background: #0f172a; color: white; }
+        #zoom-level {
+            padding: 2px 6px;
+            font-size: 10px;
+            font-weight: 700;
+            font-family: monospace;
+            border: 2px solid #0f172a;
+            background: white;
+            min-width: 48px;
+            text-align: center;
+        }
+
+        /* =====================================================
+           TOOLBAR ADDITIONS
+        ====================================================== */
+        .toolbar-divider {
+            width: 1px;
+            height: 20px;
+            background: #e2e8f0;
+        }
+
+        /* Snap grid toggle indicator */
+        #snap-indicator {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            padding: 2px 8px;
+            border: 2px solid #0f172a;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.1s;
+        }
+        #snap-indicator.active { background: #0f172a; color: white; }
+
+        /* =====================================================
+           CANVAS EMPTY STATE
+        ====================================================== */
+        #canvas-empty-state {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            pointer-events: none;
+        }
+
+        /* =====================================================
+           SIDEBAR
+        ====================================================== */
+        .sidebar {
+            width: 280px;
+            height: 100vh;
+            overflow-y: auto;
+            border-right: 2px solid #0f172a;
+            background: white;
+            flex-shrink: 0;
+        }
+        .component-item {
+            padding: 10px 16px;
+            border-bottom: 1px solid #f1f5f9;
+            cursor: grab;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: background 0.1s;
+            user-select: none;
+        }
+        .component-item:hover { background: #f8fafc; }
+        .component-item:active { cursor: grabbing; }
+
+        /* =====================================================
+           MISC
+        ====================================================== */
+        .wf-border { border: 2px solid #0f172a; }
+        .wf-shadow { box-shadow: 4px 4px 0px 0px rgba(15,23,42,1); }
+        .wf-bg { background: white; }
+        .wf-input { padding: 8px 16px; border: 2px solid #0f172a; }
+        .wf-button { padding: 8px 16px; border: 2px solid #0f172a; background: white; font-weight: 700; cursor: pointer; }
+        .wf-button:hover { background: #0f172a; color: white; }
+        .wf-placeholder { background: #f1f5f9; border: 2px dashed #94a3b8; display: flex; align-items: center; justify-content: center; color: #94a3b8; font-weight: 500; }
+        .wf-circle { border-radius: 50%; }
+    </style>
 </head>
 
-<body class="flex bg-slate-100">
+<body class="flex bg-slate-100 overflow-hidden h-screen">
 
-    <!-- Sidebar: Component Library -->
+    <!-- ================================================
+         SIDEBAR: Component Library
+    ================================================= -->
     <aside class="sidebar flex flex-col">
-        <div class="p-6 border-b-2 border-slate-900 bg-white sticky top-0 z-10 flex flex-col gap-4">
-            <h1 class="text-xl font-bold flex items-center gap-2">
-                <span class="w-6 h-6 wf-circle">W</span> Builder
-            </h1>
+        <div class="p-4 border-b-2 border-slate-900 bg-white sticky top-0 z-10 flex flex-col gap-3">
+            <div class="flex items-center gap-2">
+                <div class="w-7 h-7 bg-slate-900 text-white flex items-center justify-center text-xs font-black">W</div>
+                <span class="font-black text-lg tracking-tight">BA Builder</span>
+            </div>
             <div class="relative">
                 <input id="component-search" type="text" placeholder="Search components..." 
-                    class="w-full px-3 py-2 text-sm wf-border focus:outline-none focus:ring-2 focus:ring-slate-300">
-                <svg class="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    class="w-full px-3 py-2 text-xs border-2 border-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-300">
+                <svg class="w-3 h-3 absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                 </svg>
             </div>
-            <p class="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Component Library</p>
+            <p class="text-[9px] text-slate-400 uppercase tracking-widest font-bold">Drag onto canvas or click to add</p>
         </div>
 
-        <div id="component-list" class="flex-1 overflow-y-auto divide-y divide-slate-100">
-            <!-- Components will be injected here -->
-            <div class="p-8 text-center text-slate-400">Loading components...</div>
+        <div id="component-list" class="flex-1 overflow-y-auto">
+            <div class="p-6 text-center text-slate-400 text-xs">Loading components...</div>
         </div>
     </aside>
 
-    <!-- Main Content: Canvas & Toolbar -->
-    <main class="flex-1 flex flex-col h-screen overflow-hidden">
+    <!-- ================================================
+         MAIN: Toolbar + Freeform Canvas
+    ================================================= -->
+    <main class="flex-1 flex flex-col overflow-hidden">
         <!-- Toolbar -->
-        <header class="h-16 border-b-2 border-slate-900 bg-white flex items-center justify-between px-8 z-10">
+        <header class="h-14 border-b-2 border-slate-900 bg-white flex items-center justify-between px-6 z-10 flex-shrink-0">
             <div class="flex items-center gap-4">
-                <span id="canvas-status" class="text-sm font-medium text-slate-500">Empty Canvas</span>
+                <span id="canvas-status" class="text-xs font-bold text-slate-500 uppercase tracking-wider">Empty Canvas</span>
+                <div class="toolbar-divider"></div>
+                <!-- Zoom Controls in toolbar -->
+                <button id="zoom-out-btn" class="w-7 h-7 border-2 border-slate-900 flex items-center justify-center font-black text-lg hover:bg-slate-900 hover:text-white transition-colors" title="Zoom Out (-)">−</button>
+                <span id="zoom-level-display" class="text-xs font-mono font-bold w-12 text-center">100%</span>
+                <button id="zoom-in-btn" class="w-7 h-7 border-2 border-slate-900 flex items-center justify-center font-black text-lg hover:bg-slate-900 hover:text-white transition-colors" title="Zoom In (+)">+</button>
+                <button id="zoom-reset-btn" class="px-2 py-1 text-[10px] font-bold border-2 border-slate-300 text-slate-400 hover:border-slate-900 hover:text-slate-900 transition-colors" title="Reset Zoom">FIT</button>
+                <div class="toolbar-divider"></div>
+                <div id="snap-indicator" class="active" title="Toggle snap to grid (8px)">SNAP</div>
             </div>
             <div class="flex items-center gap-3">
-                <button id="clear-canvas" class="text-slate-500 hover:text-red-600 px-3 py-1 font-bold text-sm">Clear</button>
-                <button id="download-screenshot" class="wf-button py-1 px-4 text-sm flex items-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                <button id="clear-canvas" class="text-slate-400 hover:text-red-600 px-3 py-1 font-bold text-xs transition-colors">Clear</button>
+                <button id="download-screenshot" class="border-2 border-slate-900 px-4 py-1.5 text-xs font-bold flex items-center gap-2 hover:bg-slate-900 hover:text-white transition-colors" style="box-shadow: 2px 2px 0 #0f172a;">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                     Screenshot
                 </button>
             </div>
         </header>
 
-        <!-- Canvas Area -->
-        <div class="canvas-container scrollbar-hide">
-            <div id="drop-zone" class="canvas">
-                <!-- User built UI will go here -->
-                <div id="canvas-empty-state" class="flex-1 flex flex-col items-center justify-center p-20 text-center space-y-4">
-                    <div class="w-24 h-24 wf-placeholder border-4 border-slate-200">
-                        <svg class="w-12 h-12 text-slate-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                    </div>
-                    <div>
-                        <h3 class="text-2xl text-slate-300">Start building your UI</h3>
-                        <p class="text-slate-300">Click components on the left to add them here</p>
+        <!-- Viewport (pan + zoom container) -->
+        <div id="canvas-viewport">
+            <div id="canvas-world">
+                <div id="drop-zone">
+                    <div id="canvas-empty-state">
+                        <div class="w-20 h-20" style="border: 3px dashed #cbd5e1; display:flex; align-items:center; justify-content:center;">
+                            <svg class="w-8 h-8" style="color:#cbd5e1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                        </div>
+                        <div style="text-align:center">
+                            <p style="font-size:18px; font-weight:700; color:#cbd5e1">Drag components here</p>
+                            <p style="font-size:12px; color:#cbd5e1; margin-top:4px">Or click in the sidebar to add · Drag to reposition · Scroll to zoom</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </main>
 
-    <!-- Context Menu or Notification Area if needed -->
-    <div id="toast" class="fixed bottom-8 left-1/2 -translate-x-1/2 wf-bg wf-border wf-shadow px-6 py-3 font-bold opacity-0 transition-opacity pointer-events-none">
-        Copied to clipboard!
+    <!-- ================================================
+         ZOOM FLOATING CONTROLS (corner shortcut)
+    ================================================= -->
+    <div id="zoom-controls" class="no-print">
+        <button class="zoom-btn" id="zoom-in-corner" title="Zoom In">+</button>
+        <div id="zoom-level" title="Current zoom">100%</div>
+        <button class="zoom-btn" id="zoom-out-corner" title="Zoom Out">−</button>
+    </div>
+
+    <!-- Toast notification -->
+    <div id="toast" class="fixed bottom-8 left-1/2 -translate-x-1/2 bg-white border-2 border-slate-900 px-6 py-3 font-bold text-sm opacity-0 transition-opacity pointer-events-none z-50" style="box-shadow: 4px 4px 0 #0f172a;">
+        Saved!
     </div>
 
     <script src="js/main.js"></script>
