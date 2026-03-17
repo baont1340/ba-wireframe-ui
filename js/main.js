@@ -812,7 +812,15 @@ function enterPlayMode(){
     btnExitPlay.style.display='block';
     document.body.classList.add('playing');
     selectItem(null);
-    notify('Prototype Mode: Click linked elements to navigate');
+    
+    // Hide frames that don't match the current platform
+    document.querySelectorAll('.frame-wrap').forEach(fw => {
+        const frame = fw.querySelector('.canvas-frame');
+        if(frame && frame.dataset.frameKey !== currentPlatform) fw.style.display = 'none';
+        else fw.style.display = 'block';
+    });
+
+    notify('Prototype Mode: Displaying ' + currentPlatform.toUpperCase());
 }
 function exitPlayMode(){
     isPlaying=false;
@@ -824,6 +832,10 @@ function exitPlayMode(){
     btnExitPlay.style.display='none';
     prototypeOverlay.classList.remove('active');
     document.body.classList.remove('playing');
+    
+    // Restore all frames
+    document.querySelectorAll('.frame-wrap').forEach(fw => fw.style.display = 'block');
+    
     loadScreen(activeScreenId);
 }
 
@@ -842,11 +854,15 @@ document.addEventListener('click',e=>{
             if(targetEl){
                 const pos = ci.dataset.overlayPos || 'center';
                 const backdrop = ci.dataset.overlayBackdrop !== 'false';
+                const content = targetEl.querySelector('.ci-content');
                 
-                overlayTarget.innerHTML = targetEl.innerHTML;
+                overlayTarget.innerHTML = content ? content.innerHTML : targetEl.innerHTML;
                 overlayTarget.className = 'drop-zone absolute-mode';
                 overlayTarget.style.width = targetEl.style.width || '300px';
                 overlayTarget.style.height = targetEl.style.height || 'auto';
+                
+                // CRITICAL: Reattach listeners so items INSIDE the overlay work (e.g. close buttons)
+                reattachAllListeners(overlayTarget); 
                 
                 prototypeOverlay.style.alignItems = pos === 'top' ? 'flex-start' : (pos === 'bottom' ? 'flex-end' : 'center');
                 prototypeOverlay.style.background = backdrop ? 'rgba(0,0,0,0.5)' : 'transparent';
