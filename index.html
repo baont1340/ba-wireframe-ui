@@ -164,6 +164,20 @@
         .align-center{align-self:center !important;}
         .align-end{align-self:flex-end !important;}
         .w-full{width:100% !important;}
+        
+        /* Inner components should fill the CI box when resized */
+        .ci-content > button, .ci-content > input, .ci-content > select, .ci-content > textarea, 
+        .ci-content > .prim-shape, .ci-content > .prim-shape > * {
+            width: 100% !important;
+            height: 100% !important;
+            display: block;
+            margin: 0 !important;
+        }
+
+        /* Absolute positioning support */
+        .drop-zone.absolute-mode { position: relative; display: block; }
+        .drop-zone.absolute-mode .ci { position: absolute; margin: 0; }
+        .drop-zone.absolute-mode .ci .ci-bar { cursor: move; }
 
         /* QUICK BAR */
         #quick-bar{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:var(--text-primary);border-radius:var(--radius-xl);padding:5px 7px;display:flex;align-items:center;gap:3px;z-index:100;box-shadow:0 8px 32px rgba(0,0,0,0.24);}
@@ -376,7 +390,14 @@
         <div class="rp-section" id="rp-layout-section" style="display:none;">
             <div class="rp-label">Layout & Style</div>
             <div class="rp-row">
-                <span class="rp-input-label">Flow</span>
+                <span class="rp-input-label">Canvas</span>
+                <div class="flex gap-1 flex-1">
+                    <button class="tb-btn flex-1 py-1" id="rp-pos-flow" title="Standard Flow">Flow</button>
+                    <button class="tb-btn flex-1 py-1" id="rp-pos-free" title="Free Positioning">Free</button>
+                </div>
+            </div>
+            <div class="rp-row">
+                <span class="rp-input-label">Flow Dir</span>
                 <div class="flex gap-1 flex-1">
                     <button class="tb-btn flex-1 py-1" id="rp-layout-row" title="Horizontal">Row</button>
                     <button class="tb-btn flex-1 py-1" id="rp-layout-col" title="Vertical">Col</button>
@@ -391,12 +412,18 @@
                 </div>
             </div>
             <div class="rp-row">
-                <span class="rp-input-label">W</span>
-                <input class="rp-input" type="text" id="rp-width" placeholder="e.g. 100% or 200px" />
+                <span class="rp-input-label">X/Y</span>
+                <div class="flex gap-1 flex-1">
+                    <input class="rp-input" type="text" id="rp-left" placeholder="X" />
+                    <input class="rp-input" type="text" id="rp-top" placeholder="Y" />
+                </div>
             </div>
             <div class="rp-row">
-                <span class="rp-input-label">H</span>
-                <input class="rp-input" type="text" id="rp-height" placeholder="e.g. auto or 50px" />
+                <span class="rp-input-label">W/H</span>
+                <div class="flex gap-1 flex-1">
+                    <input class="rp-input" type="text" id="rp-width" placeholder="W" />
+                    <input class="rp-input" type="text" id="rp-height" placeholder="H" />
+                </div>
             </div>
         </div>
 

@@ -32,12 +32,15 @@ Tài liệu này ghi lại quá trình phát triển, các quyết định kiế
 ### v7.0: Figma Bridge & HTML Export
 - **Export as HTML:** Xuất mã nguồn sạch để dùng với Plugin Figma `html.to.design` nhằm tạo editable layers.
 
-### v8.0: Flex Layout & Manual Resize (Hiện tại)
+### v8.0: Flex Layout & Manual Resize
 - **Flexbox Containers:** Thay đổi flow sắp xếp linh kiện (Ngang/Dọc). Giải quyết bài toán "Label bên trái, Input bên phải".
 - **Visual Resizer:** Thêm handle ở góc linh kiện để BA có thể "co giãn" tự do bằng chuột.
-- **Alignment System:** Hỗ trợ căn Trái/Giữa/Phải linh hoạt.
-- **Synchronization Engine Upgrade:** Đồng bộ cả các thuộc tính layout (flex-direction, align-self) và kích thước (width/height) giữa các Frame.
-- **Project Structure v8:** Cập nhật file `.bnt` hỗ trợ lưu trữ toàn bộ trạng thái layout mới.
+
+### v9.0: Absolute Positioning & Free Drag (Hiện tại)
+- **Free Canvas Mode:** Cho phép kéo thả linh kiện tới bất kỳ vị trí X/Y nào trên màn hình. Giải quyết nhu cầu "Kéo thả tự do".
+- **Direct Component Scaling:** Sửa lỗi CSS giúp linh kiện bên trong (Button, Input) luôn lấp đầy khung khi BA kéo dãn kích thước.
+- **Coordinate Sync:** Đồng bộ vị trí `left/top` và trạng thái `Flow/Free` giữa tất cả các nền tảng thiết bị trong thời gian thực.
+- **Project Structure v9:** Hỗ trợ lưu trữ trạng thái Canvas Mode và tọa độ tuyệt đối.
 
 ---
 
