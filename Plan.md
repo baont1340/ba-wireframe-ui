@@ -43,11 +43,9 @@ Tài liệu này ghi lại quá trình phát triển, các quyết định kiế
 ### v10.0: Unified Design Engine
 - **Consolidated Component Logic:** Hợp nhất xử lý sự kiện (kéo thả, resize, edit) vào một engine duy nhất.
 
-### v11.0: Anti-Cache & PHP Migration (Hiện tại)
-- **Full PHP Transition:** Đổi đuôi toàn bộ file `.html` sang `.php` (bao gồm cả 80+ components).
-- **Anti-Cache Logic:** Sử dụng PHP Header để ép trình duyệt luôn load mới.
-- **Component Versioning:** Hàm `addComponent` tự động thêm tham số version vào URL.
-- **Resource Fingerprinting:** File `main.js` được nhúng kèm timestamp server-side.
+### v10.2: Stability Patch (Hiện tại)
+- Reverted PHP migration to restore local browsing compatibility.
+- Kept JS-based cache busting for components.
 
 ---
 

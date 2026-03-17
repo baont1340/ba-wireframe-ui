@@ -93,9 +93,12 @@ const viewport=document.getElementById('viewport'),compList=document.getElementB
 const searchInput=document.getElementById('component-search'),statusEl=document.getElementById('canvas-status');
 const toastEl=document.getElementById('toast'),qbZoomVal=document.getElementById('qb-zoom-val');
 const shortcutsModal=document.getElementById('shortcuts-modal'),rightPanel=document.getElementById('right-panel');
-const rpLayoutSec=document.getElementById('rp-layout-section');
-const rpWidth=document.getElementById('rp-width'),rpHeight=document.getElementById('rp-height');
-const rpLeft=document.getElementById('rp-left'),rpTop=document.getElementById('rp-top');
+const btnOpenRight=document.getElementById('btn-open-right');
+const rpLayoutSec=document.getElementById('rp-layout-section'),rpNoSelection=document.getElementById('rp-no-selection');
+const rpSelectedSec=document.getElementById('rp-selected-section'),rpSelectedName=document.getElementById('rp-selected-name');
+const rpElementTypeSec=document.getElementById('rp-element-type-section'),rpElementType=document.getElementById('rp-element-type'),rpTypeDesc=document.getElementById('rp-type-description');
+const rpCustomSec=document.getElementById('rp-custom-html-section'),rpTableSec=document.getElementById('rp-table-section');
+const rpWidth=document.getElementById('rp-width'),rpHeight=document.getElementById('rp-height'),rpLeft=document.getElementById('rp-left'),rpTop=document.getElementById('rp-top');
 const screenTabsEl=document.getElementById('screen-tabs');
 
 // BEFOREUNLOAD WARNING
@@ -657,6 +660,10 @@ document.addEventListener('keydown',e=>{
     if(e.ctrlKey&&e.shiftKey&&e.key==='S'){e.preventDefault();document.getElementById('btn-export-png').click();}
     if(e.ctrlKey&&e.key==='0'){e.preventDefault();document.getElementById('qb-zfit').click();}
 });
+
+// UTILS
+function updateStatus(){if(!statusEl)return;const count=document.querySelectorAll('.ci').length;statusEl.innerHTML=`<span class="status-dot"></span> ${count} item${count!==1?'s':''} on canvas`;}
+function showEmpty(dz){const es=dz.querySelector('.empty-state');if(es)es.style.display=dz.querySelector('.ci')?'none':'flex';}
 
 // INIT
 buildCanvases();renderScreenTabs();updateStatus();updateRightPanel();
