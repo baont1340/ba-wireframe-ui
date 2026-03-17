@@ -152,9 +152,9 @@ header("Pragma: no-cache");
         .rp-row{display:flex;align-items:center;gap:6px;margin-bottom:6px;}
         .rp-row:last-child{margin-bottom:0;}
         .rp-input-label{font-size:10px;font-weight:600;color:var(--text-secondary);min-width:28px;}
-        .rp-input{flex:1;padding:4px 7px;border:1px solid var(--border-light);border-radius:var(--radius-sm);font-size:11px;font-family:inherit;color:var(--text-primary);outline:none;background:var(--bg-canvas);transition:border-color var(--transition);}
+        .rp-input{flex:1;min-width:0;padding:4px 7px;border:1px solid var(--border-light);border-radius:var(--radius-sm);font-size:11px;font-family:inherit;color:var(--text-primary);outline:none;background:var(--bg-canvas);transition:border-color var(--transition);}
         .rp-input:focus{border-color:var(--accent);}
-        .rp-select{flex:1;padding:4px 7px;border:1px solid var(--border-light);border-radius:var(--radius-sm);font-size:11px;font-family:inherit;color:var(--text-primary);outline:none;background:var(--bg-canvas);cursor:pointer;}
+        .rp-select{flex:1;min-width:0;padding:4px 7px;border:1px solid var(--border-light);border-radius:var(--radius-sm);font-size:11px;font-family:inherit;color:var(--text-primary);outline:none;background:var(--bg-canvas);cursor:pointer;}
         .rp-select:focus{border-color:var(--accent);}
         .rp-info{font-size:11px;color:var(--text-muted);padding:16px 14px;text-align:center;line-height:1.5;}
         .rp-actions{display:flex;flex-direction:column;gap:4px;}
@@ -448,17 +448,17 @@ header("Pragma: no-cache");
                 </div>
             </div>
             <div class="rp-row">
-                <span class="rp-input-label">X/Y</span>
-                <div class="flex gap-1 flex-1">
-                    <input class="rp-input" type="text" id="rp-left" placeholder="X" />
-                    <input class="rp-input" type="text" id="rp-top" placeholder="Y" />
+                <span class="rp-input-label">Pos</span>
+                <div class="flex gap-1">
+                    <input class="rp-input" style="max-width:60px;" type="text" id="rp-left" placeholder="X" />
+                    <input class="rp-input" style="max-width:60px;" type="text" id="rp-top" placeholder="Y" />
                 </div>
             </div>
             <div class="rp-row">
-                <span class="rp-input-label">W/H</span>
-                <div class="flex gap-1 flex-1">
-                    <input class="rp-input" type="text" id="rp-width" placeholder="W" />
-                    <input class="rp-input" type="text" id="rp-height" placeholder="H" />
+                <span class="rp-input-label">Size</span>
+                <div class="flex gap-1">
+                    <input class="rp-input" style="max-width:60px;" type="text" id="rp-width" placeholder="W" />
+                    <input class="rp-input" style="max-width:60px;" type="text" id="rp-height" placeholder="H" />
                 </div>
             </div>
         </div>
@@ -479,7 +479,36 @@ header("Pragma: no-cache");
                     <option value="">None</option>
                 </select>
             </div>
-            <div style="font-size:9px;color:var(--text-muted);margin-top:4px;">When clicked in Play mode, go to this screen.</div>
+            
+            <div id="rp-overlay-settings" style="display:none; margin-top:8px; border-top:1px dashed var(--border-light); padding-top:8px;">
+                <div class="rp-row">
+                    <span class="rp-input-label">Position</span>
+                    <select class="rp-select" id="rp-overlay-pos">
+                        <option value="center">Center</option>
+                        <option value="top">Top Center</option>
+                        <option value="bottom">Bottom Center</option>
+                    </select>
+                </div>
+                <div class="rp-row">
+                    <span class="rp-input-label">Backdrop</span>
+                    <label class="flex items-center gap-1 cursor-pointer" style="font-size:10px;">
+                        <input type="checkbox" id="rp-overlay-backdrop" checked /> Dim background
+                    </label>
+                </div>
+            </div>
+            <div style="font-size:9px;color:var(--text-muted);margin-top:6px;">Define how the linked screen or hidden element behaves in Play mode.</div>
+        </div>
+
+        <!-- Hidden / Overlay State -->
+        <div class="rp-section" id="rp-state-section" style="display:none;">
+            <div class="rp-label">States & Behavior</div>
+            <div class="rp-row">
+                <label class="flex items-center gap-2 cursor-pointer" style="font-size:11px;font-weight:600;">
+                    <input type="checkbox" id="rp-is-hidden" /> Treat as Overlay (Hide by default)
+                </label>
+            </div>
+            <div style="font-size:9px;color:var(--text-muted);margin-top:4px;">When ON: This element is invisible in Play mode until triggered by another button.</div>
+        </div>
         </div>
 
         <!-- Export -->

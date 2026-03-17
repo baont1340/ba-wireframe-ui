@@ -105,6 +105,8 @@ const rpIntSec=document.getElementById('rp-interaction-section'),rpLinkTarget=do
 const btnPlayMode=document.getElementById('btn-play-mode'),btnExitPlay=document.getElementById('btn-exit-play');
 const rpLinkType=document.getElementById('rp-link-type');
 const prototypeOverlay=document.getElementById('prototype-overlay-container'),overlayTarget=document.getElementById('overlay-dz-target'),btnCloseOverlay=document.getElementById('btn-close-overlay');
+const rpOverlaySettings=document.getElementById('rp-overlay-settings'),rpOverlayPos=document.getElementById('rp-overlay-pos'),rpOverlayBackdrop=document.getElementById('rp-overlay-backdrop');
+const rpStateSec=document.getElementById('rp-state-section'),rpIsHidden=document.getElementById('rp-is-hidden');
 const guideModal=document.getElementById('guide-modal');
 let isPlaying=false;
 
@@ -475,15 +477,76 @@ function updateRightPanel(){
         rpIntSec.style.display='block';
         rpLinkType.value=selectedEl.dataset.linkType||'link';
         rpLinkTarget.innerHTML='<option value="">None</option>';
+        
+        // 1. Add Screens to target
+        const grpScreens = document.createElement('optgroup'); grpScreens.label = "Screens";
         screens.forEach(s=>{
             const opt=document.createElement('option');opt.value=s.id;opt.textContent=s.name;
-            if(selectedEl.dataset.linkTarget==String(s.id))opt.selected=true;
-            rpLinkTarget.appendChild(opt);
+            if(!selectedEl.dataset.linkIsLocal && selectedEl.dataset.linkTarget==String(s.id)) opt.selected=true;
+            grpScreens.appendChild(opt);
         });
+        rpLinkTarget.appendChild(grpScreens);
+
+        // 2. Add local components (marked as hidden/overlay) to target
+        const grpLocal = document.createElement('optgroup'); grpLocal.label = "Local Overlays (HIDDEN)";
+        const currentDZ = selectedEl.closest('.drop-zone');
+        if(currentDZ){
+            currentDZ.querySelectorAll('.ci[data-is-hidden="true"]').forEach(innerCi => {
+                if(innerCi === selectedEl) return;
+                const uid = innerCi.dataset.uid;
+                const label = innerCi.querySelector('.ci-bar-label')?.textContent || uid;
+                const opt = document.createElement('option'); opt.value = "local:"+uid; opt.textContent = label;
+                if(selectedEl.dataset.linkIsLocal && selectedEl.dataset.linkTarget === uid) opt.selected = true;
+                grpLocal.appendChild(opt);
+            });
+        }
+        rpLinkTarget.appendChild(grpLocal);
+        
+        // Show/Hide overlay settings
+        const isOverlay = rpLinkType.value === 'overlay';
+        rpOverlaySettings.style.display = isOverlay ? 'block' : 'none';
+        if(isOverlay){
+            rpOverlayPos.value = selectedEl.dataset.overlayPos || 'center';
+            rpOverlayBackdrop.checked = selectedEl.dataset.overlayBackdrop !== 'false';
+        }
+
+        // State Section
+        rpStateSec.style.display = 'block';
+        rpIsHidden.checked = selectedEl.dataset.isHidden === 'true';
     }
 }
-rpLinkType.addEventListener('change',()=>{if(selectedEl){selectedEl.dataset.linkType=rpLinkType.value;projectDirty=true;syncFrames(selectedEl.closest('.drop-zone'));}});
-rpLinkTarget.addEventListener('change',()=>{if(selectedEl){selectedEl.dataset.linkTarget=rpLinkTarget.value;projectDirty=true;syncFrames(selectedEl.closest('.drop-zone'));}});
+rpIsHidden.addEventListener('change', () => {
+    if(selectedEl){
+        selectedEl.dataset.isHidden = rpIsHidden.checked;
+        selectedEl.style.opacity = rpIsHidden.checked ? '0.5' : '1';
+        selectedEl.style.borderStyle = rpIsHidden.checked ? 'dashed' : 'solid';
+        projectDirty=true; syncFrames(selectedEl.closest('.drop-zone'));
+    }
+});
+rpLinkType.addEventListener('change',()=>{
+    if(selectedEl){
+        selectedEl.dataset.linkType=rpLinkType.value;
+        projectDirty=true;
+        updateRightPanel();
+        syncFrames(selectedEl.closest('.drop-zone'));
+    }
+});
+rpLinkTarget.addEventListener('change',()=>{
+    if(selectedEl){
+        const val = rpLinkTarget.value;
+        if(val.startsWith('local:')){
+            selectedEl.dataset.linkIsLocal = "true";
+            selectedEl.dataset.linkTarget = val.split(':')[1];
+        } else {
+            selectedEl.dataset.linkIsLocal = "false";
+            selectedEl.dataset.linkTarget = val;
+        }
+        projectDirty=true;
+        syncFrames(selectedEl.closest('.drop-zone'));
+    }
+});
+rpOverlayPos.addEventListener('change',()=>{if(selectedEl){selectedEl.dataset.overlayPos=rpOverlayPos.value;projectDirty=true;syncFrames(selectedEl.closest('.drop-zone'));}});
+rpOverlayBackdrop.addEventListener('change',()=>{if(selectedEl){selectedEl.dataset.overlayBackdrop=rpOverlayBackdrop.checked;projectDirty=true;syncFrames(selectedEl.closest('.drop-zone'));}});
 
 // ELEMENT TYPE CHANGE — VISUAL TRANSFORM
 rpElementType.addEventListener('change',()=>{
@@ -769,21 +832,47 @@ document.addEventListener('click',e=>{
     if(!isPlaying)return;
     const ci=e.target.closest('.ci');
     if(ci && ci.dataset.linkTarget){
-        const sid=parseInt(ci.dataset.linkTarget);
+        const target=ci.dataset.linkTarget;
         const type=ci.dataset.linkType||'link';
+        const isLocal=ci.dataset.linkIsLocal === 'true';
+
+        if(isLocal){
+            // LOCAL COMPONENT AS OVERLAY
+            const targetEl = document.querySelector(`.ci[data-uid="${target}"]`);
+            if(targetEl){
+                const pos = ci.dataset.overlayPos || 'center';
+                const backdrop = ci.dataset.overlayBackdrop !== 'false';
+                
+                overlayTarget.innerHTML = targetEl.innerHTML;
+                overlayTarget.className = 'drop-zone absolute-mode';
+                overlayTarget.style.width = targetEl.style.width || '300px';
+                overlayTarget.style.height = targetEl.style.height || 'auto';
+                
+                prototypeOverlay.style.alignItems = pos === 'top' ? 'flex-start' : (pos === 'bottom' ? 'flex-end' : 'center');
+                prototypeOverlay.style.background = backdrop ? 'rgba(0,0,0,0.5)' : 'transparent';
+                prototypeOverlay.style.backdropFilter = backdrop ? 'blur(2px)' : 'none';
+                prototypeOverlay.classList.add('active');
+            }
+            return;
+        }
+
+        const sid=parseInt(target);
         if(sid && screens.find(s=>s.id===sid)){
             if(type==='link'){
                 activeScreenId=sid;loadScreen(sid);
-                notify('Navigating to: '+(screens.find(s=>s.id===sid)?.name));
             } else {
-                // OVERLAY MODE
+                // SCREEN AS OVERLAY
                 const data=screenData[sid];
                 if(data){
+                    const pos = ci.dataset.overlayPos || 'center';
+                    const backdrop = ci.dataset.overlayBackdrop !== 'false';
                     overlayTarget.innerHTML=data.html;
                     overlayTarget.className='drop-zone absolute-mode';
                     reattachAllListeners(overlayTarget);
+                    prototypeOverlay.style.alignItems = pos === 'top' ? 'flex-start' : (pos === 'bottom' ? 'flex-end' : 'center');
+                    prototypeOverlay.style.background = backdrop ? 'rgba(0,0,0,0.5)' : 'transparent';
+                    prototypeOverlay.style.backdropFilter = backdrop ? 'blur(2px)' : 'none';
                     prototypeOverlay.classList.add('active');
-                    notify('Showing Overlay: '+(screens.find(s=>s.id===sid)?.name));
                 }
             }
         }
