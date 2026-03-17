@@ -81,20 +81,30 @@ let currentZoom = 1;
 let itemUID = 0;
 let dragSrcEl = null;
 let selectedEl = null;
+let selectedComp = null;
 let dropIndicator = null;
 
 // ============================================================
 // DOM REFS
 // ============================================================
-const dropZone    = document.getElementById('drop-zone');
-const canvas      = document.getElementById('canvas');
-const viewport    = document.getElementById('viewport');
-const compList    = document.getElementById('component-list');
-const searchInput = document.getElementById('component-search');
-const statusEl    = document.getElementById('canvas-status');
-const zoomValEl   = document.getElementById('zoom-val');
-const toastEl     = document.getElementById('toast');
-const emptyState  = document.getElementById('empty-state');
+const dropZone      = document.getElementById('drop-zone');
+const canvas        = document.getElementById('canvas');
+const viewport      = document.getElementById('viewport');
+const compList      = document.getElementById('component-list');
+const searchInput   = document.getElementById('component-search');
+const statusEl      = document.getElementById('canvas-status');
+const toastEl       = document.getElementById('toast');
+const emptyState    = document.getElementById('empty-state');
+const canvasLabel   = document.getElementById('canvas-label-text');
+const canvasDims    = document.getElementById('canvas-dimensions');
+const qbZoomVal     = document.getElementById('qb-zoom-val');
+const rpWidth       = document.getElementById('rp-width');
+const rpHeight      = document.getElementById('rp-height');
+const rpSelectedSec = document.getElementById('rp-selected-section');
+const rpSelectedName= document.getElementById('rp-selected-name');
+const rpNoSelection = document.getElementById('rp-no-selection');
+const shortcutsModal= document.getElementById('shortcuts-modal');
+const rightPanel    = document.getElementById('right-panel');
 
 // ============================================================
 // SIDEBAR
@@ -103,6 +113,8 @@ function renderSidebar(filter = '') {
     compList.innerHTML = '';
     const terms = filter.toLowerCase().trim().split(/\s+/).filter(Boolean);
     const cats = [...new Set(COMPONENTS.map(c => c.cat))];
+    let totalVisible = 0;
+
     cats.forEach(cat => {
         const items = COMPONENTS.filter(c => {
             if (c.cat !== cat) return false;
@@ -110,27 +122,42 @@ function renderSidebar(filter = '') {
             return terms.every(t => c.name.toLowerCase().includes(t) || cat.toLowerCase().includes(t));
         });
         if (!items.length) return;
+
+        const section = document.createElement('div');
+        section.className = 'cat-section';
+
         const h = document.createElement('div');
         h.className = 'cat-header';
         h.textContent = cat;
-        compList.appendChild(h);
+        section.appendChild(h);
+
         items.forEach(comp => {
+            totalVisible++;
             const el = document.createElement('div');
             el.className = 'comp-item';
+            el.dataset.tooltip = comp.name;
             el.innerHTML = `
                 <div class="comp-icon">
                     <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${comp.icon}"/></svg>
                 </div>
-                <span>${comp.name}</span>
+                <span class="comp-name">${comp.name}</span>
             `;
             el.addEventListener('click', () => addComponent(comp, dropZone));
-            compList.appendChild(el);
+            section.appendChild(el);
         });
+
+        compList.appendChild(section);
     });
-    if (!compList.children.length) {
-        compList.innerHTML = '<div style="padding:20px;text-align:center;font-size:11px;color:#94a3b8;">No results</div>';
+
+    if (!totalVisible) {
+        compList.innerHTML = '<div style="padding:32px 16px;text-align:center;font-size:12px;color:var(--text-muted);">No components found</div>';
     }
+
+    // Update count
+    const countEl = document.getElementById('panel-count');
+    if (countEl) countEl.textContent = `${totalVisible} component${totalVisible !== 1 ? 's' : ''}`;
 }
+
 searchInput.addEventListener('input', e => renderSidebar(e.target.value));
 renderSidebar();
 
@@ -144,7 +171,7 @@ async function addComponent(comp, targetContainer, beforeEl = null) {
         if (!res.ok) throw new Error('not found');
         html = await res.text();
     } catch {
-        html = `<div style="padding:16px;border:2px dashed #94a3b8;color:#94a3b8;font-size:11px;font-weight:600;">[${comp.name} — file not found]</div>`;
+        html = `<div style="padding:16px;border:2px dashed #94a3b8;color:#94a3b8;font-size:11px;font-weight:600;border-radius:8px;">[${comp.name} — file not found]</div>`;
     }
 
     // Hide empty state
@@ -175,28 +202,29 @@ async function addComponent(comp, targetContainer, beforeEl = null) {
         targetContainer.appendChild(ci);
     }
 
-    // ---- SELECT on click ----
+    // SELECT on click
     ci.addEventListener('mousedown', (e) => {
         if (e.target.closest('.ci-btns')) return;
-        selectItem(ci);
+        selectItem(ci, comp);
     });
 
-    // ---- DELETE ----
+    // DELETE
     ci.querySelector('.del').addEventListener('click', (e) => {
         e.stopPropagation();
         ci.remove();
-        if (selectedEl === ci) selectedEl = null;
+        if (selectedEl === ci) { selectedEl = null; selectedComp = null; }
         updateStatus();
         showEmptyIfNeeded();
+        updateRightPanel();
     });
 
-    // ---- DUPLICATE ----
+    // DUPLICATE
     ci.querySelector('.dup').addEventListener('click', (e) => {
         e.stopPropagation();
         addComponent(comp, ci.parentElement, ci.nextElementSibling);
     });
 
-    // ---- DRAG (from bar) ----
+    // DRAG (from bar)
     const bar = ci.querySelector('.ci-bar');
     bar.addEventListener('dragstart', (e) => {
         if (e.target.closest('.ci-btns')) { e.preventDefault(); return; }
@@ -204,7 +232,6 @@ async function addComponent(comp, targetContainer, beforeEl = null) {
         ci.classList.add('dragging');
         e.dataTransfer.effectAllowed = 'move';
         e.dataTransfer.setData('text/plain', ci.dataset.uid);
-        // Delay so browser captures the element first
         requestAnimationFrame(() => ci.classList.add('dragging'));
     });
     bar.addEventListener('dragend', () => {
@@ -214,12 +241,11 @@ async function addComponent(comp, targetContainer, beforeEl = null) {
         clearAllHighlights();
     });
 
-    // ---- NEST TARGET: content area accepts drops ----
+    // NEST TARGET
     const content = ci.querySelector('.ci-content');
-
     content.addEventListener('dragover', (e) => {
         if (!dragSrcEl || dragSrcEl === ci) return;
-        if (dragSrcEl.contains(ci)) return; // no nesting into own children
+        if (dragSrcEl.contains(ci)) return;
         e.preventDefault();
         e.stopPropagation();
         e.dataTransfer.dropEffect = 'move';
@@ -227,12 +253,10 @@ async function addComponent(comp, targetContainer, beforeEl = null) {
         clearAllHighlights();
         content.classList.add('nest-target');
     });
-
     content.addEventListener('dragleave', (e) => {
         if (e.relatedTarget && content.contains(e.relatedTarget)) return;
         content.classList.remove('nest-target');
     });
-
     content.addEventListener('drop', (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -245,23 +269,19 @@ async function addComponent(comp, targetContainer, beforeEl = null) {
         notify('Component nested!');
     });
 
-    // ---- REORDER TARGET: the whole .ci shows drop indicator ----
+    // REORDER TARGET
     ci.addEventListener('dragover', (e) => {
         if (!dragSrcEl || dragSrcEl === ci) return;
         if (dragSrcEl.contains(ci)) return;
         e.preventDefault();
         e.dataTransfer.dropEffect = 'move';
-
-        // Show line indicator above or below
         const rect = ci.getBoundingClientRect();
         const midY = rect.top + rect.height / 2;
         const parent = ci.parentElement;
         removeDropIndicator();
         clearAllHighlights();
-
         dropIndicator = document.createElement('div');
         dropIndicator.className = 'drop-line';
-
         if (e.clientY < midY) {
             parent.insertBefore(dropIndicator, ci);
         } else {
@@ -269,52 +289,125 @@ async function addComponent(comp, targetContainer, beforeEl = null) {
         }
     });
 
-    // ---- DOUBLE-CLICK to edit text ----
+    // DOUBLE-CLICK to edit text
     content.addEventListener('dblclick', (e) => {
         const el = e.target;
         const tags = ['P','SPAN','H1','H2','H3','H4','H5','H6','A','BUTTON','LI','TD','TH','LABEL'];
         if (tags.includes(el.tagName) && !el.querySelector('svg')) {
             e.stopPropagation();
             el.contentEditable = 'true';
-            el.style.outline = '1px dashed #3b82f6';
-            el.style.outlineOffset = '1px';
+            el.style.outline = '2px solid var(--accent)';
+            el.style.outlineOffset = '2px';
+            el.style.borderRadius = '2px';
             el.focus();
             el.addEventListener('blur', () => {
                 el.contentEditable = 'false';
                 el.style.outline = '';
                 el.style.outlineOffset = '';
+                el.style.borderRadius = '';
             }, { once: true });
         }
     });
 
     updateStatus();
-    selectItem(ci);
+    selectItem(ci, comp);
     return ci;
 }
 
 // ============================================================
 // SELECTION
 // ============================================================
-function selectItem(el) {
+function selectItem(el, comp = null) {
     if (selectedEl) selectedEl.classList.remove('selected');
     selectedEl = el;
+    selectedComp = comp;
     if (el) el.classList.add('selected');
+    updateRightPanel();
 }
-// Deselect on click on empty canvas area
+
 dropZone.addEventListener('mousedown', (e) => {
     if (e.target === dropZone || e.target === emptyState) selectItem(null);
 });
 
 // ============================================================
-// DROP ZONE — accept reorder drops
+// RIGHT PANEL
+// ============================================================
+function updateRightPanel() {
+    if (selectedEl && selectedComp) {
+        rpSelectedSec.style.display = 'block';
+        rpSelectedName.textContent = selectedComp.name;
+        rpNoSelection.style.display = 'none';
+    } else {
+        rpSelectedSec.style.display = 'none';
+        rpNoSelection.style.display = 'block';
+    }
+}
+
+// Right panel actions
+document.getElementById('rp-duplicate')?.addEventListener('click', () => {
+    if (selectedEl && selectedComp) {
+        addComponent(selectedComp, selectedEl.parentElement, selectedEl.nextElementSibling);
+    }
+});
+document.getElementById('rp-delete')?.addEventListener('click', () => {
+    if (selectedEl) {
+        selectedEl.remove();
+        selectedEl = null;
+        selectedComp = null;
+        updateStatus();
+        showEmptyIfNeeded();
+        updateRightPanel();
+    }
+});
+document.getElementById('rp-move-up')?.addEventListener('click', () => {
+    if (selectedEl && selectedEl.previousElementSibling) {
+        selectedEl.parentElement.insertBefore(selectedEl, selectedEl.previousElementSibling);
+        notify('Moved up');
+    }
+});
+document.getElementById('rp-move-down')?.addEventListener('click', () => {
+    if (selectedEl && selectedEl.nextElementSibling) {
+        selectedEl.parentElement.insertBefore(selectedEl.nextElementSibling, selectedEl);
+        notify('Moved down');
+    }
+});
+
+// Right panel canvas dimensions
+rpWidth.addEventListener('change', () => {
+    const w = parseInt(rpWidth.value);
+    if (w >= 200 && w <= 3000) {
+        canvas.style.width = w + 'px';
+        document.querySelectorAll('.device-btn').forEach(b => b.classList.remove('active'));
+        updateCanvasDimensions();
+        notify(`Width: ${w}px`);
+    }
+});
+rpHeight.addEventListener('change', () => {
+    const h = parseInt(rpHeight.value);
+    if (h >= 200 && h <= 10000) {
+        canvas.style.minHeight = h + 'px';
+        document.querySelectorAll('.height-btn').forEach(b => b.classList.remove('active'));
+        updateCanvasDimensions();
+        notify(`Height: ${h}px`);
+    }
+});
+
+// Toggle right panel
+document.getElementById('btn-toggle-right')?.addEventListener('click', () => {
+    rightPanel.classList.toggle('collapsed');
+});
+
+document.getElementById('rp-export-png')?.addEventListener('click', () => {
+    document.getElementById('btn-screenshot').click();
+});
+
+// ============================================================
+// DROP ZONE
 // ============================================================
 dropZone.addEventListener('dragover', (e) => {
     e.preventDefault();
     e.dataTransfer.dropEffect = 'move';
     if (!dragSrcEl) return;
-
-    // If not over any .ci, show indicator at end
-    const children = [...dropZone.querySelectorAll(':scope > .ci')];
     if (!e.target.closest('.ci')) {
         removeDropIndicator();
         clearAllHighlights();
@@ -327,16 +420,12 @@ dropZone.addEventListener('dragover', (e) => {
 dropZone.addEventListener('drop', (e) => {
     e.preventDefault();
     clearAllHighlights();
-
     if (!dragSrcEl) return;
-
-    // Insert at drop indicator position, or at end
     if (dropIndicator && dropIndicator.parentElement) {
         dropIndicator.parentElement.insertBefore(dragSrcEl, dropIndicator);
     } else {
         dropZone.appendChild(dragSrcEl);
     }
-
     removeDropIndicator();
     dragSrcEl.classList.remove('dragging');
     dragSrcEl = null;
@@ -365,7 +454,17 @@ function showEmptyIfNeeded() {
 
 function updateStatus() {
     const count = document.querySelectorAll('.ci').length;
-    statusEl.textContent = count === 0 ? 'Empty' : `${count} component${count > 1 ? 's' : ''}`;
+    statusEl.innerHTML = count === 0
+        ? '<span class="status-dot"></span> Ready'
+        : `<span class="status-dot"></span> ${count} component${count > 1 ? 's' : ''}`;
+}
+
+function updateCanvasDimensions() {
+    const w = parseInt(canvas.style.width) || 1440;
+    const h = canvas.offsetHeight || 1600;
+    canvasDims.textContent = `${w} × ${h}`;
+    rpWidth.value = w;
+    rpHeight.value = h;
 }
 
 // ============================================================
@@ -377,14 +476,14 @@ document.querySelectorAll('.device-btn').forEach(btn => {
         btn.classList.add('active');
         const w = parseInt(btn.dataset.w);
         canvas.style.width = w + 'px';
-        canvas.dataset.label = btn.dataset.label;
-        // Auto-fit if canvas wider than viewport
+        canvasLabel.textContent = btn.dataset.label;
         const vpW = viewport.clientWidth - 60;
         if (w > vpW) {
             setZoom(Math.min(1, vpW / w));
         } else {
             setZoom(1);
         }
+        updateCanvasDimensions();
         notify(btn.dataset.label);
     });
 });
@@ -398,7 +497,6 @@ document.querySelectorAll('.height-btn').forEach(btn => {
         btn.classList.add('active');
         const h = parseInt(btn.dataset.h);
         if (h === 0) {
-            // Auto: min-height only, grows with content
             canvas.style.minHeight = '800px';
             canvas.style.height = 'auto';
             notify('Height: Auto');
@@ -407,25 +505,25 @@ document.querySelectorAll('.height-btn').forEach(btn => {
             canvas.style.height = 'auto';
             notify('Height: ' + h + 'px');
         }
+        updateCanvasDimensions();
     });
 });
 
 // ============================================================
-// MANUAL CANVAS RESIZE (Drag height)
+// MANUAL CANVAS RESIZE
 // ============================================================
 const resizer = document.getElementById('canvas-resizer');
 resizer.addEventListener('mousedown', (e) => {
     e.preventDefault();
     const startY = e.clientY;
     const startH = canvas.offsetHeight;
-    
-    // Deactivate height buttons
     document.querySelectorAll('.height-btn').forEach(b => b.classList.remove('active'));
 
     const onMouseMove = (ev) => {
         const delta = (ev.clientY - startY) / currentZoom;
         const newH = Math.max(400, startH + delta);
         canvas.style.minHeight = newH + 'px';
+        updateCanvasDimensions();
     };
 
     const onMouseUp = () => {
@@ -439,17 +537,19 @@ resizer.addEventListener('mousedown', (e) => {
 });
 
 // ============================================================
-// ZOOM (CSS zoom property — layout-safe, screenshot-safe)
+// ZOOM
 // ============================================================
 function setZoom(z) {
     currentZoom = Math.max(0.25, Math.min(2, Math.round(z * 100) / 100));
     canvas.style.zoom = currentZoom;
-    zoomValEl.textContent = Math.round(currentZoom * 100) + '%';
+    const pct = Math.round(currentZoom * 100) + '%';
+    qbZoomVal.textContent = pct;
 }
 
-document.getElementById('btn-zin').addEventListener('click', () => setZoom(currentZoom + 0.1));
-document.getElementById('btn-zout').addEventListener('click', () => setZoom(currentZoom - 0.1));
-document.getElementById('btn-zfit').addEventListener('click', () => {
+// Quick bar zoom buttons
+document.getElementById('qb-zin').addEventListener('click', () => setZoom(currentZoom + 0.1));
+document.getElementById('qb-zout').addEventListener('click', () => setZoom(currentZoom - 0.1));
+document.getElementById('qb-zfit').addEventListener('click', () => {
     const vpW = viewport.clientWidth - 60;
     const cW = parseInt(canvas.style.width) || 1440;
     setZoom(Math.min(1, vpW / cW));
@@ -470,25 +570,23 @@ document.getElementById('btn-clear').addEventListener('click', () => {
     dropZone.querySelectorAll('.ci').forEach(el => el.remove());
     itemUID = 0;
     selectedEl = null;
+    selectedComp = null;
     updateStatus();
     showEmptyIfNeeded();
+    updateRightPanel();
 });
 
 // ============================================================
-// SCREENSHOT — clone + inline all computed styles + html2canvas
+// SCREENSHOT
 // ============================================================
 document.getElementById('btn-screenshot').addEventListener('click', async () => {
     notify('Preparing screenshot...');
-
-    // Add screenshot mode to hide controls
     canvas.classList.add('screenshot-mode');
     const savedZoom = canvas.style.zoom || '1';
     canvas.style.zoom = '1';
 
-    // Wait for repaint
     await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
 
-    // Clone the canvas element
     const clone = canvas.cloneNode(true);
     clone.style.position = 'absolute';
     clone.style.left = '-99999px';
@@ -499,7 +597,6 @@ document.getElementById('btn-screenshot').addEventListener('click', async () => 
     clone.style.border = 'none';
     document.body.appendChild(clone);
 
-    // Inline all computed styles from original into clone
     function inlineStyles(src, dest) {
         const srcStyle = window.getComputedStyle(src);
         let cssText = '';
@@ -508,7 +605,6 @@ document.getElementById('btn-screenshot').addEventListener('click', async () => 
             cssText += `${prop}:${srcStyle.getPropertyValue(prop)};`;
         }
         dest.style.cssText = cssText;
-        // Recurse children
         const srcChildren = src.children;
         const destChildren = dest.children;
         for (let i = 0; i < srcChildren.length && i < destChildren.length; i++) {
@@ -517,7 +613,6 @@ document.getElementById('btn-screenshot').addEventListener('click', async () => 
     }
     inlineStyles(canvas, clone);
 
-    // Ensure clone has clean screenshot appearance
     clone.style.position = 'absolute';
     clone.style.left = '-99999px';
     clone.style.boxShadow = 'none';
@@ -536,10 +631,10 @@ document.getElementById('btn-screenshot').addEventListener('click', async () => 
         link.download = `wireframe-${Date.now()}.png`;
         link.href = cvs.toDataURL('image/png');
         link.click();
-        notify('Screenshot saved!');
+        notify('✓ Screenshot saved!');
     } catch (err) {
         console.error('Screenshot failed:', err);
-        notify('Screenshot failed');
+        notify('✕ Screenshot failed');
     } finally {
         clone.remove();
         canvas.classList.remove('screenshot-mode');
@@ -553,12 +648,93 @@ document.getElementById('btn-screenshot').addEventListener('click', async () => 
 let toastTimer;
 function notify(msg) {
     toastEl.textContent = msg;
-    toastEl.style.opacity = '1';
+    toastEl.classList.add('show');
     clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => toastEl.style.opacity = '0', 2500);
+    toastTimer = setTimeout(() => toastEl.classList.remove('show'), 2500);
 }
+
+// ============================================================
+// KEYBOARD SHORTCUTS
+// ============================================================
+function toggleShortcuts() {
+    shortcutsModal.classList.toggle('open');
+}
+
+document.getElementById('btn-shortcuts')?.addEventListener('click', toggleShortcuts);
+document.getElementById('qb-shortcuts')?.addEventListener('click', toggleShortcuts);
+document.getElementById('btn-close-shortcuts')?.addEventListener('click', toggleShortcuts);
+shortcutsModal.addEventListener('click', (e) => {
+    if (e.target === shortcutsModal) toggleShortcuts();
+});
+
+// Global keyboard shortcuts
+document.addEventListener('keydown', (e) => {
+    // ? = show shortcuts
+    if (e.key === '?' && !e.ctrlKey && !e.altKey) {
+        const active = document.activeElement;
+        if (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.isContentEditable) return;
+        toggleShortcuts();
+    }
+
+    // Delete = remove selected
+    if ((e.key === 'Delete' || e.key === 'Backspace') && selectedEl) {
+        const active = document.activeElement;
+        if (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.isContentEditable) return;
+        e.preventDefault();
+        selectedEl.remove();
+        selectedEl = null;
+        selectedComp = null;
+        updateStatus();
+        showEmptyIfNeeded();
+        updateRightPanel();
+    }
+
+    // Escape = deselect
+    if (e.key === 'Escape') {
+        if (shortcutsModal.classList.contains('open')) {
+            toggleShortcuts();
+            return;
+        }
+        selectItem(null);
+    }
+
+    // Ctrl+D = duplicate
+    if (e.ctrlKey && e.key === 'd' && selectedEl && selectedComp) {
+        e.preventDefault();
+        addComponent(selectedComp, selectedEl.parentElement, selectedEl.nextElementSibling);
+    }
+
+    // Ctrl+K = focus search
+    if (e.ctrlKey && e.key === 'k') {
+        e.preventDefault();
+        searchInput.focus();
+        searchInput.select();
+    }
+
+    // Ctrl+. = toggle right panel
+    if (e.ctrlKey && e.key === '.') {
+        e.preventDefault();
+        rightPanel.classList.toggle('collapsed');
+    }
+
+    // Ctrl+Shift+S = screenshot
+    if (e.ctrlKey && e.shiftKey && e.key === 'S') {
+        e.preventDefault();
+        document.getElementById('btn-screenshot').click();
+    }
+
+    // Ctrl+0 = fit zoom
+    if (e.ctrlKey && e.key === '0') {
+        e.preventDefault();
+        const vpW = viewport.clientWidth - 60;
+        const cW = parseInt(canvas.style.width) || 1440;
+        setZoom(Math.min(1, vpW / cW));
+    }
+});
 
 // ============================================================
 // INIT
 // ============================================================
 updateStatus();
+updateRightPanel();
+updateCanvasDimensions();
