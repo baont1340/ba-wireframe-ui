@@ -2,6 +2,23 @@
 // COMPONENT DATA
 // ============================================================
 const COMPONENTS = [
+    // ---- PRIMITIVES (basic shapes) ----
+    { cat:'Primitives', id:'prim-rectangle', name:'Rectangle', file:'components/prim-rectangle.html', icon:'M4 4h16v16H4z', isPrim:true },
+    { cat:'Primitives', id:'prim-circle', name:'Circle', file:'components/prim-circle.html', icon:'M12 2a10 10 0 100 20 10 10 0 000-20z', isPrim:true },
+    { cat:'Primitives', id:'prim-text', name:'Text Block', file:'components/prim-text.html', icon:'M4 7V4h16v3M9 20h6M12 4v16', isPrim:true },
+    { cat:'Primitives', id:'prim-heading', name:'Heading', file:'components/prim-heading.html', icon:'M4 12h8m-8-4v8m8-8v8M16 6v12', isPrim:true },
+    { cat:'Primitives', id:'prim-button', name:'Button', file:'components/prim-button.html', icon:'M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5', isPrim:true },
+    { cat:'Primitives', id:'prim-input', name:'Input Field', file:'components/prim-input.html', icon:'M4 7h16v10H4zM7 12h3', isPrim:true },
+    { cat:'Primitives', id:'prim-image', name:'Image', file:'components/prim-image.html', icon:'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z', isPrim:true },
+    { cat:'Primitives', id:'prim-video', name:'Video', file:'components/prim-video.html', icon:'M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z', isPrim:true },
+    { cat:'Primitives', id:'prim-map', name:'Map', file:'components/prim-map.html', icon:'M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z', isPrim:true },
+    { cat:'Primitives', id:'prim-icon', name:'Icon', file:'components/prim-icon.html', icon:'M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z', isPrim:true },
+    { cat:'Primitives', id:'prim-line', name:'Line / Divider', file:'components/prim-line.html', icon:'M5 12h14', isPrim:true },
+    { cat:'Primitives', id:'prim-container', name:'Container', file:'components/prim-container.html', icon:'M4 4h16v16H4zM4 8h16', isPrim:true },
+    { cat:'Primitives', id:'prim-iframe', name:'Iframe / Embed', file:'components/prim-iframe.html', icon:'M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4', isPrim:true },
+    { cat:'Primitives', id:'prim-table', name:'Table (Custom)', file:'components/prim-table.html', icon:'M3 10h18M3 14h18M3 6h18v12H3zm5-6v18m5-18v18', isPrim:true, isTable:true },
+
+    // ---- GENERAL ----
     { cat:'General', id:'accordion', name:'Accordion', file:'components/accordion.html', icon:'M19 9l-7 7-7-7' },
     { cat:'General', id:'alert', name:'Alert', file:'components/alert.html', icon:'M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z' },
     { cat:'General', id:'avatar', name:'Avatar Group', file:'components/avatar.html', icon:'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z' },
@@ -75,6 +92,44 @@ const COMPONENTS = [
 ];
 
 // ============================================================
+// PLATFORM CONFIGS
+// ============================================================
+const PLATFORMS = {
+    web: [
+        { key:'web-desktop', label:'Web Desktop', width:1440, icon:'desktop', svgIcon:'<rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>' },
+        { key:'web-tablet', label:'Web Tablet', width:768, icon:'tablet', svgIcon:'<rect x="4" y="2" width="16" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18"/>' },
+        { key:'web-mobile', label:'Web Mobile', width:375, icon:'mobile', svgIcon:'<rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18"/>' },
+    ],
+    app: [
+        { key:'app-mobile', label:'App Mobile', width:375, icon:'mobile', svgIcon:'<rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18"/>' },
+        { key:'app-tablet', label:'App Tablet', width:768, icon:'tablet', svgIcon:'<rect x="4" y="2" width="16" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18"/>' },
+    ],
+    desktop: [
+        { key:'desktop-app', label:'Desktop App', width:1280, icon:'desktop', svgIcon:'<rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>' },
+    ],
+};
+
+const ELEMENT_TYPE_DESC = {
+    div: 'Generic container element',
+    img: 'Image element — represents a photo, illustration, or graphic',
+    button: 'Clickable button for user interaction',
+    input: 'Input field for text entry',
+    textarea: 'Multi-line text input area',
+    a: 'Hyperlink — clickable link to another page or resource',
+    video: 'Video element — embedded media player',
+    iframe: 'Iframe — embedded external content (map, video, etc.)',
+    map: 'Map element — embedded geographic map',
+    nav: 'Navigation container',
+    header: 'Header section of the page',
+    footer: 'Footer section of the page',
+    section: 'Generic section of the page',
+    article: 'Self-contained article content',
+    aside: 'Sidebar or tangential content',
+    form: 'Form container for user inputs',
+    table: 'Data table with rows and columns',
+};
+
+// ============================================================
 // STATE
 // ============================================================
 let currentZoom = 1;
@@ -83,38 +138,37 @@ let dragSrcEl = null;
 let selectedEl = null;
 let selectedComp = null;
 let dropIndicator = null;
+let currentPlatform = 'web';
+let frameVisibility = {}; // key -> boolean
 
 // ============================================================
 // DOM REFS
 // ============================================================
-const dropZone      = document.getElementById('drop-zone');
-const canvas        = document.getElementById('canvas');
 const viewport      = document.getElementById('viewport');
 const compList      = document.getElementById('component-list');
 const searchInput   = document.getElementById('component-search');
 const statusEl      = document.getElementById('canvas-status');
 const toastEl       = document.getElementById('toast');
-const emptyState    = document.getElementById('empty-state');
-const canvasLabel   = document.getElementById('canvas-label-text');
-const canvasDims    = document.getElementById('canvas-dimensions');
 const qbZoomVal     = document.getElementById('qb-zoom-val');
-const rpWidth       = document.getElementById('rp-width');
-const rpHeight      = document.getElementById('rp-height');
+const shortcutsModal= document.getElementById('shortcuts-modal');
+const rightPanel    = document.getElementById('right-panel');
+const btnOpenRight  = document.getElementById('btn-open-right');
 const rpSelectedSec = document.getElementById('rp-selected-section');
 const rpSelectedName= document.getElementById('rp-selected-name');
 const rpNoSelection = document.getElementById('rp-no-selection');
-const shortcutsModal= document.getElementById('shortcuts-modal');
-const rightPanel    = document.getElementById('right-panel');
+const rpElementTypeSec = document.getElementById('rp-element-type-section');
+const rpElementType = document.getElementById('rp-element-type');
+const rpTypeDesc    = document.getElementById('rp-type-description');
+const rpTableSec    = document.getElementById('rp-table-section');
 
 // ============================================================
-// SIDEBAR
+// SIDEBAR RENDER
 // ============================================================
 function renderSidebar(filter = '') {
     compList.innerHTML = '';
     const terms = filter.toLowerCase().trim().split(/\s+/).filter(Boolean);
     const cats = [...new Set(COMPONENTS.map(c => c.cat))];
     let totalVisible = 0;
-
     cats.forEach(cat => {
         const items = COMPONENTS.filter(c => {
             if (c.cat !== cat) return false;
@@ -122,44 +176,186 @@ function renderSidebar(filter = '') {
             return terms.every(t => c.name.toLowerCase().includes(t) || cat.toLowerCase().includes(t));
         });
         if (!items.length) return;
-
         const section = document.createElement('div');
-        section.className = 'cat-section';
-
         const h = document.createElement('div');
         h.className = 'cat-header';
         h.textContent = cat;
         section.appendChild(h);
-
         items.forEach(comp => {
             totalVisible++;
             const el = document.createElement('div');
             el.className = 'comp-item';
-            el.dataset.tooltip = comp.name;
             el.innerHTML = `
                 <div class="comp-icon">
                     <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${comp.icon}"/></svg>
                 </div>
                 <span class="comp-name">${comp.name}</span>
             `;
-            el.addEventListener('click', () => addComponent(comp, dropZone));
+            el.addEventListener('click', () => {
+                // Add to ALL visible frames' drop zones
+                const frames = viewport.querySelectorAll('.canvas-frame:not(.hidden-frame)');
+                frames.forEach(frame => {
+                    const dz = frame.querySelector('.drop-zone');
+                    addComponent(comp, dz);
+                });
+            });
             section.appendChild(el);
         });
-
         compList.appendChild(section);
     });
-
     if (!totalVisible) {
         compList.innerHTML = '<div style="padding:32px 16px;text-align:center;font-size:12px;color:var(--text-muted);">No components found</div>';
     }
-
-    // Update count
     const countEl = document.getElementById('panel-count');
     if (countEl) countEl.textContent = `${totalVisible} component${totalVisible !== 1 ? 's' : ''}`;
 }
-
 searchInput.addEventListener('input', e => renderSidebar(e.target.value));
 renderSidebar();
+
+// ============================================================
+// MULTI-PLATFORM CANVAS CREATION
+// ============================================================
+function buildCanvases() {
+    viewport.innerHTML = '';
+    const configs = PLATFORMS[currentPlatform] || [];
+    configs.forEach(cfg => {
+        const visible = frameVisibility[cfg.key] !== false; // default visible
+        const frame = document.createElement('div');
+        frame.className = 'canvas-frame' + (visible ? '' : ' hidden-frame');
+        frame.dataset.frameKey = cfg.key;
+        frame.style.width = cfg.width + 'px';
+        frame.style.minHeight = '800px';
+
+        frame.innerHTML = `
+            <div class="frame-header">
+                <div class="frame-label">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${cfg.svgIcon}</svg>
+                    <span>${cfg.label} — ${cfg.width}px</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:4px;">
+                    <span class="frame-dims" data-dims>${cfg.width} × 800</span>
+                    <button class="frame-eye-btn ${visible ? '' : 'off'}" data-frame-key="${cfg.key}" title="Toggle visibility">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            ${visible
+                                ? '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>'
+                                : '<path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19M1 1l22 22"/>'
+                            }
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div class="drop-zone">
+                <div class="empty-state">
+                    <div class="e-icon">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+                    </div>
+                    <p class="e-title">${cfg.label}</p>
+                    <p class="e-desc">Click components to add</p>
+                </div>
+            </div>
+            <div class="canvas-resizer" title="Drag to resize height"></div>
+        `;
+
+        viewport.appendChild(frame);
+
+        // Eye toggle
+        const eyeBtn = frame.querySelector('.frame-eye-btn');
+        eyeBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const key = eyeBtn.dataset.frameKey;
+            const isCurrentlyHidden = frame.classList.contains('hidden-frame');
+            if (isCurrentlyHidden) {
+                frame.classList.remove('hidden-frame');
+                frameVisibility[key] = true;
+                eyeBtn.classList.remove('off');
+                eyeBtn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+            } else {
+                frame.classList.add('hidden-frame');
+                frameVisibility[key] = false;
+                eyeBtn.classList.add('off');
+                eyeBtn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19M1 1l22 22"/></svg>';
+            }
+            notify(isCurrentlyHidden ? `${cfg.label} shown` : `${cfg.label} hidden`);
+        });
+
+        // Drop zone setup
+        const dz = frame.querySelector('.drop-zone');
+        setupDropZone(dz);
+
+        // Resizer
+        const resizer = frame.querySelector('.canvas-resizer');
+        resizer.addEventListener('mousedown', (e) => {
+            e.preventDefault();
+            const startY = e.clientY;
+            const startH = frame.offsetHeight;
+            document.querySelectorAll('.height-btn').forEach(b => b.classList.remove('active'));
+            const onMove = (ev) => {
+                const delta = (ev.clientY - startY) / currentZoom;
+                const newH = Math.max(400, startH + delta);
+                frame.style.minHeight = newH + 'px';
+                const dimsEl = frame.querySelector('[data-dims]');
+                if (dimsEl) dimsEl.textContent = `${cfg.width} × ${Math.round(newH)}`;
+            };
+            const onUp = () => {
+                document.removeEventListener('mousemove', onMove);
+                document.removeEventListener('mouseup', onUp);
+                notify('Custom height set');
+            };
+            document.addEventListener('mousemove', onMove);
+            document.addEventListener('mouseup', onUp);
+        });
+    });
+
+    updateStatus();
+}
+
+// ============================================================
+// PLATFORM SELECTOR
+// ============================================================
+document.querySelectorAll('.platform-opt').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.platform-opt').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentPlatform = btn.dataset.platform;
+        buildCanvases();
+        notify(`Platform: ${btn.textContent.trim()}`);
+    });
+});
+
+// ============================================================
+// DROP ZONE SETUP
+// ============================================================
+function setupDropZone(dz) {
+    dz.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        if (!dragSrcEl) return;
+        if (!e.target.closest('.ci')) {
+            removeDropIndicator();
+            clearAllHighlights();
+            dropIndicator = document.createElement('div');
+            dropIndicator.className = 'drop-line';
+            dz.appendChild(dropIndicator);
+        }
+    });
+    dz.addEventListener('drop', (e) => {
+        e.preventDefault();
+        clearAllHighlights();
+        if (!dragSrcEl) return;
+        if (dropIndicator && dropIndicator.parentElement) {
+            dropIndicator.parentElement.insertBefore(dragSrcEl, dropIndicator);
+        } else {
+            dz.appendChild(dragSrcEl);
+        }
+        removeDropIndicator();
+        dragSrcEl.classList.remove('dragging');
+        dragSrcEl = null;
+        updateStatus();
+    });
+    dz.addEventListener('mousedown', (e) => {
+        if (e.target === dz || e.target.closest('.empty-state')) selectItem(null);
+    });
+}
 
 // ============================================================
 // ADD COMPONENT
@@ -171,22 +367,25 @@ async function addComponent(comp, targetContainer, beforeEl = null) {
         if (!res.ok) throw new Error('not found');
         html = await res.text();
     } catch {
-        html = `<div style="padding:16px;border:2px dashed #94a3b8;color:#94a3b8;font-size:11px;font-weight:600;border-radius:8px;">[${comp.name} — file not found]</div>`;
+        html = `<div style="padding:16px;border:2px dashed #94a3b8;color:#94a3b8;font-size:11px;font-weight:600;border-radius:8px;">[${comp.name} — not found]</div>`;
     }
 
-    // Hide empty state
+    const emptyState = targetContainer.querySelector('.empty-state');
     if (emptyState) emptyState.style.display = 'none';
 
     const ci = document.createElement('div');
     ci.className = 'ci';
     ci.dataset.compId = comp.id;
     ci.dataset.uid = ++itemUID;
+    if (comp.isPrim) ci.dataset.isPrim = '1';
+    if (comp.isTable) ci.dataset.isTable = '1';
 
+    const barLabel = comp.name;
     ci.innerHTML = `
         <div class="ci-bar" draggable="true">
             <div class="ci-bar-left">
                 <div class="dots"><span></span><span></span><span></span><span></span><span></span><span></span></div>
-                <span class="ci-bar-label">${comp.name}</span>
+                <span class="ci-bar-label">${barLabel}</span>
             </div>
             <div class="ci-btns">
                 <button class="ci-btn dup" title="Duplicate">⎘</button>
@@ -202,7 +401,7 @@ async function addComponent(comp, targetContainer, beforeEl = null) {
         targetContainer.appendChild(ci);
     }
 
-    // SELECT on click
+    // SELECT
     ci.addEventListener('mousedown', (e) => {
         if (e.target.closest('.ci-btns')) return;
         selectItem(ci, comp);
@@ -213,9 +412,7 @@ async function addComponent(comp, targetContainer, beforeEl = null) {
         e.stopPropagation();
         ci.remove();
         if (selectedEl === ci) { selectedEl = null; selectedComp = null; }
-        updateStatus();
-        showEmptyIfNeeded();
-        updateRightPanel();
+        updateStatus(); showEmptyIfNeeded(targetContainer); updateRightPanel();
     });
 
     // DUPLICATE
@@ -224,7 +421,7 @@ async function addComponent(comp, targetContainer, beforeEl = null) {
         addComponent(comp, ci.parentElement, ci.nextElementSibling);
     });
 
-    // DRAG (from bar)
+    // DRAG
     const bar = ci.querySelector('.ci-bar');
     bar.addEventListener('dragstart', (e) => {
         if (e.target.closest('.ci-btns')) { e.preventDefault(); return; }
@@ -232,7 +429,6 @@ async function addComponent(comp, targetContainer, beforeEl = null) {
         ci.classList.add('dragging');
         e.dataTransfer.effectAllowed = 'move';
         e.dataTransfer.setData('text/plain', ci.dataset.uid);
-        requestAnimationFrame(() => ci.classList.add('dragging'));
     });
     bar.addEventListener('dragend', () => {
         ci.classList.remove('dragging');
@@ -244,13 +440,10 @@ async function addComponent(comp, targetContainer, beforeEl = null) {
     // NEST TARGET
     const content = ci.querySelector('.ci-content');
     content.addEventListener('dragover', (e) => {
-        if (!dragSrcEl || dragSrcEl === ci) return;
-        if (dragSrcEl.contains(ci)) return;
-        e.preventDefault();
-        e.stopPropagation();
+        if (!dragSrcEl || dragSrcEl === ci || dragSrcEl.contains(ci)) return;
+        e.preventDefault(); e.stopPropagation();
         e.dataTransfer.dropEffect = 'move';
-        removeDropIndicator();
-        clearAllHighlights();
+        removeDropIndicator(); clearAllHighlights();
         content.classList.add('nest-target');
     });
     content.addEventListener('dragleave', (e) => {
@@ -258,8 +451,7 @@ async function addComponent(comp, targetContainer, beforeEl = null) {
         content.classList.remove('nest-target');
     });
     content.addEventListener('drop', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
+        e.preventDefault(); e.stopPropagation();
         content.classList.remove('nest-target');
         if (!dragSrcEl || dragSrcEl === ci || dragSrcEl.contains(ci)) return;
         content.appendChild(dragSrcEl);
@@ -269,27 +461,24 @@ async function addComponent(comp, targetContainer, beforeEl = null) {
         notify('Component nested!');
     });
 
-    // REORDER TARGET
+    // REORDER
     ci.addEventListener('dragover', (e) => {
-        if (!dragSrcEl || dragSrcEl === ci) return;
-        if (dragSrcEl.contains(ci)) return;
+        if (!dragSrcEl || dragSrcEl === ci || dragSrcEl.contains(ci)) return;
         e.preventDefault();
         e.dataTransfer.dropEffect = 'move';
         const rect = ci.getBoundingClientRect();
         const midY = rect.top + rect.height / 2;
-        const parent = ci.parentElement;
-        removeDropIndicator();
-        clearAllHighlights();
+        removeDropIndicator(); clearAllHighlights();
         dropIndicator = document.createElement('div');
         dropIndicator.className = 'drop-line';
         if (e.clientY < midY) {
-            parent.insertBefore(dropIndicator, ci);
+            ci.parentElement.insertBefore(dropIndicator, ci);
         } else {
-            parent.insertBefore(dropIndicator, ci.nextElementSibling);
+            ci.parentElement.insertBefore(dropIndicator, ci.nextElementSibling);
         }
     });
 
-    // DOUBLE-CLICK to edit text
+    // DOUBLE-CLICK text edit
     content.addEventListener('dblclick', (e) => {
         const el = e.target;
         const tags = ['P','SPAN','H1','H2','H3','H4','H5','H6','A','BUTTON','LI','TD','TH','LABEL'];
@@ -298,13 +487,11 @@ async function addComponent(comp, targetContainer, beforeEl = null) {
             el.contentEditable = 'true';
             el.style.outline = '2px solid var(--accent)';
             el.style.outlineOffset = '2px';
-            el.style.borderRadius = '2px';
             el.focus();
             el.addEventListener('blur', () => {
                 el.contentEditable = 'false';
                 el.style.outline = '';
                 el.style.outlineOffset = '';
-                el.style.borderRadius = '';
             }, { once: true });
         }
     });
@@ -325,133 +512,136 @@ function selectItem(el, comp = null) {
     updateRightPanel();
 }
 
-dropZone.addEventListener('mousedown', (e) => {
-    if (e.target === dropZone || e.target === emptyState) selectItem(null);
-});
-
 // ============================================================
 // RIGHT PANEL
 // ============================================================
 function updateRightPanel() {
-    if (selectedEl && selectedComp) {
-        rpSelectedSec.style.display = 'block';
+    const hasSelection = selectedEl && selectedComp;
+    rpSelectedSec.style.display = hasSelection ? 'block' : 'none';
+    rpNoSelection.style.display = hasSelection ? 'none' : 'block';
+    if (hasSelection) {
         rpSelectedName.textContent = selectedComp.name;
-        rpNoSelection.style.display = 'none';
-    } else {
-        rpSelectedSec.style.display = 'none';
-        rpNoSelection.style.display = 'block';
     }
+
+    // Primitive element type
+    const isPrim = selectedEl?.dataset?.isPrim === '1';
+    rpElementTypeSec.style.display = isPrim ? 'block' : 'none';
+    if (isPrim) {
+        const primShape = selectedEl.querySelector('.prim-shape');
+        if (primShape) {
+            const currentType = primShape.dataset.assignedType || 'div';
+            rpElementType.value = currentType;
+            rpTypeDesc.textContent = ELEMENT_TYPE_DESC[currentType] || '';
+        }
+    }
+
+    // Table config
+    const isTable = selectedEl?.dataset?.isTable === '1';
+    rpTableSec.style.display = isTable ? 'block' : 'none';
+    if (isTable) {
+        const tbl = selectedEl.querySelector('.prim-table-dynamic');
+        if (tbl) {
+            document.getElementById('rp-table-rows').value = tbl.dataset.rows || 3;
+            document.getElementById('rp-table-cols').value = tbl.dataset.cols || 4;
+        }
+    }
+}
+
+// Element type change
+rpElementType.addEventListener('change', () => {
+    if (!selectedEl) return;
+    const primShape = selectedEl.querySelector('.prim-shape');
+    if (!primShape) return;
+    const type = rpElementType.value;
+    primShape.dataset.assignedType = type;
+    rpTypeDesc.textContent = ELEMENT_TYPE_DESC[type] || '';
+
+    // Add/update badge
+    let badge = selectedEl.querySelector('.prim-type-badge');
+    if (!badge) {
+        badge = document.createElement('span');
+        badge.className = 'prim-type-badge';
+        const content = selectedEl.querySelector('.ci-content');
+        content.style.position = 'relative';
+        content.appendChild(badge);
+    }
+    badge.textContent = `<${type}>`;
+    notify(`Type set: <${type}>`);
+});
+
+// Table apply
+document.getElementById('rp-table-apply')?.addEventListener('click', () => {
+    if (!selectedEl) return;
+    const tbl = selectedEl.querySelector('.prim-table-dynamic');
+    if (!tbl) return;
+    const rows = parseInt(document.getElementById('rp-table-rows').value) || 3;
+    const cols = parseInt(document.getElementById('rp-table-cols').value) || 4;
+    tbl.dataset.rows = rows;
+    tbl.dataset.cols = cols;
+    rebuildTable(tbl, rows, cols);
+    notify(`Table: ${rows} rows × ${cols} cols`);
+});
+
+function rebuildTable(container, rows, cols) {
+    let html = '<table style="width:100%;border-collapse:collapse;border:2px solid #0f172a;"><thead><tr style="border-bottom:2px solid #0f172a;background:#f8fafc;">';
+    for (let c = 0; c < cols; c++) {
+        html += `<th style="padding:10px 16px;font-weight:700;text-align:left;font-size:13px;">Col ${c+1}</th>`;
+    }
+    html += '</tr></thead><tbody>';
+    for (let r = 0; r < rows; r++) {
+        html += `<tr style="border-bottom:1px solid #e2e8f0;">`;
+        for (let c = 0; c < cols; c++) {
+            html += `<td style="padding:10px 16px;font-size:13px;">Cell</td>`;
+        }
+        html += '</tr>';
+    }
+    html += '</tbody></table>';
+    container.innerHTML = html;
 }
 
 // Right panel actions
 document.getElementById('rp-duplicate')?.addEventListener('click', () => {
-    if (selectedEl && selectedComp) {
-        addComponent(selectedComp, selectedEl.parentElement, selectedEl.nextElementSibling);
-    }
+    if (selectedEl && selectedComp) addComponent(selectedComp, selectedEl.parentElement, selectedEl.nextElementSibling);
 });
 document.getElementById('rp-delete')?.addEventListener('click', () => {
-    if (selectedEl) {
-        selectedEl.remove();
-        selectedEl = null;
-        selectedComp = null;
-        updateStatus();
-        showEmptyIfNeeded();
-        updateRightPanel();
-    }
+    if (!selectedEl) return;
+    const parent = selectedEl.parentElement;
+    selectedEl.remove(); selectedEl = null; selectedComp = null;
+    updateStatus(); if (parent) showEmptyIfNeeded(parent); updateRightPanel();
 });
 document.getElementById('rp-move-up')?.addEventListener('click', () => {
-    if (selectedEl && selectedEl.previousElementSibling) {
-        selectedEl.parentElement.insertBefore(selectedEl, selectedEl.previousElementSibling);
-        notify('Moved up');
-    }
+    if (selectedEl?.previousElementSibling) { selectedEl.parentElement.insertBefore(selectedEl, selectedEl.previousElementSibling); notify('Moved up'); }
 });
 document.getElementById('rp-move-down')?.addEventListener('click', () => {
-    if (selectedEl && selectedEl.nextElementSibling) {
-        selectedEl.parentElement.insertBefore(selectedEl.nextElementSibling, selectedEl);
-        notify('Moved down');
-    }
+    if (selectedEl?.nextElementSibling) { selectedEl.parentElement.insertBefore(selectedEl.nextElementSibling, selectedEl); notify('Moved down'); }
 });
-
-// Right panel canvas dimensions
-rpWidth.addEventListener('change', () => {
-    const w = parseInt(rpWidth.value);
-    if (w >= 200 && w <= 3000) {
-        canvas.style.width = w + 'px';
-        document.querySelectorAll('.device-btn').forEach(b => b.classList.remove('active'));
-        updateCanvasDimensions();
-        notify(`Width: ${w}px`);
-    }
-});
-rpHeight.addEventListener('change', () => {
-    const h = parseInt(rpHeight.value);
-    if (h >= 200 && h <= 10000) {
-        canvas.style.minHeight = h + 'px';
-        document.querySelectorAll('.height-btn').forEach(b => b.classList.remove('active'));
-        updateCanvasDimensions();
-        notify(`Height: ${h}px`);
-    }
-});
+document.getElementById('rp-export-png')?.addEventListener('click', () => document.getElementById('btn-screenshot').click());
 
 // Toggle right panel
 document.getElementById('btn-toggle-right')?.addEventListener('click', () => {
-    rightPanel.classList.toggle('collapsed');
+    rightPanel.classList.add('collapsed');
+    btnOpenRight.classList.add('show');
 });
-
-document.getElementById('rp-export-png')?.addEventListener('click', () => {
-    document.getElementById('btn-screenshot').click();
-});
-
-// ============================================================
-// DROP ZONE
-// ============================================================
-dropZone.addEventListener('dragover', (e) => {
-    e.preventDefault();
-    e.dataTransfer.dropEffect = 'move';
-    if (!dragSrcEl) return;
-    if (!e.target.closest('.ci')) {
-        removeDropIndicator();
-        clearAllHighlights();
-        dropIndicator = document.createElement('div');
-        dropIndicator.className = 'drop-line';
-        dropZone.appendChild(dropIndicator);
-    }
-});
-
-dropZone.addEventListener('drop', (e) => {
-    e.preventDefault();
-    clearAllHighlights();
-    if (!dragSrcEl) return;
-    if (dropIndicator && dropIndicator.parentElement) {
-        dropIndicator.parentElement.insertBefore(dragSrcEl, dropIndicator);
-    } else {
-        dropZone.appendChild(dragSrcEl);
-    }
-    removeDropIndicator();
-    dragSrcEl.classList.remove('dragging');
-    dragSrcEl = null;
-    updateStatus();
+btnOpenRight.addEventListener('click', () => {
+    rightPanel.classList.remove('collapsed');
+    btnOpenRight.classList.remove('show');
 });
 
 // ============================================================
 // HELPERS
 // ============================================================
 function removeDropIndicator() {
-    if (dropIndicator && dropIndicator.parentElement) {
-        dropIndicator.remove();
-    }
+    if (dropIndicator && dropIndicator.parentElement) dropIndicator.remove();
     dropIndicator = null;
 }
-
 function clearAllHighlights() {
     document.querySelectorAll('.nest-target').forEach(el => el.classList.remove('nest-target'));
 }
-
-function showEmptyIfNeeded() {
-    if (emptyState && !dropZone.querySelector('.ci')) {
-        emptyState.style.display = 'flex';
-    }
+function showEmptyIfNeeded(container) {
+    if (!container) return;
+    const es = container.querySelector('.empty-state');
+    if (es && !container.querySelector('.ci')) es.style.display = 'flex';
 }
-
 function updateStatus() {
     const count = document.querySelectorAll('.ci').length;
     statusEl.innerHTML = count === 0
@@ -459,81 +649,25 @@ function updateStatus() {
         : `<span class="status-dot"></span> ${count} component${count > 1 ? 's' : ''}`;
 }
 
-function updateCanvasDimensions() {
-    const w = parseInt(canvas.style.width) || 1440;
-    const h = canvas.offsetHeight || 1600;
-    canvasDims.textContent = `${w} × ${h}`;
-    rpWidth.value = w;
-    rpHeight.value = h;
-}
-
 // ============================================================
-// DEVICE SIZE PRESETS
-// ============================================================
-document.querySelectorAll('.device-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-        document.querySelectorAll('.device-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        const w = parseInt(btn.dataset.w);
-        canvas.style.width = w + 'px';
-        canvasLabel.textContent = btn.dataset.label;
-        const vpW = viewport.clientWidth - 60;
-        if (w > vpW) {
-            setZoom(Math.min(1, vpW / w));
-        } else {
-            setZoom(1);
-        }
-        updateCanvasDimensions();
-        notify(btn.dataset.label);
-    });
-});
-
-// ============================================================
-// CANVAS HEIGHT PRESETS
+// HEIGHT PRESETS
 // ============================================================
 document.querySelectorAll('.height-btn').forEach(btn => {
     btn.addEventListener('click', () => {
         document.querySelectorAll('.height-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         const h = parseInt(btn.dataset.h);
-        if (h === 0) {
-            canvas.style.minHeight = '800px';
-            canvas.style.height = 'auto';
-            notify('Height: Auto');
-        } else {
-            canvas.style.minHeight = h + 'px';
-            canvas.style.height = 'auto';
-            notify('Height: ' + h + 'px');
-        }
-        updateCanvasDimensions();
+        document.querySelectorAll('.canvas-frame').forEach(frame => {
+            if (h === 0) {
+                frame.style.minHeight = '600px';
+                frame.style.height = 'auto';
+            } else {
+                frame.style.minHeight = h + 'px';
+                frame.style.height = 'auto';
+            }
+        });
+        notify(h === 0 ? 'Height: Auto' : `Height: ${h}px`);
     });
-});
-
-// ============================================================
-// MANUAL CANVAS RESIZE
-// ============================================================
-const resizer = document.getElementById('canvas-resizer');
-resizer.addEventListener('mousedown', (e) => {
-    e.preventDefault();
-    const startY = e.clientY;
-    const startH = canvas.offsetHeight;
-    document.querySelectorAll('.height-btn').forEach(b => b.classList.remove('active'));
-
-    const onMouseMove = (ev) => {
-        const delta = (ev.clientY - startY) / currentZoom;
-        const newH = Math.max(400, startH + delta);
-        canvas.style.minHeight = newH + 'px';
-        updateCanvasDimensions();
-    };
-
-    const onMouseUp = () => {
-        document.removeEventListener('mousemove', onMouseMove);
-        document.removeEventListener('mouseup', onMouseUp);
-        notify('Custom height set');
-    };
-
-    document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseup', onMouseUp);
 });
 
 // ============================================================
@@ -541,21 +675,19 @@ resizer.addEventListener('mousedown', (e) => {
 // ============================================================
 function setZoom(z) {
     currentZoom = Math.max(0.25, Math.min(2, Math.round(z * 100) / 100));
-    canvas.style.zoom = currentZoom;
-    const pct = Math.round(currentZoom * 100) + '%';
-    qbZoomVal.textContent = pct;
+    document.querySelectorAll('.canvas-frame').forEach(f => f.style.zoom = currentZoom);
+    qbZoomVal.textContent = Math.round(currentZoom * 100) + '%';
 }
-
-// Quick bar zoom buttons
 document.getElementById('qb-zin').addEventListener('click', () => setZoom(currentZoom + 0.1));
 document.getElementById('qb-zout').addEventListener('click', () => setZoom(currentZoom - 0.1));
 document.getElementById('qb-zfit').addEventListener('click', () => {
-    const vpW = viewport.clientWidth - 60;
-    const cW = parseInt(canvas.style.width) || 1440;
-    setZoom(Math.min(1, vpW / cW));
+    const vpW = viewport.clientWidth - 80;
+    const frames = viewport.querySelectorAll('.canvas-frame:not(.hidden-frame)');
+    let totalW = 0;
+    frames.forEach(f => totalW += parseInt(f.style.width) || 400);
+    totalW += (frames.length - 1) * 24; // gap
+    setZoom(Math.min(1, vpW / totalW));
 });
-
-// Ctrl+Scroll zoom
 document.addEventListener('wheel', (e) => {
     if (!e.ctrlKey && !e.metaKey) return;
     e.preventDefault();
@@ -567,13 +699,10 @@ document.addEventListener('wheel', (e) => {
 // ============================================================
 document.getElementById('btn-clear').addEventListener('click', () => {
     if (!confirm('Clear all components?')) return;
-    dropZone.querySelectorAll('.ci').forEach(el => el.remove());
-    itemUID = 0;
-    selectedEl = null;
-    selectedComp = null;
-    updateStatus();
-    showEmptyIfNeeded();
-    updateRightPanel();
+    document.querySelectorAll('.ci').forEach(el => el.remove());
+    itemUID = 0; selectedEl = null; selectedComp = null;
+    updateStatus(); updateRightPanel();
+    document.querySelectorAll('.empty-state').forEach(es => es.style.display = 'flex');
 });
 
 // ============================================================
@@ -581,65 +710,47 @@ document.getElementById('btn-clear').addEventListener('click', () => {
 // ============================================================
 document.getElementById('btn-screenshot').addEventListener('click', async () => {
     notify('Preparing screenshot...');
-    canvas.classList.add('screenshot-mode');
-    const savedZoom = canvas.style.zoom || '1';
-    canvas.style.zoom = '1';
-
-    await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
-
-    const clone = canvas.cloneNode(true);
-    clone.style.position = 'absolute';
-    clone.style.left = '-99999px';
-    clone.style.top = '0';
-    clone.style.zIndex = '-1';
-    clone.style.zoom = '1';
-    clone.style.boxShadow = 'none';
-    clone.style.border = 'none';
-    document.body.appendChild(clone);
-
-    function inlineStyles(src, dest) {
-        const srcStyle = window.getComputedStyle(src);
-        let cssText = '';
-        for (let i = 0; i < srcStyle.length; i++) {
-            const prop = srcStyle[i];
-            cssText += `${prop}:${srcStyle.getPropertyValue(prop)};`;
+    const frames = viewport.querySelectorAll('.canvas-frame:not(.hidden-frame)');
+    for (const frame of frames) {
+        frame.classList.add('screenshot-mode');
+        const savedZoom = frame.style.zoom || '1';
+        frame.style.zoom = '1';
+        await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+        const clone = frame.cloneNode(true);
+        clone.style.position = 'absolute';
+        clone.style.left = '-99999px';
+        clone.style.top = '0';
+        clone.style.zIndex = '-1';
+        clone.style.zoom = '1';
+        clone.style.boxShadow = 'none';
+        clone.style.border = 'none';
+        document.body.appendChild(clone);
+        function inlineStyles(src, dest) {
+            const s = window.getComputedStyle(src);
+            let css = '';
+            for (let i = 0; i < s.length; i++) css += `${s[i]}:${s.getPropertyValue(s[i])};`;
+            dest.style.cssText = css;
+            for (let i = 0; i < src.children.length && i < dest.children.length; i++) inlineStyles(src.children[i], dest.children[i]);
         }
-        dest.style.cssText = cssText;
-        const srcChildren = src.children;
-        const destChildren = dest.children;
-        for (let i = 0; i < srcChildren.length && i < destChildren.length; i++) {
-            inlineStyles(srcChildren[i], destChildren[i]);
-        }
-    }
-    inlineStyles(canvas, clone);
-
-    clone.style.position = 'absolute';
-    clone.style.left = '-99999px';
-    clone.style.boxShadow = 'none';
-    clone.style.border = 'none';
-    clone.style.overflow = 'visible';
-
-    try {
-        const cvs = await html2canvas(clone, {
-            useCORS: true,
-            scale: 2,
-            backgroundColor: '#ffffff',
-            logging: false,
-            windowWidth: parseInt(canvas.style.width) || 1440,
-        });
-        const link = document.createElement('a');
-        link.download = `wireframe-${Date.now()}.png`;
-        link.href = cvs.toDataURL('image/png');
-        link.click();
-        notify('✓ Screenshot saved!');
-    } catch (err) {
-        console.error('Screenshot failed:', err);
-        notify('✕ Screenshot failed');
-    } finally {
+        inlineStyles(frame, clone);
+        clone.style.position = 'absolute';
+        clone.style.left = '-99999px';
+        clone.style.boxShadow = 'none';
+        clone.style.border = 'none';
+        clone.style.overflow = 'visible';
+        try {
+            const cvs = await html2canvas(clone, { useCORS:true, scale:2, backgroundColor:'#ffffff', logging:false, windowWidth:parseInt(frame.style.width)||1440 });
+            const link = document.createElement('a');
+            const key = frame.dataset.frameKey || 'wireframe';
+            link.download = `${key}-${Date.now()}.png`;
+            link.href = cvs.toDataURL('image/png');
+            link.click();
+        } catch (err) { console.error(err); }
         clone.remove();
-        canvas.classList.remove('screenshot-mode');
-        canvas.style.zoom = savedZoom;
+        frame.classList.remove('screenshot-mode');
+        frame.style.zoom = savedZoom;
     }
+    notify('✓ Screenshots saved!');
 });
 
 // ============================================================
@@ -656,85 +767,47 @@ function notify(msg) {
 // ============================================================
 // KEYBOARD SHORTCUTS
 // ============================================================
-function toggleShortcuts() {
-    shortcutsModal.classList.toggle('open');
-}
-
+function toggleShortcuts() { shortcutsModal.classList.toggle('open'); }
 document.getElementById('btn-shortcuts')?.addEventListener('click', toggleShortcuts);
 document.getElementById('qb-shortcuts')?.addEventListener('click', toggleShortcuts);
 document.getElementById('btn-close-shortcuts')?.addEventListener('click', toggleShortcuts);
-shortcutsModal.addEventListener('click', (e) => {
-    if (e.target === shortcutsModal) toggleShortcuts();
-});
+shortcutsModal.addEventListener('click', e => { if (e.target === shortcutsModal) toggleShortcuts(); });
 
-// Global keyboard shortcuts
 document.addEventListener('keydown', (e) => {
-    // ? = show shortcuts
-    if (e.key === '?' && !e.ctrlKey && !e.altKey) {
-        const active = document.activeElement;
-        if (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.isContentEditable) return;
-        toggleShortcuts();
-    }
+    const active = document.activeElement;
+    const isEditing = active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.isContentEditable;
 
-    // Delete = remove selected
-    if ((e.key === 'Delete' || e.key === 'Backspace') && selectedEl) {
-        const active = document.activeElement;
-        if (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.isContentEditable) return;
+    if (e.key === '?' && !e.ctrlKey && !isEditing) toggleShortcuts();
+    if ((e.key === 'Delete' || e.key === 'Backspace') && selectedEl && !isEditing) {
         e.preventDefault();
-        selectedEl.remove();
-        selectedEl = null;
-        selectedComp = null;
-        updateStatus();
-        showEmptyIfNeeded();
-        updateRightPanel();
+        const parent = selectedEl.parentElement;
+        selectedEl.remove(); selectedEl = null; selectedComp = null;
+        updateStatus(); if (parent) showEmptyIfNeeded(parent); updateRightPanel();
     }
-
-    // Escape = deselect
     if (e.key === 'Escape') {
-        if (shortcutsModal.classList.contains('open')) {
-            toggleShortcuts();
-            return;
-        }
+        if (shortcutsModal.classList.contains('open')) { toggleShortcuts(); return; }
         selectItem(null);
     }
-
-    // Ctrl+D = duplicate
-    if (e.ctrlKey && e.key === 'd' && selectedEl && selectedComp) {
-        e.preventDefault();
-        addComponent(selectedComp, selectedEl.parentElement, selectedEl.nextElementSibling);
-    }
-
-    // Ctrl+K = focus search
-    if (e.ctrlKey && e.key === 'k') {
-        e.preventDefault();
-        searchInput.focus();
-        searchInput.select();
-    }
-
-    // Ctrl+. = toggle right panel
+    if (e.ctrlKey && e.key === 'd' && selectedEl && selectedComp) { e.preventDefault(); addComponent(selectedComp, selectedEl.parentElement, selectedEl.nextElementSibling); }
+    if (e.ctrlKey && e.key === 'k') { e.preventDefault(); searchInput.focus(); searchInput.select(); }
     if (e.ctrlKey && e.key === '.') {
         e.preventDefault();
-        rightPanel.classList.toggle('collapsed');
+        if (rightPanel.classList.contains('collapsed')) {
+            rightPanel.classList.remove('collapsed'); btnOpenRight.classList.remove('show');
+        } else {
+            rightPanel.classList.add('collapsed'); btnOpenRight.classList.add('show');
+        }
     }
-
-    // Ctrl+Shift+S = screenshot
-    if (e.ctrlKey && e.shiftKey && e.key === 'S') {
-        e.preventDefault();
-        document.getElementById('btn-screenshot').click();
-    }
-
-    // Ctrl+0 = fit zoom
+    if (e.ctrlKey && e.shiftKey && e.key === 'S') { e.preventDefault(); document.getElementById('btn-screenshot').click(); }
     if (e.ctrlKey && e.key === '0') {
         e.preventDefault();
-        const vpW = viewport.clientWidth - 60;
-        const cW = parseInt(canvas.style.width) || 1440;
-        setZoom(Math.min(1, vpW / cW));
+        document.getElementById('qb-zfit').click();
     }
 });
 
 // ============================================================
 // INIT
 // ============================================================
+buildCanvases();
 updateStatus();
 updateRightPanel();
-updateCanvasDimensions();
