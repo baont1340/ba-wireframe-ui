@@ -83,7 +83,9 @@ table:{html:'<table style="width:100%;border-collapse:collapse;border:2px solid 
 };
 
 // STATE
-let currentZoom=1,itemUID=0,dragSrcEl=null,selectedEl=null,selectedComp=null,dropIndicator=null;
+let currentZoom=1,itemUID=0,dragSrcEl=null;
+let selectedEls=[],selectedComp=null,dropIndicator=null; // selectedEls is now an array
+let selectedEl=null; // Keep for legacy compatibility in some functions, points to first item
 let currentPlatform='web',frameVisibility={},drawMode=null,projectDirty=false;
 let screens=[{id:1,name:'Screen 1'}],activeScreenId=1,screenData={};
 let screenUID=1,screenZoom={};
@@ -107,6 +109,7 @@ const rpLinkType=document.getElementById('rp-link-type');
 const prototypeOverlay=document.getElementById('prototype-overlay-container'),overlayTarget=document.getElementById('overlay-dz-target'),btnCloseOverlay=document.getElementById('btn-close-overlay');
 const rpOverlaySettings=document.getElementById('rp-overlay-settings'),rpOverlayPos=document.getElementById('rp-overlay-pos'),rpOverlayBackdrop=document.getElementById('rp-overlay-backdrop');
 const rpStateSec=document.getElementById('rp-state-section'),rpIsHidden=document.getElementById('rp-is-hidden');
+const btnGroup=document.getElementById('btn-group'),btnUngroup=document.getElementById('btn-ungroup');
 const guideModal=document.getElementById('guide-modal');
 let isPlaying=false;
 
@@ -157,27 +160,107 @@ tabLayers.addEventListener('click',()=>{
     compList.style.display='none';layersList.style.display='block';renderLayers();
 });
 
-function renderLayers(){
-    layersList.innerHTML='';
-    const firstDZ=viewport.querySelector('.canvas-frame .drop-zone');
-    if(!firstDZ)return;
-    const items=firstDZ.querySelectorAll('.ci');
-    if(!items.length){layersList.innerHTML='<div style="padding:40px;text-align:center;font-size:11px;color:var(--text-muted);">No layers yet</div>';return;}
-    
-    items.forEach(ci=>{
-        const lid=ci.dataset.uid;
-        const l=document.createElement('div');
-        l.style.padding='6px 16px';l.style.fontSize='11px';l.style.cursor='pointer';l.style.display='flex';l.style.alignItems='center';l.style.gap='8px';
-        l.style.borderBottom='1px solid var(--border-light)';
-        if(selectedEl?.dataset?.uid===lid)l.style.background='var(--accent-light)';
-        
-        const label=ci.querySelector('.ci-bar-label')?.textContent||'Element';
-        l.innerHTML=`<span style="opacity:0.5;">#${lid}</span> <span style="font-weight:600;">${label}</span>`;
-        l.addEventListener('click',()=>{
-            const target=viewport.querySelector(`.ci[data-uid="${lid}"]`);
-            if(target){target.scrollIntoView({behavior:'smooth',block:'center'});selectItem(target);}
+function renderLayers() {
+    layersList.innerHTML = '';
+    const firstDZ = viewport.querySelector('.canvas-frame .drop-zone');
+    if (!firstDZ) return;
+
+    function buildTree(container, level = 0) {
+        const items = container.querySelectorAll(':scope > .ci');
+        if (items.length === 0 && level === 0) {
+            layersList.innerHTML = '<div style="padding:40px;text-align:center;font-size:11px;color:var(--text-muted);">No layers yet</div>';
+            return;
+        }
+
+        items.forEach(ci => {
+            const lid = ci.dataset.uid;
+            const l = document.createElement('div');
+            l.className = 'layer-item';
+            l.draggable = true;
+            l.dataset.uid = lid;
+            l.style.padding = '6px 16px';
+            l.style.paddingLeft = (16 + level * 16) + 'px';
+            l.style.fontSize = '11px';
+            l.style.cursor = 'grab';
+            l.style.display = 'flex';
+            l.style.alignItems = 'center';
+            l.style.gap = '8px';
+            l.style.borderBottom = '1px solid var(--border-light)';
+            if (selectedEl?.dataset?.uid === lid) l.style.background = 'var(--accent-light)';
+
+            const label = ci.querySelector('.ci-bar-label')?.textContent || 'Element';
+            const icon = ci.dataset.isPrim === '1' ? '📄' : '📦';
+            l.innerHTML = `<span style="opacity:0.6;">${icon}</span> <span style="font-weight:600; flex-1:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${label}</span> <span style="font-size:9px; opacity:0.4;">#${lid}</span>`;
+
+            // Click to select
+            l.addEventListener('click', () => {
+                const target = viewport.querySelector(`.ci[data-uid="${lid}"]`);
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    selectItem(target);
+                }
+            });
+
+            // Drag layer logic
+            l.addEventListener('dragstart', (e) => {
+                e.stopPropagation();
+                dragSrcEl = ci;
+                l.style.opacity = '0.5';
+                e.dataTransfer.effectAllowed = 'move';
+                e.dataTransfer.setData('text/plain', lid);
+            });
+            l.addEventListener('dragend', () => {
+                l.style.opacity = '1';
+                dragSrcEl = null;
+                clearHL();
+            });
+
+            // Drop target logic (to nest inside)
+            l.addEventListener('dragover', (e) => {
+                if (!dragSrcEl || dragSrcEl === ci || dragSrcEl.contains(ci)) return;
+                e.preventDefault();
+                e.stopPropagation();
+                l.style.background = 'var(--accent-light)';
+            });
+            l.addEventListener('dragleave', () => {
+                l.style.background = (selectedEl?.dataset?.uid === lid) ? 'var(--accent-light)' : 'transparent';
+            });
+            l.addEventListener('drop', (e) => {
+                e.preventDefault(); e.stopPropagation();
+                if (!dragSrcEl || dragSrcEl === ci || dragSrcEl.contains(ci)) return;
+                
+                const targetContent = ci.querySelector('.ci-content');
+                if (targetContent) {
+                    targetContent.appendChild(dragSrcEl);
+                    projectDirty = true;
+                    notify(`Moved #${dragSrcEl.dataset.uid} into #${lid}`);
+                    syncFrames(firstDZ);
+                    renderLayers(); // Refresh self
+                }
+            });
+
+            layersList.appendChild(l);
+
+            // Recurse for children
+            const childContent = ci.querySelector('.ci-content');
+            if (childContent) buildTree(childContent, level + 1);
         });
-        layersList.appendChild(l);
+    }
+
+    buildTree(firstDZ);
+    
+    // Support dropping back to root (main drop zone)
+    layersList.addEventListener('dragover', (e) => {
+        if (!dragSrcEl) return;
+        e.preventDefault();
+    });
+    layersList.addEventListener('drop', (e) => {
+        if (!dragSrcEl || e.target !== layersList) return;
+        firstDZ.appendChild(dragSrcEl);
+        projectDirty = true;
+        notify(`Moved #${dragSrcEl.dataset.uid} to Root`);
+        syncFrames(firstDZ);
+        renderLayers();
     });
 }
 
@@ -365,7 +448,11 @@ function setupComponentEvents(ci, comp, dz) {
     if (!ci || !comp || !dz) return;
     
     // 1. SELECTION & STATUS
-    ci.addEventListener('mousedown',e=>{if(!e.target.closest('.ci-btns')&&!drawMode)selectItem(ci,comp);});
+    ci.addEventListener('mousedown',e=>{
+        if(e.target.closest('.ci-btns')||drawMode)return;
+        e.stopPropagation();
+        selectItem(ci, comp, e.shiftKey || e.ctrlKey || e.metaKey);
+    });
     
     // 2. BUTTONS (DEL/DUP)
     ci.querySelector('.del')?.addEventListener('click',e=>{e.stopPropagation();ci.remove();if(selectedEl===ci){selectedEl=null;selectedComp=null;}updateStatus();showEmpty(dz);updateRightPanel();projectDirty=true;syncFrames(dz);});
@@ -441,7 +528,24 @@ function setupComponentEvents(ci, comp, dz) {
 }
 
 // SELECTION
-function selectItem(el,comp=null){if(selectedEl)selectedEl.classList.remove('selected');selectedEl=el;selectedComp=comp;if(el)el.classList.add('selected');updateRightPanel();}
+function selectItem(el, comp=null, multi=false){
+    if(!multi){
+        selectedEls.forEach(item => item.classList.remove('selected'));
+        selectedEls = el ? [el] : [];
+    } else if(el) {
+        if(selectedEls.includes(el)){
+            el.classList.remove('selected');
+            selectedEls = selectedEls.filter(item => item !== el);
+        } else {
+            selectedEls.push(el);
+        }
+    }
+    
+    selectedEls.forEach(item => item.classList.add('selected'));
+    selectedEl = selectedEls[0] || null;
+    selectedComp = comp;
+    updateRightPanel();
+}
 
 // RIGHT PANEL
 function updateRightPanel(){
@@ -787,6 +891,8 @@ document.addEventListener('keydown',e=>{
     if(e.ctrlKey&&e.key==='d'&&selectedEl&&selectedComp){e.preventDefault();addComponent(selectedComp,selectedEl.parentElement,selectedEl.nextElementSibling);}
     if(e.ctrlKey&&e.key==='k'){e.preventDefault();searchInput.focus();searchInput.select();}
     if(e.ctrlKey&&e.key==='.'){e.preventDefault();if(rightPanel.classList.contains('collapsed')){rightPanel.classList.remove('collapsed');btnOpenRight.classList.remove('show');}else{rightPanel.classList.add('collapsed');btnOpenRight.classList.add('show');}}
+    if(e.ctrlKey&&e.key==='g'&&!e.shiftKey){e.preventDefault(); groupSelected();}
+    if(e.ctrlKey&&e.shiftKey&&e.key==='G'){e.preventDefault(); ungroupSelected();}
     if(e.ctrlKey&&e.key==='s'&&!e.shiftKey){e.preventDefault();saveProject();}
     if(e.ctrlKey&&e.shiftKey&&e.key==='S'){e.preventDefault();document.getElementById('btn-export-png').click();}
     if(e.ctrlKey&&e.key==='0'){e.preventDefault();document.getElementById('qb-zfit').click();}
@@ -894,6 +1000,86 @@ document.addEventListener('click',e=>{
         }
     }
 },true);
+
+// GROUPING LOGIC
+function groupSelected(){
+    if(selectedEls.length < 2) { notify('Select at least 2 items to group'); return; }
+    
+    const firstDZ = selectedEls[0].closest('.drop-zone');
+    if(!firstDZ) return;
+    
+    // Calculate bounding box
+    let minX=Infinity, minY=Infinity, maxX=-Infinity, maxY=-Infinity;
+    selectedEls.forEach(el => {
+        const r = el.getBoundingClientRect();
+        const dzR = firstDZ.getBoundingClientRect();
+        const x = (r.left - dzR.left)/currentZoom;
+        const y = (r.top - dzR.top)/currentZoom;
+        const w = (r.width)/currentZoom;
+        const h = (r.height)/currentZoom;
+        minX = Math.min(minX, x); minY = Math.min(minY, y);
+        maxX = Math.max(maxX, x + w); maxY = Math.max(maxY, y + h);
+    });
+
+    const groupW = maxX - minX;
+    const groupH = maxY - minY;
+
+    // Create container
+    const containerComp = COMPONENTS.find(c => c.id === 'prim-container');
+    const groupCi = addComponentFromHTML(containerComp, TYPE_VISUALS.container.html, firstDZ, selectedEls[0]);
+    
+    groupCi.style.position = firstDZ.classList.contains('absolute-mode') ? 'absolute' : 'relative';
+    groupCi.style.left = minX + 'px';
+    groupCi.style.top = minY + 'px';
+    groupCi.style.width = groupW + 'px';
+    groupCi.style.height = groupH + 'px';
+
+    const content = groupCi.querySelector('.ci-content');
+    content.classList.add('flex-col'); // Default to vertical stacking for grouped items
+    if(firstDZ.classList.contains('absolute-mode')) content.classList.add('absolute-mode');
+
+    // Move items inside
+    selectedEls.sort((a,b) => a.offsetTop - b.offsetTop).forEach(el => {
+        if(firstDZ.classList.contains('absolute-mode')){
+            const r = el.getBoundingClientRect();
+            const gR = groupCi.getBoundingClientRect();
+            el.style.left = (r.left - gR.left)/currentZoom + 'px';
+            el.style.top = (r.top - gR.top)/currentZoom + 'px';
+        }
+        content.appendChild(el);
+    });
+
+    selectItem(groupCi);
+    notify('Grouped successfully');
+    syncFrames(firstDZ);
+}
+
+function ungroupSelected(){
+    if(!selectedEl || !selectedEl.querySelector('.ci-content')) return;
+    const content = selectedEl.querySelector('.ci-content');
+    const dz = selectedEl.closest('.drop-zone');
+    const items = [...content.querySelectorAll(':scope > .ci')];
+    if(!items.length) return;
+
+    items.forEach(item => {
+        if(dz.classList.contains('absolute-mode')){
+            const r = item.getBoundingClientRect();
+            const dzR = dz.getBoundingClientRect();
+            item.style.left = (r.left - dzR.left)/currentZoom + 'px';
+            item.style.top = (r.top - dzR.top)/currentZoom + 'px';
+        }
+        dz.insertBefore(item, selectedEl);
+    });
+
+    const toRemove = selectedEl;
+    selectItem(null);
+    toRemove.remove();
+    notify('Ungrouped');
+    syncFrames(dz);
+}
+
+btnGroup?.addEventListener('click', groupSelected);
+btnUngroup?.addEventListener('click', ungroupSelected);
 
 // INIT
 buildCanvases();renderScreenTabs();updateStatus();updateRightPanel();

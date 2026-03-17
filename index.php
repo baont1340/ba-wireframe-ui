@@ -108,28 +108,27 @@ header("Pragma: no-cache");
         .drop-zone.absolute-mode { display: block; padding:0; }
         .canvas-resizer:hover::after{background:var(--accent);}
         
-        .resizer { position:absolute; right:0; bottom:0; width:12px; height:12px; cursor:nwse-resize; z-index:10; background:transparent; border-right:2px solid transparent; border-bottom:2px solid transparent; transition: border-color 0.2s; }
-        .ci:hover .resizer { border-color: var(--border-medium); }
-        .ci.selected .resizer { border-color: var(--accent); }
-        .resizer-r { position:absolute; right:-2px; top:0; bottom:0; width:6px; cursor:ew-resize; z-index:9; }
-        .resizer-b { position:absolute; bottom:-2px; left:0; right:0; height:6px; cursor:ns-resize; z-index:9; }
-        .resizer-r:hover, .resizer-b:hover { background: var(--accent-glow); }
+        .resizer { position:absolute; right:-3px; bottom:-3px; width:7px; height:7px; cursor:nwse-resize; z-index:10; background:#fff; border:1px solid var(--accent); border-radius:1px; display:none; }
+        .ci.selected .resizer { display:block; }
+        .resizer-r { position:absolute; right:-3px; top:0; bottom:0; width:6px; cursor:ew-resize; z-index:9; }
+        .resizer-b { position:absolute; bottom:-3px; left:0; right:0; height:6px; cursor:ns-resize; z-index:9; }
+        .ci.selected .resizer-r { border-right: 2px solid var(--accent); }
+        .ci.selected .resizer-b { border-bottom: 2px solid var(--accent); }
 
         .drop-line{height:2px;background:var(--accent);margin:0;pointer-events:none;position:relative;border-radius:1px;}
         .drop-line::before{content:'';position:absolute;left:-4px;top:-3px;width:8px;height:8px;background:var(--accent);border-radius:50%;}
 
         /* CANVAS ITEMS */
-        .ci{position:relative;display:flex;flex-direction:column;transition:outline-color var(--transition),box-shadow var(--transition);outline:2px solid transparent;outline-offset:-2px;animation:fadeIn 0.2s ease-out;box-sizing:border-box;max-width:100%;}
+        .ci{position:relative;display:flex;flex-direction:column;transition:outline-color var(--transition);outline:1px solid transparent;animation:fadeIn 0.2s ease-out;box-sizing:border-box;max-width:100%;}
         .drop-zone.absolute-mode .ci { position: absolute; margin: 0; max-width:none; }
         .ci:hover{outline-color:var(--border-medium);}
-        .ci.selected{outline-color:var(--accent);box-shadow:0 0 0 1px var(--accent),inset 0 0 0 1px var(--accent);}
+        .ci.selected{outline-color:var(--accent); z-index:15;}
         .ci.dragging{opacity:0.3;}
-        .ci-bar{height:0;opacity:0;overflow:hidden;background:var(--text-primary);display:flex;align-items:center;justify-content:space-between;padding:0 8px;cursor:grab;user-select:none;transition:height var(--transition),opacity var(--transition);flex-shrink:0;}
-        .ci:hover>.ci-bar,.ci.selected>.ci-bar{height:24px;opacity:1;}
-        .ci-bar-left{display:flex;align-items:center;gap:6px;}
-        .ci-bar-left .dots{display:flex;gap:2px;}
-        .ci-bar-left .dots span{width:3px;height:3px;background:#78716c;border-radius:50%;}
-        .ci-bar-label{font-size:9px;font-weight:600;color:#a8a29e;text-transform:uppercase;letter-spacing:0.04em;}
+        .ci-bar{position:absolute; top:-20px; left:0; height:20px; opacity:0; pointer-events:none; background:var(--accent); display:flex; align-items:center; justify-content:space-between; padding:0 6px; cursor:grab; user-select:none; transition:opacity var(--transition); flex-shrink:0; z-index:16; border-radius:2px 2px 0 0; min-width:60px;}
+        .ci.selected>.ci-bar{opacity:1; pointer-events:auto;}
+        .ci-bar-left{display:flex;align-items:center;gap:4px;}
+        .ci-bar-left .dots{display:none;}
+        .ci-bar-label{font-size:9px;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:0.04em;}
         .ci-btns{display:flex;gap:3px;}
         .ci-btn{width:16px;height:16px;background:transparent;border:1px solid #44403c;color:#a8a29e;font-size:9px;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:3px;font-family:inherit;transition:all var(--transition);}
         .ci-btn:hover{background:#44403c;color:#fff;}
@@ -301,6 +300,16 @@ header("Pragma: no-cache");
                 <button class="platform-opt" data-platform="app">📱 App</button>
                 <button class="platform-opt" data-platform="desktop">🖥️ Desktop</button>
             </div>
+            <div class="tb-sep"></div>
+            <span class="tb-label">Selection</span>
+            <button class="tb-btn" id="btn-group" title="Group (Ctrl+G)">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6v6H9z"/></svg>
+                Group
+            </button>
+            <button class="tb-btn" id="btn-ungroup" title="Ungroup (Ctrl+Shift+G)">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" stroke-dasharray="2 2"/><path d="M9 9l6 6m0-6l-6 6"/></svg>
+                Ungroup
+            </button>
             <div class="tb-sep"></div>
 
             <!-- DRAW TOOL -->
