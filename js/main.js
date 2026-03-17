@@ -358,9 +358,18 @@ function updateRightPanel(){
 rpElementType.addEventListener('change',()=>{
     if(!selectedEl)return;
     const type=rpElementType.value;
-    if(type==='custom'){rpCustomSec.style.display='block';rpTypeDesc.textContent='Paste custom HTML below';return;}
-    rpCustomSec.style.display='none';
     const content=selectedEl.querySelector('.ci-content');if(!content)return;
+
+    if(type==='custom'){
+        rpCustomSec.style.display='block';
+        rpTypeDesc.textContent='Paste custom HTML below';
+        // PRE-FILL: Grab current HTML automatically
+        const ps=selectedEl.querySelector('.prim-shape');
+        const currentHtml=ps ? ps.innerHTML : content.innerHTML;
+        document.getElementById('rp-custom-html').value = currentHtml.trim();
+        return;
+    }
+    rpCustomSec.style.display='none';
     const ps=selectedEl.querySelector('.prim-shape');if(ps)ps.dataset.assignedType=type;
     const visual=TYPE_VISUALS[type];
     if(visual){content.innerHTML=`<div class="prim-shape" data-prim="${type}" data-assigned-type="${type}">${visual.html}</div>`;}
@@ -399,7 +408,12 @@ document.getElementById('rp-duplicate')?.addEventListener('click',()=>{if(select
 document.getElementById('rp-delete')?.addEventListener('click',()=>{if(!selectedEl)return;const p=selectedEl.parentElement;selectedEl.remove();selectedEl=null;selectedComp=null;updateStatus();showEmpty(p);updateRightPanel();projectDirty=true;syncFrames(p);});
 document.getElementById('rp-move-up')?.addEventListener('click',()=>{if(selectedEl?.previousElementSibling){const dz=selectedEl.closest('.drop-zone');selectedEl.parentElement.insertBefore(selectedEl,selectedEl.previousElementSibling);projectDirty=true;if(dz)syncFrames(dz);}});
 document.getElementById('rp-move-down')?.addEventListener('click',()=>{if(selectedEl?.nextElementSibling){const dz=selectedEl.closest('.drop-zone');selectedEl.parentElement.insertBefore(selectedEl.nextElementSibling,selectedEl);projectDirty=true;if(dz)syncFrames(dz);}});
-document.getElementById('rp-export-png')?.addEventListener('click',()=>document.getElementById('btn-screenshot').click());
+document.getElementById('rp-export-png')?.addEventListener('click',()=>document.getElementById('btn-export-png').click());
+
+// EXPORT DROPDOWN LOGIC
+const btnExportMain=document.getElementById('btn-export-main'),exportMenu=document.getElementById('export-menu');
+btnExportMain?.addEventListener('click',(e)=>{e.stopPropagation();exportMenu.style.display=exportMenu.style.display==='block'?'none':'block';});
+document.addEventListener('click',()=>exportMenu&&(exportMenu.style.display='none'));
 
 // PANEL TOGGLE
 document.getElementById('btn-toggle-right')?.addEventListener('click',()=>{rightPanel.classList.add('collapsed');btnOpenRight.classList.add('show');});
@@ -431,32 +445,13 @@ document.getElementById('btn-clear').addEventListener('click',()=>{if(!confirm('
 document.getElementById('btn-save').addEventListener('click',saveProject);
 function saveProject(){
     saveCurrentScreen();
-    const project={version:5,platform:currentPlatform,screens,activeScreenId,screenData:{},frameVisibility,screenZoom};
+    const project={version:7,platform:currentPlatform,screens,activeScreenId,screenData:{},frameVisibility,screenZoom};
     Object.keys(screenData).forEach(k=>{project.screenData[k]=screenData[k];});
     const blob=new Blob([JSON.stringify(project,null,2)],{type:'application/json'});
     const link=document.createElement('a');link.download=`wireframe-project-${Date.now()}.bnt`;
     link.href=URL.createObjectURL(blob);link.click();URL.revokeObjectURL(link.href);
     projectDirty=false;notify('✓ Project saved as .bnt!');
 }
-
-// EXPORT SVG FOR FIGMA
-document.getElementById('btn-export-figma')?.addEventListener('click',async()=>{
-    notify('Generating SVG for Figma...');
-    for(const frame of viewport.querySelectorAll('.canvas-frame:not(.dimmed-frame)')){
-        frame.classList.add('screenshot-mode');const sz=frame.style.zoom||'1';frame.style.zoom='1';
-        await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
-        try{
-            const cvs=await html2canvas(frame,{useCORS:true,scale:2,backgroundColor:'#fff',logging:false,windowWidth:parseInt(frame.style.width)||1440});
-            const w=cvs.width,h=cvs.height,dataUrl=cvs.toDataURL('image/png');
-            const svg=`<?xml version="1.0" encoding="UTF-8"?>\n<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${w/2}" height="${h/2}" viewBox="0 0 ${w/2} ${h/2}">\n  <title>${frame.dataset.frameKey}</title>\n  <image width="${w/2}" height="${h/2}" xlink:href="${dataUrl}"/>\n</svg>`;
-            const blob=new Blob([svg],{type:'image/svg+xml'});
-            const a=document.createElement('a');a.download=`${frame.dataset.frameKey}-figma.svg`;
-            a.href=URL.createObjectURL(blob);a.click();URL.revokeObjectURL(a.href);
-        }catch(err){console.error(err);}
-        frame.classList.remove('screenshot-mode');frame.style.zoom=sz;
-    }
-    notify('✓ SVG exported — drag into Figma!');
-});
 
 // LOAD .bnt
 document.getElementById('btn-load').addEventListener('click',()=>document.getElementById('file-load').click());
@@ -480,9 +475,9 @@ document.getElementById('file-load').addEventListener('change',e=>{
     reader.readAsText(file);e.target.value='';
 });
 
-// SCREENSHOT
-document.getElementById('btn-screenshot').addEventListener('click',async()=>{
-    notify('Exporting...');
+// SCREENSHOTS & EXPORTS
+document.getElementById('btn-export-png')?.addEventListener('click',async()=>{
+    notify('Exporting PNG...');
     for(const frame of viewport.querySelectorAll('.canvas-frame:not(.dimmed-frame)')){
         frame.classList.add('screenshot-mode');const sz=frame.style.zoom||'1';frame.style.zoom='1';
         await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
@@ -490,7 +485,53 @@ document.getElementById('btn-screenshot').addEventListener('click',async()=>{
         const a=document.createElement('a');a.download=`${frame.dataset.frameKey}-${Date.now()}.png`;a.href=cvs.toDataURL('image/png');a.click();}catch(err){console.error(err);}
         frame.classList.remove('screenshot-mode');frame.style.zoom=sz;
     }
-    notify('✓ Exported!');
+    notify('✓ PNG Exported!');
+});
+
+// EXPORT STANDARD SVG
+document.getElementById('btn-export-svg')?.addEventListener('click',async()=>{
+    notify('Exporting SVG...');
+    for(const frame of viewport.querySelectorAll('.canvas-frame:not(.dimmed-frame)')){
+        const sz=frame.style.zoom||'1';frame.style.zoom='1';
+        const w=frame.offsetWidth,h=frame.offsetHeight;
+        const html=frame.innerHTML.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+        const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}"><foreignObject width="100%" height="100%"><div xmlns="http://www.w3.org/1999/xhtml">${frame.innerHTML}</div></foreignObject></svg>`;
+        const blob=new Blob([svg],{type:'image/svg+xml'});
+        const a=document.createElement('a');a.download=`${frame.dataset.frameKey}.svg`;
+        a.href=URL.createObjectURL(blob);a.click();URL.revokeObjectURL(a.href);
+        frame.style.zoom=sz;
+    }
+    notify('✓ SVG Exported!');
+});
+
+// EXPORT SVG FOR FIGMA
+document.getElementById('btn-export-figma')?.addEventListener('click',async()=>{
+    notify('Generating Figma SVG...');
+    for(const frame of viewport.querySelectorAll('.canvas-frame:not(.dimmed-frame)')){
+        frame.classList.add('screenshot-mode');const sz=frame.style.zoom||'1';frame.style.zoom='1';
+        await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
+        try{
+            const cvs=await html2canvas(frame,{useCORS:true,scale:2,backgroundColor:'#fff',logging:false,windowWidth:parseInt(frame.style.width)||1440});
+            const w=cvs.width,h=cvs.height,dataUrl=cvs.toDataURL('image/png');
+            const svg=`<?xml version="1.0" encoding="UTF-8"?>\n<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${w/2}" height="${h/2}" viewBox="0 0 ${w/2} ${h/2}">\n  <title>${frame.dataset.frameKey}</title>\n  <image width="${w/2}" height="${h/2}" xlink:href="${dataUrl}"/>\n</svg>`;
+            const blob=new Blob([svg],{type:'image/svg+xml'});
+            const a=document.createElement('a');a.download=`${frame.dataset.frameKey}-figma.svg`;
+            a.href=URL.createObjectURL(blob);a.click();URL.revokeObjectURL(a.href);
+        }catch(err){console.error(err);}
+        frame.classList.remove('screenshot-mode');frame.style.zoom=sz;
+    }
+    notify('✓ Figma SVG exported — drag into Figma!');
+});
+
+// EXPORT STANDALONE HTML
+document.getElementById('btn-export-html')?.addEventListener('click',()=>{
+    const firstDZ=viewport.querySelector('.canvas-frame .drop-zone');
+    if(!firstDZ) return;
+    const fullHtml=`<!DOCTYPE html><html><head><meta charset="utf-8"><title>${screens.find(s=>s.id===activeScreenId)?.name}</title><script src="https://cdn.tailwindcss.com"></script><style>body{background:#f5f5f4;padding:40px;display:flex;justify-content:center;} .canvas{background:#fff;border:1px solid #e7e5e4;box-shadow:0 2px 24px rgba(0,0,0,0.08);width:100%;max-width:1440px;min-height:800px;position:relative;}</style></head><body><div class="canvas">${firstDZ.innerHTML}</div></body></html>`;
+    const blob=new Blob([fullHtml],{type:'text/html'});
+    const a=document.createElement('a');a.download=`${screens.find(s=>s.id===activeScreenId)?.name}.html`;
+    a.href=URL.createObjectURL(blob);a.click();URL.revokeObjectURL(a.href);
+    notify('✓ HTML File Exported!');
 });
 
 // TOAST
@@ -512,7 +553,7 @@ document.addEventListener('keydown',e=>{
     if(e.ctrlKey&&e.key==='k'){e.preventDefault();searchInput.focus();searchInput.select();}
     if(e.ctrlKey&&e.key==='.'){e.preventDefault();if(rightPanel.classList.contains('collapsed')){rightPanel.classList.remove('collapsed');btnOpenRight.classList.remove('show');}else{rightPanel.classList.add('collapsed');btnOpenRight.classList.add('show');}}
     if(e.ctrlKey&&e.key==='s'&&!e.shiftKey){e.preventDefault();saveProject();}
-    if(e.ctrlKey&&e.shiftKey&&e.key==='S'){e.preventDefault();document.getElementById('btn-screenshot').click();}
+    if(e.ctrlKey&&e.shiftKey&&e.key==='S'){e.preventDefault();document.getElementById('btn-export-png').click();}
     if(e.ctrlKey&&e.key==='0'){e.preventDefault();document.getElementById('qb-zfit').click();}
 });
 

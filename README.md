@@ -18,13 +18,13 @@ Công cụ thiết kế Wireframe chuyên nghiệp dành cho Business Analyst. H
 - **Chuyển đổi Type (Semantic HTML):** Chuyển đổi một hình khối cơ bản thành: `Image`, `Button`, `Input`, `Video`, `Map`, `Nav`, `Form`, `Table`... với hình ảnh hiển thị thực tế tương ứng.
 
 ### ✍️ Nhúng Custom HTML & Draw Tool
-- **Custom HTML:** Tự do dán mã HTML/CSS cá nhân để tạo các thành phần đặc thù mà thư viện chưa có.
+- **Custom HTML (Auto-fill):** Tự do dán mã HTML/CSS cá nhân. Khi chuyển từ component có sẵn sang Custom, hệ thống tự động trích xuất code HTML hiện tại để bạn chỉnh sửa ngay lập tức.
 - **Draw Tool:** Công cụ vẽ tự do Rectangle/Circle trực tiếp trên canvas bằng chuột (như các phần mềm thiết kế chuyên nghiệp).
 
 ### 💾 Công cụ Xuất bản & Lưu trữ
-- **Lưu dự án (`.bnt`):** Tải toàn bộ dự án dưới dạng file JSON để làm việc sau này. Trình quản lý dự án hỗ trợ kéo-thả để Load file.
-- **Export PNG:** Chụp ảnh chất lượng cao từng Frame.
-- **Figma SVG Export:** Xuất thiết kế sang định dạng SVG đặc thù để kéo trực tiếp vào Figma để làm Prototype.
+- **Export Dashboard:** Menu Export gọn gàng hỗ trợ xuất PNG, SVG chuẩn và Figma SVG.
+- **Lưu dự án (`.bnt`):** Tải toàn bộ dự án dưới dạng file JSON v6.0.
+- **Figma SVG Export:** Xuất thiết kế sang định dạng SVG đặc thù để kéo trực tiếp vào Figma. SVG này chứa ảnh nhúng để giữ nguyên 100% độ chính xác của CSS phức tạp.
 
 ## ⌨️ Phím tắt (Shortcuts)
 - `Ctrl + S`: Lưu file dự án (.bnt)

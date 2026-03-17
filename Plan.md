@@ -21,10 +21,15 @@ Tài liệu này ghi lại quá trình phát triển, các quyết định kiế
 - **Draw Tool:** Hiện thực hóa công cụ vẽ Rectangle/Circle bằng chuột ngay trên canvas.
 - **Save/Load:** Chuẩn hóa định dạng định dạng `.bnt` (JSON) để lưu trữ dự án.
 
-### v5.0: Synchronization & Figma Integration (Hiện tại)
-- **Automatic Frame Sync:** Đây là thay đổi kiến trúc lớn nhất. Tất cả các Frame trong một Screen chia sẻ chung một "nguồn sự thật" (Source of Truth). Mọi thay đổi ở bất kỳ Frame nào (thêm, xóa, kéo thả, edit text) đều được clone sang các Frame còn lại.
-- **Separate Screen State:** Custom HTML và Zoom được quản lý riêng cho từng screen để không gây xung đột không gian làm việc.
+### v5.0: Synchronization & Figma Integration
+- **Automatic Frame Sync:** Tất cả các Frame trong một Screen chia sẻ chung một "nguồn sự thật" (Source of Truth). 
 - **Figma SVG Export:** Tạo wrapper SVG chứa Base64 image để Figma có thể import trực tiếp đúng kích thước.
+
+### v6.0: UX Refinement & Export Dashboard (Hiện tại)
+- **Custom HTML Pre-fill:** Khi chọn loại "Custom", hệ thống tự động trích xuất `innerHTML` hiện có của phần tử vào textarea. BA không cần viết code từ đầu mà chỉ cần sửa trên code cũ.
+- **Improved Export Dashboard:** Hợp nhất các nút xuất file vào một menu dropdown duy nhất để tiết kiệm không gian toolbar.
+- **Standard SVG Export:** Thêm tùy chọn xuất SVG thô dùng `foreignObject` (tương thích browser).
+- **Project Structure v6:** Cập nhật file `.bnt` để lưu trữ đồng bộ trạng thái zoom và platform cho từng screen.
 
 ---
 
