@@ -6,13 +6,12 @@ Công cụ thiết kế Wireframe chuyên nghiệp dành cho Business Analyst. H
 
 ### 🛠️ Thiết kế Đa nền tảng (Multi-Platform View)
 - Xem đồng thời thiết kế trên nhiều kích cỡ thiết bị: **Web** (Desktop, Tablet, Mobile), **App** (Phone, Tablet), và **Desktop App**.
-- **Đồng bộ nội dung (Sync Engines):** Mọi thao tác thêm, xóa, sửa, kéo thả, và **căn chỉnh layout** trên một khung hình sẽ tự động cập nhật sang tất cả các khung hình khác.
+- **Đồng bộ nội dung (Sync Engines):** Mọi thao tác thêm, xóa, sửa, kéo thả, **căn chỉnh layout**, và **co giãn kích thước** trên một khung hình sẽ tự động cập nhật sang tất cả các khung hình khác.
 
-### 🍱 Hệ thống Layout Linh hoạt (v8.0)
-- **Flexbox Engine:** Container có thể chuyển đổi giữa `Row` (Ngang) và `Col` (Dọc). Cho phép đặt Label cạnh Input, hoặc Button cạnh nhau cực kỳ dễ dàng.
-- **Self Alignment:** Căn chỉnh linh kiện sang Trái, Giữa, hoặc Phải so với cha.
-- **Manual Resizing:** Kéo góc dưới bên phải của bất kỳ linh kiện nào để thay đổi kích thước (Width/Height) trực quan.
-- **Dimension Controls:** Nhập chính xác thông số `100%`, `50px` hoặc `auto` trong bảng thuộc tính.
+### 🧘 Hệ thống Thiết kế Tự do (v10.0)
+- **Unified Component Engine:** Đảm bảo mọi tính năng (Resize, Free Drag, Flow) luôn hoạt động ổn định và đồng bộ trên mọi thiết bị (Mobile, Desktop...).
+- **Perfect Scaling:** Linh kiện bên trong (Button, Input, Image...) luôn tự động lấp đầy 100% không gian khi bạn thay đổi kích thước khung chứa.
+- **Canvas: Free vs Flow:** Chuyển đổi linh hoạt giữa dàn trang tự động và kéo thả tự do tại bất kỳ tọa độ X/Y nào.
 
 ### 📄 Quản lý Dự án Đa màn hình (Multi-Screen)
 - Thiết kế toàn bộ luồng nghiệp vụ (User Flow) trong một tab duy nhất.

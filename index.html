@@ -166,12 +166,13 @@
         .w-full{width:100% !important;}
         
         /* Inner components should fill the CI box when resized */
-        .ci-content > button, .ci-content > input, .ci-content > select, .ci-content > textarea, 
-        .ci-content > .prim-shape, .ci-content > .prim-shape > * {
+        .ci-content > *, .ci-content > * > * {
             width: 100% !important;
             height: 100% !important;
-            display: block;
-            margin: 0 !important;
+            box-sizing: border-box;
+        }
+        .ci-content img, .ci-content video, .ci-content iframe {
+            object-fit: cover;
         }
 
         /* Absolute positioning support */

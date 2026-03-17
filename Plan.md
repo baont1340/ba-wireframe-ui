@@ -36,11 +36,14 @@ Tài liệu này ghi lại quá trình phát triển, các quyết định kiế
 - **Flexbox Containers:** Thay đổi flow sắp xếp linh kiện (Ngang/Dọc). Giải quyết bài toán "Label bên trái, Input bên phải".
 - **Visual Resizer:** Thêm handle ở góc linh kiện để BA có thể "co giãn" tự do bằng chuột.
 
-### v9.0: Absolute Positioning & Free Drag (Hiện tại)
-- **Free Canvas Mode:** Cho phép kéo thả linh kiện tới bất kỳ vị trí X/Y nào trên màn hình. Giải quyết nhu cầu "Kéo thả tự do".
-- **Direct Component Scaling:** Sửa lỗi CSS giúp linh kiện bên trong (Button, Input) luôn lấp đầy khung khi BA kéo dãn kích thước.
-- **Coordinate Sync:** Đồng bộ vị trí `left/top` và trạng thái `Flow/Free` giữa tất cả các nền tảng thiết bị trong thời gian thực.
-- **Project Structure v9:** Hỗ trợ lưu trữ trạng thái Canvas Mode và tọa độ tuyệt đối.
+### v9.0: Absolute Positioning & Free Drag
+- **Free Canvas Mode:** Cho phép kéo thả linh kiện tới bất kỳ vị trí X/Y nào trên màn hình.
+- **Coordinate Sync:** Đồng bộ vị trí `left/top` giữa các Frame.
+
+### v10.0: Unified Design Engine (Hiện tại)
+- **Consolidated Component Logic:** Hợp nhất toàn bộ xử lý sự kiện (kéo thả, resize, edit) vào một engine duy nhất để loại bỏ lỗi mất tính năng khi đồng bộ giữa các Frame.
+- **Perfect Inner Scaling:** Cập nhật CSS giúp nút, ô nhập liệu, hình ảnh luôn co giãn hoàn hảo theo kích thước khung BA tùy chỉnh.
+- **Stable Multi-Device Sync:** Hệ thống đồng bộ (Sync) giờ đây bảo toàn 100% trạng thái di chuyển tự do và kích thước trên tất cả các màn hình thiết bị.
 
 ---
 
