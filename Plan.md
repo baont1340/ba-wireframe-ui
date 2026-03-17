@@ -40,10 +40,14 @@ Tài liệu này ghi lại quá trình phát triển, các quyết định kiế
 - **Free Canvas Mode:** Cho phép kéo thả linh kiện tới bất kỳ vị trí X/Y nào trên màn hình.
 - **Coordinate Sync:** Đồng bộ vị trí `left/top` giữa các Frame.
 
-### v10.0: Unified Design Engine (Hiện tại)
-- **Consolidated Component Logic:** Hợp nhất toàn bộ xử lý sự kiện (kéo thả, resize, edit) vào một engine duy nhất để loại bỏ lỗi mất tính năng khi đồng bộ giữa các Frame.
-- **Perfect Inner Scaling:** Cập nhật CSS giúp nút, ô nhập liệu, hình ảnh luôn co giãn hoàn hảo theo kích thước khung BA tùy chỉnh.
-- **Stable Multi-Device Sync:** Hệ thống đồng bộ (Sync) giờ đây bảo toàn 100% trạng thái di chuyển tự do và kích thước trên tất cả các màn hình thiết bị.
+### v10.0: Unified Design Engine
+- **Consolidated Component Logic:** Hợp nhất xử lý sự kiện (kéo thả, resize, edit) vào một engine duy nhất.
+
+### v11.0: Anti-Cache & PHP Migration (Hiện tại)
+- **Full PHP Transition:** Đổi đuôi toàn bộ file `.html` sang `.php` (bao gồm cả 80+ components).
+- **Anti-Cache Logic:** Sử dụng PHP Header để ép trình duyệt luôn load mới.
+- **Component Versioning:** Hàm `addComponent` tự động thêm tham số version vào URL.
+- **Resource Fingerprinting:** File `main.js` được nhúng kèm timestamp server-side.
 
 ---
 

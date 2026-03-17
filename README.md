@@ -8,10 +8,10 @@ Công cụ thiết kế Wireframe chuyên nghiệp dành cho Business Analyst. H
 - Xem đồng thời thiết kế trên nhiều kích cỡ thiết bị: **Web** (Desktop, Tablet, Mobile), **App** (Phone, Tablet), và **Desktop App**.
 - **Đồng bộ nội dung (Sync Engines):** Mọi thao tác thêm, xóa, sửa, kéo thả, **căn chỉnh layout**, và **co giãn kích thước** trên một khung hình sẽ tự động cập nhật sang tất cả các khung hình khác.
 
-### 🧘 Hệ thống Thiết kế Tự do (v10.0)
-- **Unified Component Engine:** Đảm bảo mọi tính năng (Resize, Free Drag, Flow) luôn hoạt động ổn định và đồng bộ trên mọi thiết bị (Mobile, Desktop...).
-- **Perfect Scaling:** Linh kiện bên trong (Button, Input, Image...) luôn tự động lấp đầy 100% không gian khi bạn thay đổi kích thước khung chứa.
-- **Canvas: Free vs Flow:** Chuyển đổi linh hoạt giữa dàn trang tự động và kéo thả tự do tại bất kỳ tọa độ X/Y nào.
+### 🛡️ Hệ thống Chống Cache (v11.0)
+- **PHP Migration:** Toàn bộ hệ thống chuyển sang .php để tận dụng header kiểm soát cache máy chủ.
+- **Auto-Versioning:** Mọi file JS, CSS và Component Fragments đều được gắn timestamp `?v=...` tự động. Đảm bảo người dùng luôn thấy bản cập nhật mới nhất mà không bị lưu cache trình duyệt cũ.
+- **No-Cache Headers:** Trình duyệt sẽ luôn tải lại file gốc mỗi khi bạn mở ứng dụng.
 
 ### 📄 Quản lý Dự án Đa màn hình (Multi-Screen)
 - Thiết kế toàn bộ luồng nghiệp vụ (User Flow) trong một tab duy nhất.
