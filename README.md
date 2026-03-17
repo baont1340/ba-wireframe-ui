@@ -6,12 +6,25 @@ Công cụ thiết kế Wireframe chuyên nghiệp dành cho Business Analyst. H
 
 ### 🛠️ Thiết kế Đa nền tảng (Multi-Platform View)
 - Xem đồng thời thiết kế trên nhiều kích cỡ thiết bị: **Web** (Desktop, Tablet, Mobile), **App** (Phone, Tablet), và **Desktop App**.
-- **Đồng bộ nội dung (Sync Engines):** Mọi thao tác thêm, xóa, sửa, kéo thả, **căn chỉnh layout**, và **co giãn kích thước** trên một khung hình sẽ tự động cập nhật sang tất cả các khung hình khác.
+- **Đồng bộ nội dung (Sync Engines):** Mọi thao tác thêm, xóa, sửa, kéo thả, co giãn, và **liên kết prototype** trên một khung hình sẽ tự động cập nhật sang tất cả các khung hình khác.
+
+### 🏗️ Quản lý & Lớp (v12.0)
+- **Layers Panel:** Bảng quản lý cây linh kiện bên trái, giúp chọn và tìm kiếm linh kiện nhanh chóng trong các bản vẽ phức tạp.
+- **Prototyping (Interactivity):** Cho phép gắn liên kết "Link to Screen" cho bất kỳ linh kiện nào (Button, Text, Image...).
+- **Play Mode:** Chế độ xem trước (Preview) sạch sẽ, không có viền chỉnh sửa, cho phép bấm tương tác để chuyển màn hình như ứng dụng thật.
 
 ### 🧘 Hệ thống Thiết kế Tự do (v10.0)
-- **Unified Component Engine:** Đảm bảo mọi tính năng (Resize, Free Drag, Flow) luôn hoạt động ổn định và đồng bộ trên mọi thiết bị (Mobile, Desktop...).
-- **Perfect Scaling:** Linh kiện bên trong (Button, Input, Image...) luôn tự động lấp đầy 100% không gian khi bạn thay đổi kích thước khung chứa.
-- **Canvas: Free vs Flow:** Chuyển đổi linh hoạt giữa dàn trang tự động và kéo thả tự do tại bất kỳ tọa độ X/Y nào.
+- **Unified Component Engine:** Đảm bảo mọi tính năng (Resize, Free Drag, Flow) luôn hoạt động ổn định.
+- **Perfect Scaling:** Linh kiện bên trong luôn tự động lấp đầy 100% không gian.
+
+### v10.2: Stability Patch
+- Reverted PHP migration to restore local browsing compatibility.
+- Kept JS-based cache busting for components.
+
+### v12.0: Pro Designer Upgrade (Hiện tại)
+- **Layers Panel:** Quản lý danh sách linh kiện theo cấu trúc cây.
+- **Prototyping Engine:** Chế độ "Play" và tính năng liên kết màn hình (Interactions).
+- **Stability Fixes:** Sửa lỗi DOM Reference và khôi phục hệ thống nạp linh kiện .php (tương thích máy chủ).
 
 ### 📄 Quản lý Dự án Đa màn hình (Multi-Screen)
 - Thiết kế toàn bộ luồng nghiệp vụ (User Flow) trong một tab duy nhất.

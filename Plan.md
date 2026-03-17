@@ -42,10 +42,18 @@ Tài liệu này ghi lại quá trình phát triển, các quyết định kiế
 
 ### v10.0: Unified Design Engine
 - **Consolidated Component Logic:** Hợp nhất xử lý sự kiện (kéo thả, resize, edit) vào một engine duy nhất.
+- **Perfect Inner Scaling:** Linh kiện tự động lấp đầy khung khi co giãn.
 
-### v10.2: Stability Patch (Hiện tại)
-- Reverted PHP migration to restore local browsing compatibility.
-- Kept JS-based cache busting for components.
+### v11.0: Anti-Cache & PHP Migration
+- **PHP Transition:** Chuyển đổi toàn bộ mã nguồn từ HTML sang PHP để kiểm soát cache ở mức server.
+- **Anti-Cache Engine:** Sử dụng PHP Headers và Resource Fingerprinting (`?v=<?php echo time(); ?>`) để đảm bảo người dùng luôn nhận được bản code mới nhất, không bị lỗi cache trình duyệt.
+- **PHP Fragments:** Chuyển đổi 80+ component fragments sang định dạng `.php` giúp việc nạp linh kiện nhanh và linh hoạt hơn.
+
+### v12.0: Pro Designer Upgrade (Hiện tại)
+- **Layers Panel:** Quản lý danh sách linh kiện theo cấu trúc cây (Left Panel Tabs). Giúp chọn nhanh linh kiện bị che khuất.
+- **Prototyping Engine:** Khả năng liên kết linh kiện với các màn hình khác nhau (Interactions).
+- **Play Mode:** Chế độ trình chiếu Prototype tương tác thực tế, ẩn toàn bộ UI chỉnh sửa.
+- **Stability Fixes:** Fix lỗi mất tham chiếu DOM và khôi phục các hàm utility quan trọng (`updateStatus`, `showEmpty`).
 
 ---
 
@@ -69,6 +77,15 @@ Dữ liệu là một đối tượng JSON chứa:
 ### 3. Hệ thống Zoom
 Sử dụng thuộc tính `zoom` của CSS (non-standard nhưng hoạt động hoàn hảo trên Chrome/Edge). Ưu điểm so với `transform: scale` là không làm thay đổi flow của layout và không gây lỗi khi tính toán tọa độ chuột trong các thư viện screenshot.
 
+### 4. Hệ thống Chống Cache (Anti-Cache)
+- **Server Headers:** Ép trình duyệt không lưu cache tệp `index.php`.
+- **Resource Versioning:** File `js/main.js` và các tệp CSS được gắn mã timestamp của server mỗi khi nạp lại trang.
+- **Fragment Cache Busting:** Khi nạp linh kiện qua `fetch`, JavaScript tự động thêm tham số `?v=timestamp` để bỏ qua cache tệp fragment.
+
+### 5. Prototyping & Layers
+- **Interactions:** Sử dụng `data-link-target` để lưu trữ ID màn hình đích.
+- **Layer Mapping:** Hàm `renderLayers()` duyệt qua DOM của Frame hiện tại để xây dựng sơ đồ các phần tử, ánh xạ qua `data-uid` để tương tác ngược lại canvas.
+
 ---
 
 ## 🚀 Lộ trình Tương lai (Roadmap)
@@ -83,6 +100,8 @@ Sử dụng thuộc tính `zoom` của CSS (non-standard nhưng hoạt động h
 ---
 
 ## 👨‍💻 Hướng dẫn cho Nhà phát triển tiếp theo
-- **Logic chính:** Nằm trong hàm `addComponentFromHTML` và `reattachAllListeners`. Mọi component mới thêm vào cần đảm bảo có `ci-content` để hệ thống hiểu được cấu trúc lồng nhau.
-- **Style:** Sử dụng Tailwind CSS nhưng ưu tiên các utility classes tự định nghĩa (ở đầu file `index.html`) như `.wf-border`, `.wf-button` để giữ phong cách Wireframe nhất quán.
-- **Sync:** Nếu bạn thêm một tính năng làm thay đổi DOM, hãy luôn gọi `syncFrames(parentDZ)` ở cuối để đảm bảo tính đồng bộ.
+- **Cấu trúc tệp:** Ứng dụng hiện chạy trên nền tảng PHP. Để chạy cục bộ, cần dùng XAMPP/Laragon hoặc lệnh `php -S localhost:8000`.
+- **Logic chính:** Nằm trong hàm `addComponentFromHTML` và `reattachAllListeners`. Mọi component mới cần có `ci-content`.
+- **Sync:** Nếu bạn thêm một tính năng làm thay đổi DOM, hãy luôn gọi `syncFrames(parentDZ)` ở cuối để đảm bảo tính đồng bộ giữa các platform.
+- **Layers:** Đảm bảo gọi `renderLayers()` sau mỗi lần thay đổi số lượng hoặc thứ tự linh kiện (thường đã được tích hợp trong `updateStatus`).
+- **Prototype:** Khi ở chế độ `isPlaying`, các sự kiện chỉnh sửa bị vô hiệu hóa để ưu tiên sự kiện điều hướng màn hình.

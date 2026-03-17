@@ -104,21 +104,27 @@ header("Pragma: no-cache");
         .frame-eye-btn:hover{border-color:var(--accent);color:var(--accent);}
         .frame-eye-btn.off{color:var(--danger);}
 
-        .drop-zone{min-height:400px;position:relative;padding:0;border-radius:var(--radius-lg);overflow:hidden;flex:1;}
-        .canvas-resizer{height:12px;background:transparent;cursor:ns-resize;display:flex;align-items:center;justify-content:center;transition:background var(--transition);z-index:5;border-radius:0 0 var(--radius-lg) var(--radius-lg);}
-        .canvas-resizer:hover{background:var(--accent-light);}
-        .canvas-resizer::after{content:'';width:28px;height:3px;border-radius:2px;background:var(--border-medium);transition:background var(--transition);}
+        .drop-zone{min-height:400px;position:relative;padding:16px;border-radius:var(--radius-lg);overflow:hidden;flex:1;display:flex;flex-direction:row;flex-wrap:wrap;align-content:flex-start;gap:16px;}
+        .drop-zone.absolute-mode { display: block; padding:0; }
         .canvas-resizer:hover::after{background:var(--accent);}
+        
+        .resizer { position:absolute; right:0; bottom:0; width:12px; height:12px; cursor:nwse-resize; z-index:10; background:transparent; border-right:2px solid transparent; border-bottom:2px solid transparent; transition: border-color 0.2s; }
+        .ci:hover .resizer { border-color: var(--border-medium); }
+        .ci.selected .resizer { border-color: var(--accent); }
+        .resizer-r { position:absolute; right:-2px; top:0; bottom:0; width:6px; cursor:ew-resize; z-index:9; }
+        .resizer-b { position:absolute; bottom:-2px; left:0; right:0; height:6px; cursor:ns-resize; z-index:9; }
+        .resizer-r:hover, .resizer-b:hover { background: var(--accent-glow); }
 
         .drop-line{height:2px;background:var(--accent);margin:0;pointer-events:none;position:relative;border-radius:1px;}
         .drop-line::before{content:'';position:absolute;left:-4px;top:-3px;width:8px;height:8px;background:var(--accent);border-radius:50%;}
 
         /* CANVAS ITEMS */
-        .ci{position:relative;transition:outline-color var(--transition),box-shadow var(--transition);outline:2px solid transparent;outline-offset:-2px;animation:fadeIn 0.2s ease-out;}
+        .ci{position:relative;display:flex;flex-direction:column;transition:outline-color var(--transition),box-shadow var(--transition);outline:2px solid transparent;outline-offset:-2px;animation:fadeIn 0.2s ease-out;box-sizing:border-box;max-width:100%;}
+        .drop-zone.absolute-mode .ci { position: absolute; margin: 0; max-width:none; }
         .ci:hover{outline-color:var(--border-medium);}
         .ci.selected{outline-color:var(--accent);box-shadow:0 0 0 1px var(--accent),inset 0 0 0 1px var(--accent);}
         .ci.dragging{opacity:0.3;}
-        .ci-bar{height:0;opacity:0;overflow:hidden;background:var(--text-primary);display:flex;align-items:center;justify-content:space-between;padding:0 8px;cursor:grab;user-select:none;transition:height var(--transition),opacity var(--transition);}
+        .ci-bar{height:0;opacity:0;overflow:hidden;background:var(--text-primary);display:flex;align-items:center;justify-content:space-between;padding:0 8px;cursor:grab;user-select:none;transition:height var(--transition),opacity var(--transition);flex-shrink:0;}
         .ci:hover>.ci-bar,.ci.selected>.ci-bar{height:24px;opacity:1;}
         .ci-bar-left{display:flex;align-items:center;gap:6px;}
         .ci-bar-left .dots{display:flex;gap:2px;}
@@ -128,7 +134,7 @@ header("Pragma: no-cache");
         .ci-btn{width:16px;height:16px;background:transparent;border:1px solid #44403c;color:#a8a29e;font-size:9px;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:3px;font-family:inherit;transition:all var(--transition);}
         .ci-btn:hover{background:#44403c;color:#fff;}
         .ci-btn.del:hover{background:var(--danger);border-color:var(--danger);}
-        .ci-content{position:relative;}
+        .ci-content{position:relative;flex:1;min-height:0;display:flex;flex-direction:column;}
         .ci-content.nest-target{outline:2px dashed var(--accent);outline-offset:-2px;background:var(--accent-glow);}
 
         .empty-state{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;pointer-events:none;}
@@ -181,8 +187,6 @@ header("Pragma: no-cache");
         }
 
         /* Absolute positioning support */
-        .drop-zone.absolute-mode { position: relative; display: block; }
-        .drop-zone.absolute-mode .ci { position: absolute; margin: 0; }
         .drop-zone.absolute-mode .ci .ci-bar { cursor: move; }
 
         /* QUICK BAR */
@@ -234,6 +238,21 @@ header("Pragma: no-cache");
         .platform-opt:hover{color:var(--text-primary);}
         .platform-opt.active{background:var(--accent);color:#fff;box-shadow:0 1px 4px rgba(124,58,237,0.3);}
 
+        /* PLAY MODE */
+        body.playing .ci-bar, body.playing .canvas-resizer, body.playing .resizer { display:none !important; }
+        body.playing .ci { outline:none !important; cursor:default !important; }
+        body.playing .ci[data-link-target]:not([data-link-target=""]) { cursor:pointer !important; }
+        body.playing .drop-zone { background:white !important; }
+        body.playing .frame-header { display:none !important; }
+        body.playing #viewport { background: #f0f0f0 !important; cursor:default !important; }
+
+        /* OVERLAY PREVIEW */
+        #prototype-overlay-container { display:none; position:fixed; inset:0; z-index:999; background:rgba(0,0,0,0.5); backdrop-filter:blur(2px); align-items:center; justify-content:center; }
+        #prototype-overlay-container.active { display:flex; }
+        #prototype-overlay-content { background:white; border-radius:var(--radius-xl); box-shadow:var(--shadow-lg); position:relative; max-width:90%; max-height:90%; overflow:auto; }
+        #btn-close-overlay { position:absolute; top:12px; right:12px; background:white; border:1px solid var(--border-light); width:32px; height:32px; border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center; font-weight:bold; z-index:10; }
+        #btn-close-overlay:hover { background:var(--danger); color:white; }
+
         @keyframes fadeIn{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:translateY(0);}}
     </style>
 </head>
@@ -250,10 +269,16 @@ header("Pragma: no-cache");
             <svg id="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
             <input id="component-search" type="text" placeholder="Search components..." />
         </div>
+        <div id="left-tabs" class="flex border-b border-[var(--border-light)] mt-2">
+            <button id="tab-btn-comp" class="flex-1 py-2 text-[10px] font-bold uppercase tracking-wider text-[var(--accent)] border-b-2 border-[var(--accent)]">Components</button>
+            <button id="tab-btn-layers" class="flex-1 py-2 text-[10px] font-bold uppercase tracking-wider text-[var(--text-muted)] hover:text-[var(--text-primary)]">Layers</button>
+        </div>
     </div>
     <div id="component-list"></div>
+    <div id="layers-list" style="display:none; flex:1; overflow-y:auto; padding:8px 0;"></div>
     <div id="panel-footer">
         <span id="panel-count">0</span>
+        <button class="panel-footer-btn" id="btn-guide">📖 User Guide</button>
         <button class="panel-footer-btn" id="btn-shortcuts">⌨ Shortcuts</button>
     </div>
 </div>
@@ -263,6 +288,11 @@ header("Pragma: no-cache");
     <!-- TOOLBAR -->
     <div id="toolbar">
         <div class="tb-group">
+            <button class="tb-btn primary" id="btn-play-mode" title="Preview Prototype">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                Play
+            </button>
+            <div class="tb-sep"></div>
             <span id="canvas-status"><span class="status-dot"></span> Ready</span>
             <div class="tb-sep"></div>
             <span class="tb-label">Platform</span>
@@ -433,6 +463,25 @@ header("Pragma: no-cache");
             </div>
         </div>
 
+        <!-- Interactions -->
+        <div class="rp-section" id="rp-interaction-section" style="display:none;">
+            <div class="rp-label">Interactions (Prototype)</div>
+            <div class="rp-row">
+                <span class="rp-input-label">Action</span>
+                <select class="rp-select" id="rp-link-type">
+                    <option value="link">Jump to Screen</option>
+                    <option value="overlay">Show as Overlay</option>
+                </select>
+            </div>
+            <div class="rp-row">
+                <span class="rp-input-label">Target</span>
+                <select class="rp-select" id="rp-link-target">
+                    <option value="">None</option>
+                </select>
+            </div>
+            <div style="font-size:9px;color:var(--text-muted);margin-top:4px;">When clicked in Play mode, go to this screen.</div>
+        </div>
+
         <!-- Export -->
         <div class="rp-section">
             <div class="rp-label">Quick Export</div>
@@ -461,6 +510,47 @@ header("Pragma: no-cache");
 <div id="toast"></div>
 
 <!-- SHORTCUTS MODAL -->
+<!-- GUIDE MODAL -->
+<div id="guide-modal" class="modal-overlay">
+    <div class="modal-box" style="max-width:700px;">
+        <div class="flex items-center justify-between border-b pb-4 mb-4">
+            <h2 class="text-xl font-bold">📖 User Guide (Hướng dẫn sử dụng)</h2>
+            <button class="p-1 hover:bg-gray-100 rounded" id="btn-close-guide">✕</button>
+        </div>
+        <div class="space-y-6 text-sm leading-relaxed" style="max-height:60vh; overflow-y:auto;">
+            <div class="p-4 bg-purple-50 rounded-lg">
+                <h3 class="font-bold text-purple-700 mb-2">1. 🏗️ Cách trình chiếu Prototype (Overlay)</h3>
+                <p>Nút "Play" trên Toolbar giúp bạn demo cho khách: Gắn Link cho linh kiện ở bảng Properties bên phải (Action: Show as Overlay). Khi nhấn nút trong chế độ Play, một cửa sổ popup sẽ hiện ra.</p>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div class="border p-3 rounded">
+                    <h3 class="font-bold mb-1">🖱️ Kéo cạnh (Edge Resize)</h3>
+                    <p>Đưa chuột vào mép phải hoặc cạnh dưới của linh kiện để thay đổi kích thước ngang/dọc nhanh.</p>
+                </div>
+                <div class="border p-3 rounded">
+                    <h3 class="font-bold mb-1">📂 Layers Panel</h3>
+                    <p>Tab "Layers" bên trái giúp quản lý các phần tử bị che khuất hoặc chồng đè.</p>
+                </div>
+            </div>
+            <div class="border p-3 rounded">
+                <h3 class="font-bold mb-1">🧘 Layout (Flow vs Free Drag)</h3>
+                <p>Mặc định linh kiện sẽ dàn theo flow (tự động xuống dòng). Nếu muốn tự do kéo thả X/Y, hãy bật **Free Drag** ở bảng bên phải.</p>
+            </div>
+            <div class="border p-3 rounded bg-gray-50">
+                <h3 class="font-bold mb-1">🎨 Primitive Shapes</h3>
+                <p>Linh kiện "Rectangle", "Text" có thể đổi "Type" ở bảng phải để biến thành Nút, Input hoặc Ảnh mà không cần vẽ lại.</p>
+            </div>
+            <div class="border p-3 rounded">
+                <h3 class="font-bold mb-1">⌨️ Phím tắt (Shortcuts)</h3>
+                <p>Ctrl + S: Lưu dự án | Del: Xóa | Ctrl + D: Nhân bản | Ctrl + K: Tìm kiếm.</p>
+            </div>
+        </div>
+        <div class="mt-6 flex justify-end">
+            <button class="bg-purple-600 text-white px-6 py-2 rounded-lg font-bold" id="btn-read-full">Đã hiểu!</button>
+        </div>
+    </div>
+</div>
+
 <div id="shortcuts-modal" class="modal-overlay">
     <div class="modal-box">
         <h2 class="sc-title">⌨️ Keyboard Shortcuts</h2>
@@ -479,6 +569,15 @@ header("Pragma: no-cache");
             <div class="sc-item"><span>Toggle Panel</span><kbd>Ctrl .</kbd></div>
         </div>
         <div style="margin-top:12px;text-align:center;"><button class="tb-btn" id="btn-close-shortcuts">Close</button></div>
+    </div>
+</div>
+
+<button id="btn-exit-play" style="display:none; position:fixed; right:24px; top:24px; z-index:1000; background:var(--danger); color:white; padding:8px 16px; border-radius:var(--radius-md); font-weight:bold; box-shadow:var(--shadow-lg);">✕ Exit Preview</button>
+
+<div id="prototype-overlay-container">
+    <div id="prototype-overlay-content">
+        <button id="btn-close-overlay">✕</button>
+        <div id="overlay-dz-target" class="drop-zone"></div>
     </div>
 </div>
 
