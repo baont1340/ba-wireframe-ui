@@ -6,7 +6,13 @@ Công cụ thiết kế Wireframe chuyên nghiệp dành cho Business Analyst. H
 
 ### 🛠️ Thiết kế Đa nền tảng (Multi-Platform View)
 - Xem đồng thời thiết kế trên nhiều kích cỡ thiết bị: **Web** (Desktop, Tablet, Mobile), **App** (Phone, Tablet), và **Desktop App**.
-- **Đồng bộ nội dung (Sync Engines):** Mọi thao tác thêm, xóa, sửa, kéo thả trên một khung hình sẽ tự động cập nhật sang tất cả các khung hình khác trong cùng một màn hình. Không còn nỗi lo bất đồng bộ nội dung giữa các phiên bản thiết bị.
+- **Đồng bộ nội dung (Sync Engines):** Mọi thao tác thêm, xóa, sửa, kéo thả, và **căn chỉnh layout** trên một khung hình sẽ tự động cập nhật sang tất cả các khung hình khác.
+
+### 🍱 Hệ thống Layout Linh hoạt (v8.0)
+- **Flexbox Engine:** Container có thể chuyển đổi giữa `Row` (Ngang) và `Col` (Dọc). Cho phép đặt Label cạnh Input, hoặc Button cạnh nhau cực kỳ dễ dàng.
+- **Self Alignment:** Căn chỉnh linh kiện sang Trái, Giữa, hoặc Phải so với cha.
+- **Manual Resizing:** Kéo góc dưới bên phải của bất kỳ linh kiện nào để thay đổi kích thước (Width/Height) trực quan.
+- **Dimension Controls:** Nhập chính xác thông số `100%`, `50px` hoặc `auto` trong bảng thuộc tính.
 
 ### 📄 Quản lý Dự án Đa màn hình (Multi-Screen)
 - Thiết kế toàn bộ luồng nghiệp vụ (User Flow) trong một tab duy nhất.

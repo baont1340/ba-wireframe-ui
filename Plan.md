@@ -25,11 +25,19 @@ Tài liệu này ghi lại quá trình phát triển, các quyết định kiế
 - **Automatic Frame Sync:** Tất cả các Frame trong một Screen chia sẻ chung một "nguồn sự thật" (Source of Truth). 
 - **Figma SVG Export:** Tạo wrapper SVG chứa Base64 image để Figma có thể import trực tiếp đúng kích thước.
 
-### v6.0: UX Refinement & Export Dashboard (Hiện tại)
-- **Custom HTML Pre-fill:** Khi chọn loại "Custom", hệ thống tự động trích xuất `innerHTML` hiện có của phần tử vào textarea. BA không cần viết code từ đầu mà chỉ cần sửa trên code cũ.
-- **Improved Export Dashboard:** Hợp nhất các nút xuất file vào một menu dropdown duy nhất để tiết kiệm không gian toolbar.
-- **Standard SVG Export:** Thêm tùy chọn xuất SVG thô dùng `foreignObject` (tương thích browser).
-- **Project Structure v6:** Cập nhật file `.bnt` để lưu trữ đồng bộ trạng thái zoom và platform cho từng screen.
+### v6.0: UX Refinement & Export Dashboard
+- **Custom HTML Pre-fill:** Tự động trích xuất mã HTML khi chuyển sang Custom.
+- **Improved Export Dashboard:** Hợp nhất PNG, SVG, Figma SVG vào một menu.
+
+### v7.0: Figma Bridge & HTML Export
+- **Export as HTML:** Xuất mã nguồn sạch để dùng với Plugin Figma `html.to.design` nhằm tạo editable layers.
+
+### v8.0: Flex Layout & Manual Resize (Hiện tại)
+- **Flexbox Containers:** Thay đổi flow sắp xếp linh kiện (Ngang/Dọc). Giải quyết bài toán "Label bên trái, Input bên phải".
+- **Visual Resizer:** Thêm handle ở góc linh kiện để BA có thể "co giãn" tự do bằng chuột.
+- **Alignment System:** Hỗ trợ căn Trái/Giữa/Phải linh hoạt.
+- **Synchronization Engine Upgrade:** Đồng bộ cả các thuộc tính layout (flex-direction, align-self) và kích thước (width/height) giữa các Frame.
+- **Project Structure v8:** Cập nhật file `.bnt` hỗ trợ lưu trữ toàn bộ trạng thái layout mới.
 
 ---
 

@@ -11,7 +11,7 @@ const COMPONENTS=[
 {cat:'Primitives',id:'prim-map',name:'Map',file:'components/prim-map.html',icon:'M17.657 16.657L13.414 20.9a2 2 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z',isPrim:true},
 {cat:'Primitives',id:'prim-icon',name:'Icon',file:'components/prim-icon.html',icon:'M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77',isPrim:true},
 {cat:'Primitives',id:'prim-line',name:'Line / Divider',file:'components/prim-line.html',icon:'M5 12h14',isPrim:true},
-{cat:'Primitives',id:'prim-container',name:'Container',file:'components/prim-container.html',icon:'M4 4h16v16H4zM4 8h16',isPrim:true},
+{cat:'Primitives',id:'prim-container',name:'Container (Flex)',file:'components/prim-container.html',icon:'M4 4h16v16H4zM4 8h16',isPrim:true},
 {cat:'Primitives',id:'prim-iframe',name:'Iframe / Embed',file:'components/prim-iframe.html',icon:'M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4',isPrim:true},
 {cat:'Primitives',id:'prim-table',name:'Table (Custom)',file:'components/prim-table.html',icon:'M3 10h18M3 14h18M3 6h18v12H3z',isPrim:true,isTable:true},
 {cat:'General',id:'accordion',name:'Accordion',file:'components/accordion.html',icon:'M19 9l-7 7-7-7'},
@@ -64,7 +64,8 @@ desktop:[{key:'desktop-app',label:'Desktop App',width:1280,svg:'<rect x="2" y="3
 };
 
 const TYPE_VISUALS={
-div:{html:'<div style="width:100%;min-height:80px;border:2px solid #0f172a;background:#fff;display:flex;align-items:center;justify-content:center;"><span style="font-size:11px;color:#94a3b8;font-weight:600;">DIV</span></div>'},
+div:{html:'<div class="ci-content flex-col" style="width:100%;min-height:80px;border:2px solid #0f172a;background:#fff;display:flex;align-items:center;justify-content:center;"><span style="font-size:11px;color:#94a3b8;font-weight:600;">BOX / CONTAINER</span></div>'},
+container:{html:'<div class="ci-content flex-row" style="width:100%;min-height:100px;border:2px dashed #94a3b8;padding:16px;display:flex;gap:16px;"></div>'},
 img:{html:'<div style="width:100%;min-height:120px;border:2px dashed #94a3b8;background:#f8fafc;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;"><svg width="40" height="40" viewBox="0 0 48 48" fill="none"><rect x="4" y="8" width="40" height="32" rx="2" stroke="#94a3b8" stroke-width="2" stroke-dasharray="4 3"/><circle cx="16" cy="20" r="4" stroke="#94a3b8" stroke-width="2"/><path d="M4 34L16 24L24 30L32 22L44 32" stroke="#94a3b8" stroke-width="2" fill="none"/></svg><span style="font-size:10px;color:#94a3b8;font-weight:600;">IMAGE</span></div>'},
 button:{html:'<div style="padding:12px 16px;"><button style="padding:10px 24px;border:2px solid #0f172a;background:#fff;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit;">Button Label</button></div>'},
 input:{html:'<div style="padding:12px 16px;"><label style="display:block;font-size:12px;font-weight:700;margin-bottom:6px;">Label</label><input type="text" placeholder="Placeholder..." style="width:100%;padding:8px 12px;border:2px solid #0f172a;font-size:13px;font-family:inherit;outline:none;"></div>'},
@@ -97,6 +98,8 @@ const rpSelectedSec=document.getElementById('rp-selected-section'),rpSelectedNam
 const rpNoSelection=document.getElementById('rp-no-selection'),rpElementTypeSec=document.getElementById('rp-element-type-section');
 const rpElementType=document.getElementById('rp-element-type'),rpTypeDesc=document.getElementById('rp-type-description');
 const rpTableSec=document.getElementById('rp-table-section'),rpCustomSec=document.getElementById('rp-custom-html-section');
+const rpLayoutSec=document.getElementById('rp-layout-section');
+const rpWidth=document.getElementById('rp-width'),rpHeight=document.getElementById('rp-height');
 const screenTabsEl=document.getElementById('screen-tabs');
 
 // BEFOREUNLOAD WARNING
@@ -331,6 +334,20 @@ function addComponentFromHTML(comp,html,container,before=null){
     content.addEventListener('drop',e=>{e.preventDefault();e.stopPropagation();content.classList.remove('nest-target');if(!dragSrcEl||dragSrcEl===ci)return;content.appendChild(dragSrcEl);dragSrcEl.classList.remove('dragging');dragSrcEl=null;updateStatus();projectDirty=true;syncFrames(container);});
     ci.addEventListener('dragover',e=>{if(!dragSrcEl||dragSrcEl===ci)return;e.preventDefault();const rect=ci.getBoundingClientRect(),mid=rect.top+rect.height/2;removeDropIndicator();clearHL();dropIndicator=document.createElement('div');dropIndicator.className='drop-line';ci.parentElement.insertBefore(dropIndicator,e.clientY<mid?ci:ci.nextElementSibling);});
     content.addEventListener('dblclick',e=>{const el=e.target;if(['P','SPAN','H1','H2','H3','H4','H5','H6','A','BUTTON','LI','TD','TH','LABEL'].includes(el.tagName)&&!el.querySelector('svg')){e.stopPropagation();el.contentEditable='true';el.style.outline='2px solid var(--accent)';el.focus();el.addEventListener('blur',()=>{el.contentEditable='false';el.style.outline='';projectDirty=true;syncFrames(container);},{once:true});}});
+    // RESIZER
+    const resizer=document.createElement('div');resizer.className='resizer';ci.appendChild(resizer);
+    resizer.addEventListener('mousedown',e=>{
+        e.preventDefault();e.stopPropagation();
+        const startX=e.clientX,startY=e.clientY,startW=ci.offsetWidth,startH=ci.offsetHeight;
+        const move=(me)=>{
+            const nw=startW+(me.clientX-startX),nh=startH+(me.clientY-startY);
+            ci.style.width=nw+'px';ci.style.height=nh+'px';
+            rpWidth.value=ci.style.width;rpHeight.value=ci.style.height;
+        };
+        const stop=()=>{window.removeEventListener('mousemove',move);window.removeEventListener('mouseup',stop);projectDirty=true;syncFrames(container);};
+        window.addEventListener('mousemove',move);window.addEventListener('mouseup',stop);
+    });
+
     updateStatus();selectItem(ci,comp);projectDirty=true;
     // Sync to all other frames
     syncFrames(container);
@@ -352,6 +369,19 @@ function updateRightPanel(){
     if(isPrim){const ps=selectedEl.querySelector('.prim-shape');if(ps){rpElementType.value=ps.dataset.assignedType||'div';rpTypeDesc.textContent='';}}
     const isTable=selectedEl?.dataset?.isTable==='1';
     rpTableSec.style.display=isTable?'block':'none';
+    
+    // Layout Section
+    rpLayoutSec.style.display=has?'block':'none';
+    if(has){
+        const content=selectedEl.querySelector('.ci-content');
+        rpWidth.value=selectedEl.style.width||'';
+        rpHeight.value=selectedEl.style.height||'';
+        document.getElementById('rp-layout-row').classList.toggle('active',content?.classList.contains('flex-row'));
+        document.getElementById('rp-layout-col').classList.toggle('active',content?.classList.contains('flex-col'));
+        document.getElementById('rp-align-left').classList.toggle('active',selectedEl.classList.contains('align-start'));
+        document.getElementById('rp-align-center').classList.toggle('active',selectedEl.classList.contains('align-center'));
+        document.getElementById('rp-align-right').classList.toggle('active',selectedEl.classList.contains('align-end'));
+    }
 }
 
 // ELEMENT TYPE CHANGE — VISUAL TRANSFORM
@@ -425,6 +455,32 @@ function clearHL(){document.querySelectorAll('.nest-target').forEach(el=>el.clas
 function showEmpty(c){if(!c)return;const es=c.querySelector('.empty-state');if(es&&!c.querySelector('.ci'))es.style.display='flex';}
 function updateStatus(){const n=document.querySelectorAll('.ci').length;statusEl.innerHTML=n?`<span class="status-dot"></span> ${n} items`:'<span class="status-dot"></span> Ready';}
 
+// LAYOUT ACTIONS
+document.getElementById('rp-layout-row')?.addEventListener('click',()=>{
+    const content=selectedEl?.querySelector('.ci-content');if(!content)return;
+    content.classList.remove('flex-col');content.classList.add('flex-row');
+    projectDirty=true;updateRightPanel();syncFrames(selectedEl.closest('.drop-zone'));
+});
+document.getElementById('rp-layout-col')?.addEventListener('click',()=>{
+    const content=selectedEl?.querySelector('.ci-content');if(!content)return;
+    content.classList.remove('flex-row');content.classList.add('flex-col');
+    projectDirty=true;updateRightPanel();syncFrames(selectedEl.closest('.drop-zone'));
+});
+document.getElementById('rp-align-left')?.addEventListener('click',()=>{
+    selectedEl.classList.remove('align-center','align-end');selectedEl.classList.add('align-start');
+    projectDirty=true;updateRightPanel();syncFrames(selectedEl.closest('.drop-zone'));
+});
+document.getElementById('rp-align-center')?.addEventListener('click',()=>{
+    selectedEl.classList.remove('align-start','align-end');selectedEl.classList.add('align-center');
+    projectDirty=true;updateRightPanel();syncFrames(selectedEl.closest('.drop-zone'));
+});
+document.getElementById('rp-align-right')?.addEventListener('click',()=>{
+    selectedEl.classList.remove('align-start','align-center');selectedEl.classList.add('align-end');
+    projectDirty=true;updateRightPanel();syncFrames(selectedEl.closest('.drop-zone'));
+});
+rpWidth?.addEventListener('input',()=>{if(selectedEl){selectedEl.style.width=rpWidth.value;projectDirty=true;syncFrames(selectedEl.closest('.drop-zone'));}});
+rpHeight?.addEventListener('input',()=>{if(selectedEl){selectedEl.style.height=rpHeight.value;projectDirty=true;syncFrames(selectedEl.closest('.drop-zone'));}});
+
 // PLATFORM
 document.querySelectorAll('.platform-opt').forEach(b=>{b.addEventListener('click',()=>{document.querySelectorAll('.platform-opt').forEach(x=>x.classList.remove('active'));b.classList.add('active');saveCurrentScreen();currentPlatform=b.dataset.platform;loadScreen(activeScreenId);notify('Platform: '+b.textContent.trim());});});
 
@@ -445,7 +501,7 @@ document.getElementById('btn-clear').addEventListener('click',()=>{if(!confirm('
 document.getElementById('btn-save').addEventListener('click',saveProject);
 function saveProject(){
     saveCurrentScreen();
-    const project={version:7,platform:currentPlatform,screens,activeScreenId,screenData:{},frameVisibility,screenZoom};
+    const project={version:8,platform:currentPlatform,screens,activeScreenId,screenData:{},frameVisibility,screenZoom};
     Object.keys(screenData).forEach(k=>{project.screenData[k]=screenData[k];});
     const blob=new Blob([JSON.stringify(project,null,2)],{type:'application/json'});
     const link=document.createElement('a');link.download=`wireframe-project-${Date.now()}.bnt`;
