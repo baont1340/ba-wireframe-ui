@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family: 'Inter', -apple-system, sans-serif; background:#fafafa; color:#1e293b; font-size:12px; }
+  
+  .header { padding:12px 14px; border-bottom:1px solid #e2e8f0; display:flex; align-items:center; gap:8px; background:#fff; position:sticky; top:0; z-index:10; }
+  .header svg { color:#7c3aed; }
+  .header h1 { font-size:13px; font-weight:700; }
+  .header span { font-size:10px; color:#94a3b8; }
+
+  .search { padding:8px 14px; position:sticky; top:44px; z-index:10; background:#fafafa; }
+  .search input { width:100%; padding:8px 10px; border:1px solid #e2e8f0; border-radius:6px; font-size:12px; outline:none; font-family:inherit; background:#fff; }
+  .search input:focus { border-color:#7c3aed; box-shadow:0 0 0 2px rgba(124,58,237,0.1); }
+
+  .cat-header { padding:10px 14px 4px; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:#94a3b8; }
+  
+  .comp-item { padding:7px 14px; display:flex; align-items:center; gap:10px; cursor:pointer; transition:background 0.15s; user-select:none; }
+  .comp-item:hover { background:#f1f0ff; }
+  .comp-item:active { background:#ede9fe; }
+  
+  .comp-icon { width:28px; height:28px; border:1.5px solid #e2e8f0; border-radius:6px; display:flex; align-items:center; justify-content:center; flex-shrink:0; background:#fff; color:#94a3b8; transition:all 0.15s; }
+  .comp-item:hover .comp-icon { border-color:#7c3aed; color:#7c3aed; background:#f5f3ff; }
+  
+  .comp-name { flex:1; font-weight:500; }
+  .comp-arrow { opacity:0; color:#7c3aed; transition:opacity 0.15s; font-size:14px; }
+  .comp-item:hover .comp-arrow { opacity:1; }
+
+  .footer { padding:12px 14px; border-top:1px solid #e2e8f0; text-align:center; font-size:10px; color:#94a3b8; background:#fff; position:sticky; bottom:0; }
+  .footer a { color:#7c3aed; text-decoration:none; font-weight:600; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M3 9h18"/></svg>
+  <div>
+    <h1>BA Wireframe Kit</h1>
+    <span>Click to insert on canvas</span>
+  </div>
+</div>
+
+<div class="search">
+  <input type="text" id="search" placeholder="Search components..." />
+</div>
+
+<div id="list"></div>
+
+<div class="footer">
+  Made with ♥ by <a href="#">BA Team</a> · v1.0
+</div>
+
+<script>
+const COMPONENTS = [
+  // Primitives
+  { cat: "Primitives", id: "prim-rectangle", name: "Rectangle", icon: "M4 4h16v16H4z" },
+  { cat: "Primitives", id: "prim-circle", name: "Circle", icon: "M12 2a10 10 0 100 20 10 10 0 000-20z" },
+  { cat: "Primitives", id: "prim-text", name: "Text Block", icon: "M4 7h16M4 12h16M4 17h10" },
+  { cat: "Primitives", id: "prim-heading", name: "Heading", icon: "M4 12h8m-8-4v8m8-8v8M16 6v12" },
+  { cat: "Primitives", id: "prim-button", name: "Button", icon: "M15 15l-2 5L9 9l11 4-5 2z" },
+  { cat: "Primitives", id: "prim-input", name: "Input Box", icon: "M4 7h16v10H4z" },
+  { cat: "Primitives", id: "prim-image", name: "Image", icon: "M4 16l4.586-4.586a2 2 0 012.828 0L16 16" },
+  { cat: "Primitives", id: "prim-video", name: "Video", icon: "M15 10l4.553-2.276A1 1 0 0121 8.618v6.764" },
+  { cat: "Primitives", id: "prim-map", name: "Map", icon: "M17.657 16.657L13.414 20.9" },
+  { cat: "Primitives", id: "prim-container", name: "Container", icon: "M4 4h16v16H4z" },
+
+  // General
+  { cat: "General", id: "accordion", name: "Accordion", icon: "M19 9l-7 7-7-7" },
+  { cat: "General", id: "alert", name: "Alert", icon: "M12 9v2m0 4h.01" },
+  { cat: "General", id: "avatar", name: "Avatar", icon: "M16 7a4 4 0 11-8 0" },
+  { cat: "General", id: "badge", name: "Badge", icon: "M7 7h.01M7 3h5" },
+  { cat: "General", id: "button", name: "Button Group", icon: "M15 15l-2 5L9 9l11 4-5 2z" },
+  { cat: "General", id: "card", name: "Card", icon: "M4 5a1 1 0 011-1h14" },
+  { cat: "General", id: "carousel", name: "Carousel", icon: "M4 16l4.586-4.586" },
+  { cat: "General", id: "chat", name: "Chat", icon: "M8 10h.01M12 10h.01" },
+  { cat: "General", id: "datepicker", name: "Datepicker", icon: "M8 7V3m8 4V3" },
+  { cat: "General", id: "progress", name: "Progress", icon: "M13 10V3L4 14" },
+  { cat: "General", id: "skeleton", name: "Skeleton", icon: "M4 7v10" },
+  { cat: "General", id: "spinner", name: "Spinner", icon: "M4 4v5" },
+  { cat: "General", id: "timeline", name: "Timeline", icon: "M12 8v4" },
+  { cat: "General", id: "empty-state", name: "Empty State", icon: "M4 4h16v16" },
+
+  // Navigation
+  { cat: "Navigation", id: "breadcrumb", name: "Breadcrumb", icon: "M9 5l7 7-7 7" },
+  { cat: "Navigation", id: "navbar", name: "Navbar", icon: "M4 6h16" },
+  { cat: "Navigation", id: "tabs", name: "Tabs", icon: "M5 12h14" },
+  { cat: "Navigation", id: "pagination", name: "Pagination", icon: "M7 16l-4-4" },
+  { cat: "Navigation", id: "sidebar-c", name: "Sidebar", icon: "M9 17V7" },
+
+  // Forms
+  { cat: "Forms", id: "checkbox", name: "Checkbox", icon: "M9 12l2 2 4-4" },
+  { cat: "Forms", id: "input", name: "Input", icon: "M11 5H6" },
+  { cat: "Forms", id: "select", name: "Select", icon: "M19 9l-7 7" },
+  { cat: "Forms", id: "switch", name: "Switch", icon: "M8 7h8" },
+  { cat: "Forms", id: "form-full", name: "Complete Form", icon: "M3 8l7.89 5.26" },
+
+  // Overlays
+  { cat: "Overlays", id: "modal", name: "Modal", icon: "M8 7V5" },
+  { cat: "Overlays", id: "dropdown", name: "Dropdown", icon: "M19 9l-7 7" },
+  { cat: "Overlays", id: "tooltip", name: "Tooltip", icon: "M13 16h-1" },
+
+  // Data
+  { cat: "Data", id: "table", name: "Table", icon: "M3 10h18" },
+  { cat: "Data", id: "charts", name: "Charts", icon: "M9 19v-6" },
+  { cat: "Data", id: "stat-card", name: "Stat Card", icon: "M12 20V10" },
+
+  // Advanced
+  { cat: "Advanced", id: "blockquote", name: "Blockquote", icon: "M4 7V4" },
+  { cat: "Advanced", id: "editor", name: "Rich Editor", icon: "M11 5H6" },
+  { cat: "Advanced", id: "file-upload", name: "File Upload", icon: "M4 16v1" },
+  { cat: "Advanced", id: "tree-view", name: "Tree View", icon: "M3 7v10" },
+  { cat: "Advanced", id: "color-picker", name: "Color Picker", icon: "M7 21a4 4" },
+  { cat: "Advanced", id: "combobox", name: "Combobox", icon: "M9 12l2 2" },
+
+  // Interactive
+  { cat: "Interactive", id: "confetti", name: "Confetti", icon: "M13 10V3" },
+  { cat: "Interactive", id: "popover", name: "Popover", icon: "M13 16h-1" },
+  { cat: "Interactive", id: "ratings", name: "Ratings", icon: "M11.049 2.927" },
+  { cat: "Interactive", id: "toasts", name: "Toasts", icon: "M7 8h10" },
+
+  // System
+  { cat: "System", id: "devices", name: "Device Shells", icon: "M12 18h.01" },
+  { cat: "System", id: "mega-menu", name: "Mega Menu", icon: "M4 6h16" },
+  { cat: "System", id: "offcanvas", name: "Offcanvas", icon: "M4 6h16" },
+];
+
+function renderList(filter = "") {
+  const list = document.getElementById("list");
+  list.innerHTML = "";
+  const terms = filter.toLowerCase().trim().split(/\s+/).filter(Boolean);
+  const cats = [...new Set(COMPONENTS.map(c => c.cat))];
+
+  cats.forEach(cat => {
+    const items = COMPONENTS.filter(c => {
+      if (c.cat !== cat) return false;
+      if (!terms.length) return true;
+      return terms.every(t => c.name.toLowerCase().includes(t) || cat.toLowerCase().includes(t));
+    });
+    if (!items.length) return;
+
+    const h = document.createElement("div");
+    h.className = "cat-header";
+    h.textContent = cat;
+    list.appendChild(h);
+
+    items.forEach(comp => {
+      const el = document.createElement("div");
+      el.className = "comp-item";
+      el.innerHTML = `
+        <div class="comp-icon">
+          <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${comp.icon}"/>
+          </svg>
+        </div>
+        <span class="comp-name">${comp.name}</span>
+        <span class="comp-arrow">→</span>
+      `;
+      el.addEventListener("click", () => {
+        parent.postMessage({ pluginMessage: { type: "insert-component", id: comp.id } }, "*");
+      });
+      list.appendChild(el);
+    });
+  });
+}
+
+document.getElementById("search").addEventListener("input", e => renderList(e.target.value));
+renderList();
+</script>
+
+</body>
+</html>

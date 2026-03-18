@@ -51,6 +51,30 @@ const COMPONENTS=[
 {cat:'Sections',id:'features',name:'Features',file:'components/features.php',icon:'M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6z'},
 {cat:'Sections',id:'pricing',name:'Pricing',file:'components/pricing.php',icon:'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2'},
 {cat:'Sections',id:'footer',name:'Footer',file:'components/footer.php',icon:'M3 12l2-2m0 0l7-7 7 7'},
+{cat:'Advanced',id:'blockquote',name:'Blockquote',file:'components/blockquote.php',icon:'M4 7V4h16v3M9 20h6M12 4v16'},
+{cat:'Advanced',id:'clipboard',name:'Clipboard',file:'components/clipboard.php',icon:'M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2'},
+{cat:'Advanced',id:'color-picker',name:'Color Picker',file:'components/color-picker.php',icon:'M7 21a4 4 0 01-4-4c0-4 4-9 4-9s4 5 4 9a4 4 0 01-4 4z'},
+{cat:'Advanced',id:'combobox',name:'Combobox',file:'components/combobox.php',icon:'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z'},
+{cat:'Advanced',id:'context-menu',name:'Context Menu',file:'components/context-menu.php',icon:'M4 6h16M4 12h16M4 18h16'},
+{cat:'Advanced',id:'editor',name:'Rich Text Editor',file:'components/editor.php',icon:'M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11'},
+{cat:'Advanced',id:'file-upload',name:'File Upload',file:'components/file-upload.php',icon:'M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12'},
+{cat:'Advanced',id:'tree-view',name:'Tree View',file:'components/tree-view.php',icon:'M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z'},
+{cat:'Advanced',id:'copy-markup',name:'Copy Markup',file:'components/copy-markup.php',icon:'M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1'},
+{cat:'Interactive',id:'confetti',name:'Confetti',file:'components/confetti.php',icon:'M13 10V3L4 14h7v7l9-11h-7z'},
+{cat:'Interactive',id:'popover',name:'Popover',file:'components/popover.php',icon:'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0'},
+{cat:'Interactive',id:'ratings',name:'Ratings',file:'components/ratings.php',icon:'M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.518 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.921-.755 1.688-1.54 1.118l-3.976-2.888a1 1 0 00-1.175 0l-3.976 2.888c-.784.57-1.838-.197-1.539-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z'},
+{cat:'Interactive',id:'toasts',name:'Toasts',file:'components/toasts.php',icon:'M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z'},
+{cat:'Interactive',id:'scrollspy',name:'Scrollspy',file:'components/scrollspy.php',icon:'M15 12a3 3 0 11-6 0 3 3 0 016 0z'},
+{cat:'System',id:'kbd',name:'Keyboard Key',file:'components/kbd.php',icon:'M4 6h16M4 12h16M4 18h16'},
+{cat:'System',id:'devices',name:'Device Shells',file:'components/devices.php',icon:'M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z'},
+{cat:'System',id:'mega-menu',name:'Mega Menu',file:'components/mega-menu.php',icon:'M4 6h16M4 12h16M4 18h16'},
+{cat:'System',id:'offcanvas',name:'Offcanvas',file:'components/offcanvas.php',icon:'M4 6h16M4 12h16M4 18h7'},
+{cat:'System',id:'splitter',name:'Splitter',file:'components/splitter.php',icon:'M8 7v10M16 7v10'},
+{cat:'Utilities',id:'file-progress',name:'File Progress',file:'components/file-progress.php',icon:'M4 12h16M4 18h16'},
+{cat:'Utilities',id:'legend',name:'Legend',file:'components/legend.php',icon:'M4 6h4v4H4z'},
+{cat:'Utilities',id:'link',name:'Simple Link',file:'components/link.php',icon:'M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4'},
+{cat:'Data Visualization',id:'stat-card',name:'Stat Card',file:'components/stat-card.php',icon:'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2z'},
+{cat:'General',id:'empty-state',name:'Empty State',file:'components/empty-state.php',icon:'M4 4h16v16H4z'},
 ];
 
 // PLATFORM CONFIGS
@@ -58,14 +82,17 @@ const PLATFORMS={
 web:[{key:'web-desktop',label:'Web Desktop',width:1440,svg:'<rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>'},
 {key:'web-tablet',label:'Web Tablet',width:768,svg:'<rect x="4" y="2" width="16" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18"/>'},
 {key:'web-mobile',label:'Web Mobile',width:375,svg:'<rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18"/>'}],
+mobile:[{key:'ios-mobile',label:'iOS Mobile',width:390,svg:'<rect x="5" y="2" width="14" height="20" rx="4"/><line x1="12" y1="18" x2="12" y2="18"/>'},
+{key:'android-mobile',label:'Android Mobile',width:360,svg:'<rect x="5" y="2" width="14" height="20" rx="1"/><circle cx="12" cy="19" r="1"/>'}],
+tablet:[{key:'ipad-pro',label:'iPad Pro',width:1024,svg:'<rect x="3" y="2" width="18" height="20" rx="3"/><line x1="12" y1="18" x2="12" y2="18"/>'}],
 app:[{key:'app-mobile',label:'App Mobile',width:375,svg:'<rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18"/>'},
 {key:'app-tablet',label:'App Tablet',width:768,svg:'<rect x="4" y="2" width="16" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18"/>'}],
 desktop:[{key:'desktop-app',label:'Desktop App',width:1280,svg:'<rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>'}]
 };
 
 const TYPE_VISUALS={
-div:{html:'<div class="ci-content flex-col" style="width:100%;min-height:80px;border:2px solid #0f172a;background:#fff;display:flex;align-items:center;justify-content:center;"><span style="font-size:11px;color:#94a3b8;font-weight:600;">BOX / CONTAINER</span></div>'},
-container:{html:'<div class="ci-content flex-row" style="width:100%;min-height:100px;border:2px dashed #94a3b8;padding:16px;display:flex;gap:16px;"></div>'},
+div:{html:'<div style="width:100%;min-height:80px;border:2px solid #0f172a;background:#fff;display:flex;align-items:center;justify-content:center;"><span style="font-size:11px;color:#94a3b8;font-weight:600;">BOX / CONTAINER</span></div>'},
+container:{html:'<span style="font-size:10px;color:#94a3b8;font-weight:600;text-transform:uppercase;padding:8px;display:block;">CONTAINER</span>'},
 img:{html:'<div style="width:100%;min-height:120px;border:2px dashed #94a3b8;background:#f8fafc;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;"><svg width="40" height="40" viewBox="0 0 48 48" fill="none"><rect x="4" y="8" width="40" height="32" rx="2" stroke="#94a3b8" stroke-width="2" stroke-dasharray="4 3"/><circle cx="16" cy="20" r="4" stroke="#94a3b8" stroke-width="2"/><path d="M4 34L16 24L24 30L32 22L44 32" stroke="#94a3b8" stroke-width="2" fill="none"/></svg><span style="font-size:10px;color:#94a3b8;font-weight:600;">IMAGE</span></div>'},
 button:{html:'<div style="padding:12px 16px;"><button style="padding:10px 24px;border:2px solid #0f172a;background:#fff;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit;">Button Label</button></div>'},
 input:{html:'<div style="padding:12px 16px;"><label style="display:block;font-size:12px;font-weight:700;margin-bottom:6px;">Label</label><input type="text" placeholder="Placeholder..." style="width:100%;padding:8px 12px;border:2px solid #0f172a;font-size:13px;font-family:inherit;outline:none;"></div>'},
@@ -1003,79 +1030,78 @@ document.addEventListener('click',e=>{
 
 // GROUPING LOGIC
 function groupSelected(){
-    if(selectedEls.length < 2) { notify('Select at least 2 items to group'); return; }
+    if(selectedEls.length < 2) { notify('Select 2+ items first (Shift/Ctrl+click)'); return; }
     
     const firstDZ = selectedEls[0].closest('.drop-zone');
     if(!firstDZ) return;
+    const isAbsolute = firstDZ.classList.contains('absolute-mode');
     
-    // Calculate bounding box
-    let minX=Infinity, minY=Infinity, maxX=-Infinity, maxY=-Infinity;
-    selectedEls.forEach(el => {
-        const r = el.getBoundingClientRect();
-        const dzR = firstDZ.getBoundingClientRect();
-        const x = (r.left - dzR.left)/currentZoom;
-        const y = (r.top - dzR.top)/currentZoom;
-        const w = (r.width)/currentZoom;
-        const h = (r.height)/currentZoom;
-        minX = Math.min(minX, x); minY = Math.min(minY, y);
-        maxX = Math.max(maxX, x + w); maxY = Math.max(maxY, y + h);
+    // Sort by DOM order
+    const sorted = [...selectedEls].sort((a,b) => {
+        const aI = [...firstDZ.querySelectorAll(':scope > .ci')].indexOf(a);
+        const bI = [...firstDZ.querySelectorAll(':scope > .ci')].indexOf(b);
+        return aI - bI;
     });
+    const insertBefore = sorted[0];
 
-    const groupW = maxX - minX;
-    const groupH = maxY - minY;
+    // Build group wrapper manually (no addComponentFromHTML to avoid side effects)
+    const ci = document.createElement('div');
+    ci.className = 'ci ci-group';
+    ci.dataset.compId = 'prim-container';
+    ci.dataset.uid = ++itemUID;
+    ci.dataset.isPrim = '1';
+    ci.innerHTML = `<div class="ci-bar" draggable="true"><div class="ci-bar-left"><div class="dots"><span></span><span></span><span></span><span></span><span></span><span></span></div><span class="ci-bar-label">Group</span></div><div class="ci-btns"><button class="ci-btn dup" title="Dup">⎘</button><button class="ci-btn del" title="Del">✕</button></div></div><div class="ci-content flex-col"></div>`;
 
-    // Create container
-    const containerComp = COMPONENTS.find(c => c.id === 'prim-container');
-    const groupCi = addComponentFromHTML(containerComp, TYPE_VISUALS.container.html, firstDZ, selectedEls[0]);
-    
-    groupCi.style.position = firstDZ.classList.contains('absolute-mode') ? 'absolute' : 'relative';
-    groupCi.style.left = minX + 'px';
-    groupCi.style.top = minY + 'px';
-    groupCi.style.width = groupW + 'px';
-    groupCi.style.height = groupH + 'px';
+    if(!isAbsolute){
+        ci.style.width = '100%';
+    }
 
-    const content = groupCi.querySelector('.ci-content');
-    content.classList.add('flex-col'); // Default to vertical stacking for grouped items
-    if(firstDZ.classList.contains('absolute-mode')) content.classList.add('absolute-mode');
+    firstDZ.insertBefore(ci, insertBefore);
+    const content = ci.querySelector('.ci-content');
 
-    // Move items inside
-    selectedEls.sort((a,b) => a.offsetTop - b.offsetTop).forEach(el => {
-        if(firstDZ.classList.contains('absolute-mode')){
-            const r = el.getBoundingClientRect();
-            const gR = groupCi.getBoundingClientRect();
-            el.style.left = (r.left - gR.left)/currentZoom + 'px';
-            el.style.top = (r.top - gR.top)/currentZoom + 'px';
-        }
+    // Move items inside, clear any flex-stretch inline widths
+    sorted.forEach(el => {
+        el.style.position = '';
+        el.style.left = '';
+        el.style.top = '';
         content.appendChild(el);
     });
 
-    selectItem(groupCi);
-    notify('Grouped successfully');
+    const containerComp = COMPONENTS.find(c => c.id === 'prim-container') || {id:'prim-container',name:'Group',file:'',isPrim:true};
+    setupComponentEvents(ci, containerComp, firstDZ);
+    
+    selectedEls.forEach(e => e.classList.remove('selected'));
+    selectedEls = [ci]; selectedEl = ci; selectedComp = containerComp;
+    ci.classList.add('selected');
+    updateRightPanel(); updateStatus();
+    projectDirty = true;
     syncFrames(firstDZ);
+    notify('✓ Grouped ' + sorted.length + ' items');
 }
 
 function ungroupSelected(){
-    if(!selectedEl || !selectedEl.querySelector('.ci-content')) return;
+    if(!selectedEl) return;
     const content = selectedEl.querySelector('.ci-content');
+    if(!content) return;
     const dz = selectedEl.closest('.drop-zone');
+    if(!dz) return;
     const items = [...content.querySelectorAll(':scope > .ci')];
-    if(!items.length) return;
+    if(!items.length){ notify('Nothing to ungroup'); return; }
 
     items.forEach(item => {
-        if(dz.classList.contains('absolute-mode')){
-            const r = item.getBoundingClientRect();
-            const dzR = dz.getBoundingClientRect();
-            item.style.left = (r.left - dzR.left)/currentZoom + 'px';
-            item.style.top = (r.top - dzR.top)/currentZoom + 'px';
-        }
+        item.style.position = '';
+        item.style.left = '';
+        item.style.top = '';
         dz.insertBefore(item, selectedEl);
     });
 
     const toRemove = selectedEl;
     selectItem(null);
     toRemove.remove();
-    notify('Ungrouped');
+    updateStatus();
+    projectDirty = true;
     syncFrames(dz);
+    notify('✓ Ungrouped');
 }
 
 btnGroup?.addEventListener('click', groupSelected);
